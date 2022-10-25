@@ -3,6 +3,7 @@ import Empoloyee from "./components/Employee";
 import { useState } from "react";
 import logo from "./img/a.jpg";
 import { v4 } from "uuid";
+import AddEmployee from "./components/AddEmployee";
 
 function App() {
   const [role, setRole] = useState("dev");
@@ -54,6 +55,16 @@ function App() {
     setEmployees(updatedEmployees);
   }
 
+  function NewEmployee(name, role, img) {
+    const NewEmployee = {
+      id: v4(),
+      name: name,
+      role: role,
+      img: img,
+    };
+    setEmployees([...empoloyees, NewEmployee]);
+  }
+
   const a = true;
   return (
     <div>
@@ -80,6 +91,7 @@ function App() {
               );
             })}
           </div>
+          <AddEmployee NewEmployee={NewEmployee} />
         </>
       ) : (
         <p>You cannot see emp!</p>
