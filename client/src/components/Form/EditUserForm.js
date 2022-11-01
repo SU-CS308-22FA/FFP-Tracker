@@ -47,7 +47,7 @@ const EditUserForm = ({ user }) => {
       setUsername("");
       setPassword("");
       //setRoles([])
-      navigate("/dash/users");
+      navigate("/login");
     }
   }, [isSuccess, isDelSuccess, navigate]);
 
@@ -63,14 +63,18 @@ const EditUserForm = ({ user }) => {
     }*/
 
   const onSaveUserClicked = async (e) => {
+    console.log("here1");
     if (password) {
+      console.log("here2");
       await updateUser({ id: user.id, username, password });
     } else {
+      console.log("here3");
       await updateUser({ id: user.id, username });
     }
   };
 
   const onDeleteUserClicked = async () => {
+    //console.log("here");
     await deleteUser({ id: user.id });
   };
 
@@ -115,7 +119,6 @@ const EditUserForm = ({ user }) => {
               className="icon-button"
               title="Save"
               onClick={onSaveUserClicked}
-              disabled={!canSave}
             >
               <FontAwesomeIcon icon={faSave} />
             </button>
@@ -150,6 +153,7 @@ const EditUserForm = ({ user }) => {
           id="password"
           name="password"
           type="password"
+          autoComplete="off"
           value={password}
           onChange={onPasswordChanged}
         />
