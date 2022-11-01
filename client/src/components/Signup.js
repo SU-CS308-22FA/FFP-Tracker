@@ -52,6 +52,7 @@ export default function Signup() {
       await addNewUser({ username, email, password, role: "Team admin" });
     } else {
       // TODO: Check the reasons and render accordingly
+      //alert("Wrong Credentials!");
     }
   };
 

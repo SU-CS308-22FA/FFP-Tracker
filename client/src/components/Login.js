@@ -24,7 +24,7 @@ export default function Login() {
         navigate(`/users/${id}`);
       }
     } catch (err) {
-      console.log(err);
+      alert("Wrong Credentials!");
     }
   };
 
