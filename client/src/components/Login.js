@@ -2,7 +2,7 @@ import FormAction from "./Form/FormAction";
 import FormExtra from "./Form/FormExtra";
 import Input from "./Form/Input";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../features/auth/authApiSlice";
 
 export default function Login() {
@@ -21,7 +21,7 @@ export default function Login() {
         // TODO: send the user to their user page
         setEmail("");
         setPassword("");
-        navigate(`/user/${id}`);
+        navigate(`/users/${id}`);
       }
     } catch (err) {
       console.log(err);

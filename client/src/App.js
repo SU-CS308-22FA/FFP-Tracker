@@ -2,6 +2,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import SignupPage from "./pages/Signup";
 import LoginPage from "./pages/Login";
+import EditUser from "./pages/EditUser";
 
 function App() {
   return (
@@ -10,6 +11,9 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
+          <Route path="users">
+            <Route path=":id" element={<EditUser />} />
+          </Route>
         </Routes>
       </div>
     </div>

@@ -58,10 +58,10 @@ const createUser = asyncHandler(async (req, res) => {
 // @route PATCH /users
 // @access private
 const updateUser = asyncHandler(async (req, res) => {
-  const id = req.params.id;
-  const { username, role, password } = req.body;
+  const id = req.body.id;
+  const { username, email, password } = req.body;
   // Confirm data
-  if (!id || !username || !role) {
+  if (!id || !username) {
     return res.status(400).json({ message: "All of the fields are required!" });
   }
   const user = await User.findById(id).exec();
@@ -73,12 +73,12 @@ const updateUser = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: "Username is already in use!" });
   }
   user.username = username;
-  user.role = role;
   // If the request also has a password, update that as well
   if (password) {
     // Hash the password
     user.password = await bcrypt.hash(password, 10);
   }
+  if (email) user.email = email;
   const updatedUser = await user.save();
   res.json({
     user: updatedUser,
@@ -90,7 +90,9 @@ const updateUser = asyncHandler(async (req, res) => {
 // @route DELETE /users
 // @access private
 const deleteUser = asyncHandler(async (req, res) => {
-  const id = req.params.id;
+  console.log("here2");
+  const id = req.body.id;
+  console.log(id);
   if (!id) return res.status(400).json({ message: "User ID is required!" });
   const user = await User.findById(id).exec();
   if (!user) return res.status(400).json({ message: "User does not exist!" });
