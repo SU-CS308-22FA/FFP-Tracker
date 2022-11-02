@@ -1,4 +1,6 @@
-require("dotenv").config();
+require("dotenv").config({
+  path: "../.env",
+});
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -7,6 +9,10 @@ const corsOptions = require("./config/corsOptions");
 const connectDB = require("./config/dbConn");
 const mongoose = require("mongoose");
 const PORT = process.env.PORT || 3500;
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 connectDB();
 
@@ -17,12 +23,16 @@ app.use(cors(corsOptions));
 app.use(express.json());
 
 // Built-in Middleware: Static Files --> .css, .png, .img files
-app.use("/", express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname + "/../client/build")));
 
 // Routes
 app.use("/", require("./routes/root"));
 app.use("/users", require("./routes/userRoutes"));
 app.use("/auth", require("./routes/authRoutes"));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname + "/../client/build/index.html"));
+});
 
 // This catches all requests that fall outside of the routes that are defined
 app.all("*", (req, res) => {

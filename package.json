@@ -1,0 +1,25 @@
+{
+  "name": "cs-308-team-19-202201",
+  "version": "1.0.0",
+  "description": "Full stack FFP App",
+  "main": "server/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd server && npm install && node server.js",
+    "heroku-postbuild": "cd client && npm install && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SU-CS308-22FA/CS-308-Team-19-202201.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SU-CS308-22FA/CS-308-Team-19-202201/issues"
+  },
+  "engines": {
+    "node": "16.x",
+    "npm": "8.x"
+  },
+  "homepage": "https://github.com/SU-CS308-22FA/CS-308-Team-19-202201#readme"
+}
