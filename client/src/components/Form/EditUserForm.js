@@ -5,7 +5,7 @@ import {
 } from "../../features/users/usersApiSlice";
 import { redirect, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { faSave, faTrashCan,faSign,faSignOut } from "@fortawesome/free-solid-svg-icons";
 import Header from "../Header";
 import Input from "../Form/Input";
 
@@ -32,7 +32,7 @@ const EditUserForm = ({ user }) => {
   const [validUsername, setValidUsername] = useState(false);
   const [password, setPassword] = useState("");
   const [validPassword, setValidPassword] = useState(false);
-  // const [roles, setRoles] = useState(user.roles)
+  const [role, setRole] = useState(user.role)
   // const [active, setActive] = useState(user.active)
 
   useEffect(() => {
@@ -46,7 +46,11 @@ const EditUserForm = ({ user }) => {
   useEffect(() => {
     if (isSuccess) {
       alert("Saved Successfully.");
-      window.location.reload();
+      if (!password.length) {
+        window.location.reload();
+      } else {
+        navigate('/login');
+      }
     } else if (isDelSuccess) {
       alert("User Deleted. You will be directed to the sign up page.");
       navigate("/signup");
@@ -55,22 +59,16 @@ const EditUserForm = ({ user }) => {
 
   const onUsernameChanged = (e) => setUsername(e.target.value);
   const onPasswordChanged = (e) => setPassword(e.target.value);
-
-  /*
-  const onRolesChanged = e => {
-      const values = Array.from(
-          e.target.selectedOptions,
-          (option) => option.value
-      )
-      setRoles(values)
-  }
-  */
+  const onRoleChanged = (e) => setRole(e.target.value);
 
   const onSaveUserClicked = async (e) => {
+    console.log('Here1')
     if (password) {
-      await updateUser({ id: user.id, username, password });
+      console.log('Here2')
+      await updateUser({ id: user.id, username, role, password });
     } else {
-      await updateUser({ id: user.id, username });
+      console.log('Here3')
+      await updateUser({ id: user.id, username, role});
     }
   };
 
@@ -79,17 +77,10 @@ const EditUserForm = ({ user }) => {
     await deleteUser({ id: user.id });
   };
 
-  /*
-  const options = Object.values(ROLES).map(role => {
-      // return (
-          <option
-              key={role}
-              value={role}
-
-          > {role}</option >
-      )
-  })
-  */
+  const onLogOutClicked = () => {
+    //console.log("here");
+    navigate('/login');
+  };
 
   let canSave;
   if (password) {
@@ -102,9 +93,6 @@ const EditUserForm = ({ user }) => {
   const validUserClass = !validUsername ? "form__input--incomplete" : "";
   const validPwdClass =
     password && !validPassword ? "form__input--incomplete" : "";
-  //const validRolesClass = !Boolean(roles.length)
-  //? "form__input--incomplete"
-  //: "";
 
   const errContent = (error?.data?.message || delerror?.data?.message) ?? "";
 
@@ -114,12 +102,13 @@ const EditUserForm = ({ user }) => {
 
       <form className="form" onSubmit={(e) => e.preventDefault()}>
         <div className="form__title-row">
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Edit User
-          </h2>
+        <Header
+        heading=" Edit User"
+      />
+          
         </div>
         <label
-          className="mt-6 text-center text-2x1 font-extrabold text-gray-900"
+          className="font-medium text-purple-600 hover:text-purple-500"
           htmlFor="username"
         >
           Username:
@@ -135,9 +124,28 @@ const EditUserForm = ({ user }) => {
           onChange={onUsernameChanged}
         />
         <div className="m-5"></div>
+        <label
+          className="font-medium text-purple-600 hover:text-purple-500"
+          htmlFor="username"
+        >
+          Role:
+        </label>
+        <div></div>
+        <input
+          className="rounded-md appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-purple-500 focus:border-purple-500 focus:z-10 sm:text-sm"
+          id="username"
+          name="username"
+          type="text"
+          autoComplete="off"
+          value={role}
+          onChange={onRoleChanged}
+        />
+        <div className="m-5"></div>
+        
+        
 
         <label
-          className="mt-6 text-center text-2x1 font-extrabold text-gray-900"
+          className="font-medium text-purple-600 hover:text-purple-500"
           htmlFor="password"
         >
           Password:
@@ -169,7 +177,22 @@ const EditUserForm = ({ user }) => {
             <FontAwesomeIcon icon={faTrashCan} />
           </button>
           <h2 className="ml-15 mt-3 font-extrabold">DELETE</h2>
-        </div>
+
+
+        
+          <button
+            className="icon-button absolute top-10 right-10 mr-20"
+            title="Delete"
+            onClick={onLogOutClicked}
+          >
+            <FontAwesomeIcon icon={faSignOut} />
+          </button>
+          <h2 className="mt-3 font-extrabold absolute top-10 right-8 mr-2 ">LOG OUT</h2>
+          </div>
+
+
+
+        
       </form>
     </>
   );
