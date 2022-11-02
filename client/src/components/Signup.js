@@ -5,7 +5,7 @@ import FormAction from "./Form/FormAction";
 import Input from "./Form/Input";
 
 const USER_REGEX = /^[A-z0-9]{3,20}$/;
-const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
+const PWD_REGEX = /^[A-z0-9!@#$%]{4,20}$/;
 
 export default function Signup() {
   const [addNewUser, { isLoading, isSuccess, isError, error }] =
@@ -55,15 +55,21 @@ export default function Signup() {
         password,
         role: "Team admin",
       });
-      const message = result.data["message"];
-      console.log(message);
     } else {
+      if (!validPassword && !validUsername) {
+        setUsername("");
+        setEmail("");
+        setPassword("");
+        setRepassword("");
+        alert("You have entered non-valid fields. Try again!");
+      }
       if (!validUsername) {
         setUsername("");
         alert("This username is not valid!");
       }
       if (!validPassword) {
         setPassword("");
+        setRepassword("");
         alert("password is not valid!");
       }
     }

@@ -73,7 +73,6 @@ const EditUserForm = ({ user }) => {
   };
 
   const onDeleteUserClicked = async () => {
-    //console.log("here");
     await deleteUser({ id: user.id });
   };
 
