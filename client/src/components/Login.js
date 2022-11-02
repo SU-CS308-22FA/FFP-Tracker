@@ -16,15 +16,21 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { id, isLoggedIn } = await login({ email, password }).unwrap();
+      const { message, id, isLoggedIn } = await login({
+        email,
+        password,
+      }).unwrap();
       if (isLoggedIn) {
         // TODO: send the user to their user page
         setEmail("");
         setPassword("");
+        alert("Successful Login. You will be directed to your user page!");
         navigate(`/users/${id}`);
       }
     } catch (err) {
-      alert("Wrong Credentials!");
+      setEmail("");
+      setPassword("");
+      alert("Error!");
     }
   };
 

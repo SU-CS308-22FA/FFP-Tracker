@@ -3,7 +3,7 @@ import {
   useUpdateUserMutation,
   useDeleteUserMutation,
 } from "../../features/users/usersApiSlice";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faTrashCan } from "@fortawesome/free-solid-svg-icons";
 import Header from "../Header";
@@ -44,33 +44,32 @@ const EditUserForm = ({ user }) => {
   }, [password]);
 
   useEffect(() => {
-    console.log(isSuccess);
-    if (isSuccess || isDelSuccess) {
-      setUsername("");
-      setPassword("");
-      //setRoles([])
-      navigate("/login");
+    if (isSuccess) {
+      alert("Saved Successfully.");
+      window.location.reload();
+    } else if (isDelSuccess) {
+      alert("User Deleted. You will be directed to the sign up page.");
+      navigate("/signup");
     }
   }, [isSuccess, isDelSuccess, navigate]);
 
   const onUsernameChanged = (e) => setUsername(e.target.value);
   const onPasswordChanged = (e) => setPassword(e.target.value);
 
-  /*const onRolesChanged = e => {
-        const values = Array.from(
-            e.target.selectedOptions,
-            (option) => option.value
-        )
-        setRoles(values)
-    }*/
+  /*
+  const onRolesChanged = e => {
+      const values = Array.from(
+          e.target.selectedOptions,
+          (option) => option.value
+      )
+      setRoles(values)
+  }
+  */
 
   const onSaveUserClicked = async (e) => {
-    console.log("here1");
     if (password) {
-      console.log("here2");
       await updateUser({ id: user.id, username, password });
     } else {
-      console.log("here3");
       await updateUser({ id: user.id, username });
     }
   };
@@ -81,16 +80,16 @@ const EditUserForm = ({ user }) => {
   };
 
   /*
-    const options = Object.values(ROLES).map(role => {
-        // return (
-            <option
-                key={role}
-                value={role}
+  const options = Object.values(ROLES).map(role => {
+      // return (
+          <option
+              key={role}
+              value={role}
 
-            > {role}</option >
-        )
-    })
-    */
+          > {role}</option >
+      )
+  })
+  */
 
   let canSave;
   if (password) {

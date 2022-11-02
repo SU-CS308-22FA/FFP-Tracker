@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import FormAction from "./Form/FormAction";
 import Input from "./Form/Input";
 
-const USER_REGEX = /^[A-z]{3,20}$/;
+const USER_REGEX = /^[A-z0-9]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,12}$/;
 
 export default function Signup() {
@@ -34,7 +34,7 @@ export default function Signup() {
     if (isSuccess) {
       setUsername("");
       setPassword("");
-      // setRole("");
+      alert("User Succesfully Created. You will be redirected to login page.");
       navigate("/login");
     }
   }, [isSuccess, navigate]);
@@ -49,10 +49,23 @@ export default function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (canSave) {
-      await addNewUser({ username, email, password, role: "Team admin" });
+      const result = await addNewUser({
+        username,
+        email,
+        password,
+        role: "Team admin",
+      });
+      const message = result.data["message"];
+      console.log(message);
     } else {
-      // TODO: Check the reasons and render accordingly
-      //alert("Wrong Credentials!");
+      if (!validUsername) {
+        setUsername("");
+        alert("This username is not valid!");
+      }
+      if (!validPassword) {
+        setPassword("");
+        alert("password is not valid!");
+      }
     }
   };
 
