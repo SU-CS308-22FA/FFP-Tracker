@@ -1,26 +1,35 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import SignupPage from "./pages/Signup";
-import LoginPage from "./pages/Login";
-import EditUser from "./pages/EditUser";
+import SignupPage from "./pages/SignupPage";
+import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
+import TeamsPage from "./pages/TeamsPage";
+import DetailedTeamPage from "./pages/DetailedTeamPage";
+import EditUserPage from "./pages/EditUserPage";
+import ProfilePage from "./pages/ProfilePage";
+import { UserContextProvider } from "./contexts/userContext";
 
 function App() {
   return (
-    <div className="min-h-full h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/" element={<SignupPage />} />
-          <Route path="users">
-            <Route path=":id" element={<EditUser />} />
-          </Route>
-          <Route path="editUser">
-            <Route path=":id" element={<EditUser />} />
-          </Route>
-        </Routes>
-      </div>
-    </div>
+    <UserContextProvider>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/teams">
+          <Route path="" element={<TeamsPage />} />
+          <Route path=":id" element={<DetailedTeamPage />} />
+        </Route>
+        <Route path="/editUser" element={<ProfilePage />}>
+          <Route path=":id" element={<EditUserPage />} />
+        </Route>
+        <Route path="/my/profile/">
+          <Route path=":id" element={<ProfilePage />} />
+          <Route path="edit/:id" element={<EditUserPage />} />
+        </Route>
+      </Routes>
+    </UserContextProvider>
   );
 }
 
