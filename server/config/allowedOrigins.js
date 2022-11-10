@@ -4,7 +4,7 @@ const allowedOrigins = [
   "https://ffp-tracker.herokuapp.com",
   "https://www.ffp-tracker.herokuapp.com",
   "http://www.ffp-tracker.herokuapp.com",
-  "http://www.ffp-tracker.herokuapp.com",
+  "http://ffp-tracker.herokuapp.com",
 ];
 
 module.exports = allowedOrigins;

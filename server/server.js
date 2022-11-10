@@ -9,7 +9,6 @@ const corsOptions = require("./config/corsOptions");
 const connectDB = require("./config/dbConn");
 const mongoose = require("mongoose");
 const PORT = process.env.PORT || 3500;
-const { fileURLToPath } = require("url");
 
 connectDB();
 
@@ -26,6 +25,7 @@ app.use(express.static(path.join(__dirname + "/../client/build")));
 app.use("/api", require("./routes/root"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
+app.use("/api/register", require("./routes/registerRoutes"));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/../client/build/index.html"));

@@ -8,17 +8,17 @@ const asyncHandler = require("express-async-handler");
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return res.status(400).json({ message: "All fields are required" });
+    return res.status(400).json({ error: "All fields are required" });
   }
   const foundUser = await User.findOne({ email }).exec();
   if (!foundUser) {
-    return res.status(404).json({ message: "User Not Found!" });
+    return res.status(404).json({ error: "Wrong Credentials!" });
   }
   const match = await bcrypt.compare(password, foundUser.password);
-  if (!match) return res.status(401).json({ message: "Unauthorized" });
+  if (!match) return res.status(401).json({ error: "Wrong Credentials!" });
   return res
     .status(200)
-    .json({ message: "Logged in", id: foundUser._id, isLoggedIn: true });
+    .json({ message: "Logged in", user: foundUser, isLoggedIn: true });
 });
 
 // @desc Login
