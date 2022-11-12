@@ -14,6 +14,7 @@ import { ROLES } from "./app/roles";
 import PersistLogin from "./components/PersistLogin";
 import SendKeyPage from "./pages/TFF Admin Pages/SendKeyPage";
 import FileSubmitPage from "./pages/Team Admin Pages/FileSubmitPage";
+import NotificationPage from "./pages/NotificationPage";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             <Route path="register" element={<SendKeyPage />} />
           </Route>
         </Route>
+        <Route path="/notification" element={<NotificationPage />} />
       </Routes>
     </UserContextProvider>
   );
