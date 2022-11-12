@@ -4,7 +4,7 @@ import FrontPageAppBar from "../components/FrontPageAppBar";
 export default function HomePage() {
   const content = (
     <>
-      <FrontPageAppBar navItems={["Teams", "Login", "Sign Up"]} />
+      <FrontPageAppBar navItems={["Teams", "Notification", "Login", "Sign Up"]} />
       <center>
         <h1>About This Site</h1>
       </center>

@@ -4,7 +4,7 @@ import TeamsComponent from "../components/TeamsComponent";
 export default function TeamsPage() {
   const content = (
     <>
-      <FrontPageAppBar navItems={["Home", "Login", "Sign Up"]} />
+      <FrontPageAppBar navItems={["Home", "Notification", "Login", "Sign Up"]} />
       <TeamsComponent />
     </>
   );
