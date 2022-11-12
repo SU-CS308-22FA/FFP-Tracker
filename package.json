@@ -21,5 +21,8 @@
     "node": "16.x",
     "npm": "8.x"
   },
-  "homepage": "https://github.com/SU-CS308-22FA/CS-308-Team-19-202201#readme"
+  "homepage": "https://github.com/SU-CS308-22FA/CS-308-Team-19-202201#readme",
+  "dependencies": {
+    "emailjs-com": "^3.2.0"
+  }
 }

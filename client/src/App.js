@@ -7,6 +7,7 @@ import TeamsPage from "./pages/TeamsPage";
 import DetailedTeamPage from "./pages/DetailedTeamPage";
 import EditUserPage from "./pages/EditUserPage";
 import ProfilePage from "./pages/ProfilePage";
+import NotificationPage from "./pages/NotificationPage";
 import { UserContextProvider } from "./contexts/userContext";
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
           <Route path=":id" element={<ProfilePage />} />
           <Route path="edit/:id" element={<EditUserPage />} />
         </Route>
+        <Route path="/notification" element={<NotificationPage />} />
       </Routes>
     </UserContextProvider>
   );
