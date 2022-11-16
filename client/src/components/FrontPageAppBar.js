@@ -12,7 +12,7 @@ function FrontPageAppBar(navItems) {
     <Box sx={{ display: "flex" }}>
       <AppBar
         component="nav"
-        sx={{ bgcolor: "#ff0000" }}
+        sx={{ bgcolor: "#51087E" }}
         elevation={0}
         position="static"
       >
@@ -22,7 +22,7 @@ function FrontPageAppBar(navItems) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}
           >
-            FFP Tracker for TFF
+            <Link to="/home">FFP Tracker for TFF</Link>
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navigationItems.map((item) => (

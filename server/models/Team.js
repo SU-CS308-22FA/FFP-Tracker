@@ -10,6 +10,14 @@ const TeamSchema = new mongoose.Schema({
     required: true,
     ref: "User",
   },
+  seasonBudget: {
+    type: Number,
+    required: true,
+  },
+  currentBudget: {
+    type: Number,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Team", TeamSchema);

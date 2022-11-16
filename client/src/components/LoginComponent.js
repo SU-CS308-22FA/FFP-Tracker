@@ -58,14 +58,11 @@ export default function LoginComponent() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Sign in
+          <Typography component="h1" variant="h4">
+            Log In
           </Typography>
           <Grid container>
-            <Grid item sx={{ mt: 2, mb: 2 }}>
+            <Grid item sx={{ mt: 2 }}>
               Don't have an account? <Link href="/signup">{"Sign Up"}</Link>
             </Grid>
           </Grid>

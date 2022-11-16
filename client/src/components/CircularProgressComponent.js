@@ -14,6 +14,7 @@ export default function CircularProgressComponent() {
           minHeight: "75vh",
         }}
       >
+        Loading...
         <CircularProgress />
       </Box>
     </Container>
