@@ -26,6 +26,7 @@ app.use("/api", require("./routes/root"));
 app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/register", require("./routes/registerRoutes"));
+app.use("/api/teams", require("./routes/teamRoutes"));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/../client/build/index.html"));

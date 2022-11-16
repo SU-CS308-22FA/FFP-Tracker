@@ -12,6 +12,7 @@ import { useState } from "react";
 import { Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import FFP_API from "../app/api";
+import Avatar from "@mui/material/Avatar";
 
 const theme = createTheme();
 
@@ -72,115 +73,134 @@ export default function SignUpComponent() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Box
-            sx={{
-              marginTop: 8,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Typography component="h1" variant="h5">
-              Sign Up
-            </Typography>
-            <Grid container justifyContent="flex-centre">
-              <Grid item sx={{ mt: 2, mb: 2 }}>
-                Already have an account? <Link href="/login">Sign in!</Link>
-              </Grid>
-            </Grid>
-            <Box component="form" onSubmit={handleSubmit}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    name="key"
-                    required
-                    fullWidth
-                    id="key"
-                    label="Registration Key"
-                    autoFocus
-                  />
-                </Grid>
-                <Grid item xs={12} sm={5.5}>
-                  <TextField
-                    autoComplete="given-name"
-                    name="firstname"
-                    required
-                    fullWidth
-                    id="firstname"
-                    label="First Name"
-                    autoFocus
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6.5}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="lastname"
-                    label="Last Name"
-                    name="lastname"
-                    autoComplete="family-name"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="username"
-                    label="Username"
-                    name="username"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={5.5}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="password"
-                    label="Password"
-                    type="password"
-                    id="password"
-                    autoComplete="new-password"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6.5}>
-                  <TextField
-                    required
-                    fullWidth
-                    name="repassword"
-                    label="Re-Password"
-                    type="password"
-                    id="re-password"
-                  />
-                </Grid>
-              </Grid>
-              <Box sx={{ mt: 2 }} />
-              {e && (
-                <Alert variant="outlined" severity="error">
-                  {errorMessage}
-                </Alert>
-              )}
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 2, mb: 4 }}
-              >
-                Sign Up
-              </Button>
+        <CssBaseline />
+        <Grid container spacing={2}>
+          <Grid item xs={5}>
+            <Box
+              sx={{ display: "flex", justifyContent: "center", mt: 25, ml: 15 }}
+            >
+              <Avatar
+                align="center"
+                src="favicon.ico"
+                sx={{ width: 400, height: 200 }}
+                variant="square"
+              />
             </Box>
-          </Box>
-        </Container>
+          </Grid>
+          <Grid item xs={7}>
+            <Container maxWidth="sm">
+              <Box
+                sx={{
+                  m: 6,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Typography component="h1" variant="h5">
+                  Sign Up
+                </Typography>
+                <Grid container justifyContent="flex-centre">
+                  <Grid item sx={{ mt: 2, mb: 2 }}>
+                    Already have an account? <Link href="/login">Sign in!</Link>
+                  </Grid>
+                </Grid>
+                <Box
+                  component="form"
+                  onSubmit={handleSubmit}
+                  alignItems="center"
+                >
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        name="key"
+                        required
+                        fullWidth
+                        id="key"
+                        label="Registration Key"
+                        autoFocus
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={5.5}>
+                      <TextField
+                        autoComplete="given-name"
+                        name="firstname"
+                        required
+                        fullWidth
+                        id="firstname"
+                        label="First Name"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6.5}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="lastname"
+                        label="Last Name"
+                        name="lastname"
+                        autoComplete="family-name"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="email"
+                        label="Email Address"
+                        name="email"
+                        autoComplete="email"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        fullWidth
+                        id="username"
+                        label="Username"
+                        name="username"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={5.5}>
+                      <TextField
+                        required
+                        fullWidth
+                        name="password"
+                        label="Password"
+                        type="password"
+                        id="password"
+                        autoComplete="new-password"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6.5}>
+                      <TextField
+                        required
+                        fullWidth
+                        name="repassword"
+                        label="Re-Password"
+                        type="password"
+                        id="re-password"
+                      />
+                    </Grid>
+                  </Grid>
+                  <Box sx={{ mt: 2 }} />
+                  {e && (
+                    <Alert variant="outlined" severity="error">
+                      {errorMessage}
+                    </Alert>
+                  )}
+                  <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 2, mb: 4, bgcolor: "#51087E" }}
+                  >
+                    Sign Up
+                  </Button>
+                </Box>
+              </Box>
+            </Container>
+          </Grid>
+        </Grid>
       </ThemeProvider>
     </>
   );
