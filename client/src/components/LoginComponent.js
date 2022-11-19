@@ -1,4 +1,3 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -13,12 +12,12 @@ import { Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import FFP_API from "../app/api";
 import { UserContext } from "../contexts/userContext";
+import { useContext } from "react";
 
 const theme = createTheme();
 
 export default function LoginComponent() {
-  const { user, setUser } = React.useContext(UserContext);
-  setUser(null);
+  const { user, setUser } = useContext(UserContext);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 

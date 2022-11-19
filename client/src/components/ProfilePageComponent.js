@@ -37,8 +37,10 @@ export default function ProfilePageComponent() {
         <Typography variant="h4" component="h1" sx={{ m: 4 }} align="center">
           Welcome, {user.fullname}!
         </Typography>
-        {ButtonContent}
-        {user.role}
+        <Typography variant="body1" sx={{ m: 2 }} align="center">
+          As a {user.role}, you can edit your profile, submit and review files,
+          and much more things!
+        </Typography>
       </Container>
     </>
   );
