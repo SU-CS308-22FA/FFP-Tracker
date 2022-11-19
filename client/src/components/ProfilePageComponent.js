@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
@@ -28,8 +28,9 @@ export default function ProfilePageComponent() {
       </Button>
     </>
   );
+
   const content = !user ? (
-    <CircularProgressComponent />
+    <Navigate to="/login" />
   ) : (
     <>
       <Container component="main" maxWidth="md">
@@ -37,6 +38,7 @@ export default function ProfilePageComponent() {
           Welcome, {user.fullname}!
         </Typography>
         {ButtonContent}
+        {user.role}
       </Container>
     </>
   );

@@ -17,7 +17,8 @@ import { UserContext } from "../contexts/userContext";
 const theme = createTheme();
 
 export default function LoginComponent() {
-  const { setUser } = React.useContext(UserContext);
+  const { user, setUser } = React.useContext(UserContext);
+  setUser(null);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
