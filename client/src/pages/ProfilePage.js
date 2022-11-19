@@ -4,7 +4,7 @@ import ProfilePageComponent from "../components/ProfilePageComponent";
 export default function ProfilePage() {
   return (
     <>
-      <CustomAppBar navItems={[]} />
+      <CustomAppBar navItems={["Submit", "send Key"]} />
       <ProfilePageComponent />
     </>
   );
