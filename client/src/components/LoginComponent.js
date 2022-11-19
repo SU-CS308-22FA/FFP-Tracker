@@ -1,12 +1,10 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -19,7 +17,7 @@ import { UserContext } from "../contexts/userContext";
 const theme = createTheme();
 
 export default function LoginComponent() {
-  const { user, setUser } = React.useContext(UserContext);
+  const { setUser } = React.useContext(UserContext);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -31,14 +29,16 @@ export default function LoginComponent() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     try {
-      const res = await FFP_API.post("/auth", {
-        email: data.get("email"),
-        password: data.get("password"),
-      });
+      const res = await FFP_API.post(
+        "/auth",
+        {
+          email: data.get("email"),
+          password: data.get("password"),
+        },
+        { withCredentials: true }
+      );
       setUser(res.data.user);
-      console.log(res.data.user);
       alert("You have successfully logged in!");
-      // store cookie here!
       navigate("/my/profile/" + res.data.user._id);
     } catch (error) {
       setE(true);
@@ -96,7 +96,14 @@ export default function LoginComponent() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 4 }}
+              sx={{
+                mt: 3,
+                mb: 4,
+                backgroundColor: "#51087E",
+                "&:hover": {
+                  backgroundColor: "#51087E",
+                },
+              }}
             >
               Sign In
             </Button>

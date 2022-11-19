@@ -4,11 +4,11 @@ import { useState, useEffect } from "react";
 import FFP_API from "../app/api";
 import CircularProgressComponent from "./CircularProgressComponent";
 import Typography from "@mui/material/Typography";
-import { Box, Divider, Grid } from "@mui/material";
+import { Grid } from "@mui/material";
 
 export default function DetailedTeamPageComponent() {
   const [team, setTeam] = useState(null);
-  const [info, setInfo] = useState(null);
+  // const [info, setInfo] = useState(null);
 
   const { id } = useParams();
   useEffect(() => {
@@ -51,8 +51,11 @@ export default function DetailedTeamPageComponent() {
             {plot(team)}
           </Grid>
           <Grid item xs={6.5}>
-            <Typography variant="h5" align="center" sx={{ mt: 4 }}>
-              Information About {team.teamName}
+            <Typography variant="h4" align="center" sx={{ mt: 4 }}>
+              Information About
+              <Typography variant="h5" color="#0000FF">
+                <a href={team.wikiLink}>{team.teamName}</a>
+              </Typography>
             </Typography>
             <Typography variant="body1" sx={{ mt: 4 }}>
               Season Starting Budget: {team.seasonBudget}
