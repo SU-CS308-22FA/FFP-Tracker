@@ -10,7 +10,9 @@ const login = asyncHandler(async (req, res) => {
   if (!email || !password) {
     return res.status(400).json({ error: "All fields are required" });
   }
-  const foundUser = await User.findOne({ email }).exec();
+  const foundUser = await User.findOne({ email })
+    .select("-password, -__v")
+    .lean();
   if (!foundUser) {
     return res.status(404).json({ error: "Wrong Credentials!" });
   }

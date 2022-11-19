@@ -7,6 +7,10 @@ router
   .get(teamsController.getAllTeams)
   .post(teamsController.createTeam);
 
+router.route("/data").get(teamsController.getAllGraphData);
+
+router.route("/data/:id").get(teamsController.getTeamGraphDataById);
+
 router.route("/:id").get(teamsController.getTeamById);
 router.route("/:name/admin").get(teamsController.getTeamAdmin);
 

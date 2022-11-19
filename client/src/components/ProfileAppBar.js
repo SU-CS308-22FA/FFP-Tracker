@@ -24,6 +24,7 @@ function ProfileAppBar() {
           >
             <Link to="">FFP Tracker for TFF</Link>
           </Typography>
+          <Link to="/login">LOGOUT</Link>
         </Toolbar>
       </AppBar>
     </Box>

@@ -31,6 +31,8 @@ app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/register", require("./routes/registerRoutes"));
 app.use("/api/teams", require("./routes/teamRoutes"));
+app.use("/api/revenues", require("./routes/revenueRoutes"));
+app.use("/api/expenses", require("./routes/expenseRoutes"));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/../client/build/index.html"));
