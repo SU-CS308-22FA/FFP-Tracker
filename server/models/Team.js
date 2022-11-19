@@ -7,8 +7,14 @@ const TeamSchema = new mongoose.Schema({
   },
   admin: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
+    required: false,
     ref: "User",
+    default: null,
+  },
+  wikiLink: {
+    type: String,
+    required: false,
+    default: null,
   },
   seasonBudget: {
     type: Number,

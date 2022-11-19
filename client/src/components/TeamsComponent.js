@@ -35,7 +35,7 @@ export default function TeamsComponent() {
       layout={{
         width: 420,
         height: 315,
-        title: `<a href = "${team._id}" target = "_self">${team.teamName}</a>`,
+        title: `<a href = "/teams/${team._id}" target = "_self">${team.teamName}</a>`,
       }}
     />
   );
