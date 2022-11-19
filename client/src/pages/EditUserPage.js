@@ -4,7 +4,7 @@ import ProfileAppBar from "../components/ProfileAppBar";
 export default function EditUserPage() {
   const content = (
     <>
-      <ProfileAppBar />
+      <ProfileAppBar navItems={[]} />
       <EditUserComponent />
     </>
   );

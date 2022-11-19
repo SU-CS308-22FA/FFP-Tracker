@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
-import { Dropdown } from "semantic-ui-react";
 import { client } from "filestack-react";
-import TextField from "@mui/material/TextField";
 
-export default function FileUploadPage() {
+export default function FileUploadComponent() {
   const [selectedFile, setSelectedFile] = useState();
   const [isSelected, setIsSelected] = useState(false);
 
@@ -20,11 +18,9 @@ export default function FileUploadPage() {
     picker.open();
   };
 
-  const handleSubmission = () => {
+  const handleSubmission = async () => {
     const formData = new FormData();
-
     formData.append("File", selectedFile);
-
     fetch(
       "http://freeimage.host/api/1/upload/?key=6d207e02198a847aa98d0a2a901485a5",
       {
@@ -40,21 +36,7 @@ export default function FileUploadPage() {
         console.error("Error:", error);
       });
   };
-  const options = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  const defaultOption = "MONTH";
+
   return (
     <Button
       onClick={handleFilePicker}
@@ -62,7 +44,7 @@ export default function FileUploadPage() {
       variant="contained"
       sx={{ mb: 3, mt: -5 }}
     >
-      FILE PICKER
+      Pick a file to Upload
     </Button>
   );
 }
