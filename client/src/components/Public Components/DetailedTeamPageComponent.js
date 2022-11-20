@@ -1,7 +1,7 @@
 import Plot from "react-plotly.js";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import FFP_API from "../app/api";
+import FFP_API from "../../app/api";
 import CircularProgressComponent from "./CircularProgressComponent";
 import Typography from "@mui/material/Typography";
 import { Avatar, Grid } from "@mui/material";
