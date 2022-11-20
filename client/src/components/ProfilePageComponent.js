@@ -29,6 +29,28 @@ export default function ProfilePageComponent() {
     </>
   );
 
+  const items =
+    user.role === "Team Admin" ? (
+      <>
+        <Button
+          variant="contained"
+          onClick={() => navigate(`/my/profile/submit/${id}`)}
+          sx={{
+            backgroundColor: "#51087E",
+            "&:hover": {
+              backgroundColor: "#51087E",
+            },
+          }}
+        >
+          Submit Files
+        </Button>
+      </>
+    ) : user.role === "TFF Admin" ? (
+      <></>
+    ) : (
+      <></>
+    );
+
   const content = !user ? (
     <Navigate to="/login" />
   ) : (
@@ -39,6 +61,7 @@ export default function ProfilePageComponent() {
         </Typography>
         {ButtonContent}
         {user.role}
+        {items}
       </Container>
     </>
   );

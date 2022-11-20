@@ -29,8 +29,8 @@ function App() {
         <Route path="/my/profile/">
           <Route path=":id" element={<ProfilePage />} />
           <Route path="edit/:id" element={<EditUserPage />} />
+          <Route path="submit/:id" element={<FileSubmitPage />} />
         </Route>
-        <Route path="/submit" element={<FileSubmitPage />} />
       </Routes>
     </UserContextProvider>
   );

@@ -4,9 +4,35 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
-import { Avatar } from "@mui/material";
+import { Avatar, Button, useColorScheme } from "@mui/material";
+import { UserContext } from "../contexts/userContext";
+import { useNavigate } from "react-router-dom";
 
 function ProfileAppBar() {
+  const { user, setUser } = React.useContext(UserContext);
+  const navigate = useNavigate();
+  const items =
+    user.role === "Team Admin" ? (
+      <>
+        <Button
+          variant="contained"
+          onClick={() => navigate(`/my/profile/submit/${user._id}`)}
+          sx={{
+            backgroundColor: "#51087E",
+            "&:hover": {
+              backgroundColor: "#51087E",
+            },
+          }}
+        >
+          Submit Files
+        </Button>
+      </>
+    ) : user.role === "TFF Admin" ? (
+      <></>
+    ) : (
+      <></>
+    );
+
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar
@@ -24,7 +50,9 @@ function ProfileAppBar() {
           >
             <Link to="">FFP Tracker for TFF</Link>
           </Typography>
+          <Link>{items}</Link>
           <Link to="/login">LOGOUT</Link>
+          <Box sx={{ ml: 2 }}></Box>
         </Toolbar>
       </AppBar>
     </Box>
