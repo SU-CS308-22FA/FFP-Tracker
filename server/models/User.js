@@ -21,6 +21,16 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  readNotif: {
+    type: Array,
+    default: [],
+    required: false,
+  },
+  unreadNotif: {
+    type: Array,
+    default: [],
+    required: false,
+  },
 });
 
 module.exports = mongoose.model("User", UserSchema);

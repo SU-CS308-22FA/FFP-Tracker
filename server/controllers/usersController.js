@@ -58,6 +58,8 @@ const createUser = asyncHandler(async (req, res) => {
     email,
     password: hashedPw,
     role: userInfo.role,
+    readNotif: [],
+    unreadNotif: [],
   };
   const user = await User.create(userObject);
   if (user) {
