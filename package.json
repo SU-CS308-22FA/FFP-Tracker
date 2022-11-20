@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/SU-CS308-22FA/CS-308-Team-19-202201#readme",
   "dependencies": {
+    "crypto": "^1.0.1",
     "filestack-react": "^4.0.1"
   }
 }

@@ -1,34 +1,41 @@
 import * as React from "react";
 import { useRef } from "react";
-
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-
 import Box from "@mui/material/Box";
-
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import FFP_API from "../app/api";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useContext } from "react";
+import { UserContext } from "../contexts/userContext";
+import { Alert } from "@mui/material";
+//import { randomBytes } from "crypto";
 
 import emailjs from "@emailjs/browser";
 const theme = createTheme();
 export default function SendKeyPage() {
+  function generateRandomKey() {}
+  const { user, setUser } = useContext(UserContext);
+  const [e, setE] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const form = useRef();
   const [role, setRole] = React.useState("");
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
-    console.log(role);
     setRole(event.target.value);
-    console.log(role);
   };
-  const sendEmail = (e) => {
+  const sendEmail = async (e) => {
     e.preventDefault();
 
-    emailjs
+    await emailjs
       .sendForm(
         "service_rqfjoti",
         "contact_form",
@@ -43,6 +50,30 @@ export default function SendKeyPage() {
           console.log(error.text);
         }
       );
+
+    const data = new FormData(e.currentTarget);
+
+    try {
+      if (role === "Team Admin") {
+        await FFP_API.post("/register", {
+          email: data.get("email"),
+          key: data.get("key"),
+          role: data.get("role"),
+          team: data.get("team"),
+        });
+      } else {
+        await FFP_API.post("/register", {
+          email: data.get("email"),
+          key: data.get("key"),
+          role: data.get("role"),
+        });
+      }
+      alert("Successfully key registered!");
+      navigate(`/my/profile/${user._id}`);
+    } catch (error) {
+      setE(true);
+      setErrorMessage(error.response.data.error);
+    }
   };
 
   return (
@@ -85,12 +116,12 @@ export default function SendKeyPage() {
                 label="Role"
                 onChange={handleChange}
               >
-                <MenuItem value={10}>Team Admin</MenuItem>
-                <MenuItem value={20}>TFF Admin</MenuItem>
-                <MenuItem value={30}>Lawyer</MenuItem>
+                <MenuItem value={"Team Admin"}>Team Admin</MenuItem>
+                <MenuItem value={"TFF Admin"}>TFF Admin</MenuItem>
+                <MenuItem value={"Lawyer"}>Lawyer</MenuItem>
               </Select>
             </FormControl>
-            {role === 10 ? (
+            {role === "Team Admin" ? (
               <TextField
                 margin="normal"
                 required
@@ -104,7 +135,7 @@ export default function SendKeyPage() {
             ) : (
               <></>
             )}
-            {role !== 10 ? (
+            {role !== "Team Admin" ? (
               <Box
                 sx={{
                   marginTop: 1,
@@ -121,10 +152,10 @@ export default function SendKeyPage() {
               margin="normal"
               required
               fullWidth
-              id="user_email"
+              id="email"
               label="Email Address"
-              name="user_email"
-              autoComplete="user_email"
+              name="email"
+              autoComplete="email"
               autoFocus
             />
 
@@ -132,13 +163,17 @@ export default function SendKeyPage() {
               margin="normal"
               required
               fullWidth
-              name="message"
+              name="key"
               label="Key"
               type="text"
-              id="message"
-              autoComplete="message"
+              id="key"
+              autoComplete="key"
             />
-
+            {e && (
+              <Alert variant="outlined" severity="error">
+                {errorMessage}
+              </Alert>
+            )}
             <Button
               type="submit"
               fullWidth
