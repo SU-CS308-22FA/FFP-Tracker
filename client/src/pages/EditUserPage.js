@@ -1,10 +1,10 @@
 import EditUserComponent from "../components/EditUserComponent";
-import CustomAppBar from "../components/FrontPageAppBar";
+import ProfileAppBar from "../components/ProfileAppBar";
 
 export default function EditUserPage() {
   const content = (
     <>
-      <CustomAppBar navItems={[]} />
+      <ProfileAppBar navItems={[]} />
       <EditUserComponent />
     </>
   );

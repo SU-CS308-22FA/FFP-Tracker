@@ -1,36 +1,46 @@
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import FFP_API from "../app/api";
-
 import Container from "@mui/material/Container";
 import CircularProgressComponent from "./CircularProgressComponent";
+import { Typography } from "@mui/material";
+import { useContext } from "react";
+import { UserContext } from "../contexts/userContext";
 
 export default function ProfilePageComponent() {
   const { id } = useParams();
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useContext(UserContext);
   const navigate = useNavigate();
-  useEffect(() => {
-    const fetchUser = async () => {
-      const response = await FFP_API.get(`/users/${id}`);
-      setUser(response.data);
-    };
-    fetchUser();
-  }, [id]);
+
+  const ButtonContent = (
+    <>
+      <Button
+        variant="contained"
+        onClick={() => navigate(`/my/profile/edit/${id}`)}
+        sx={{
+          backgroundColor: "#51087E",
+          "&:hover": {
+            backgroundColor: "#51087E",
+          },
+        }}
+      >
+        Edit Profile
+      </Button>
+    </>
+  );
+
   const content = !user ? (
-    <CircularProgressComponent />
+    <Navigate to="/login" />
   ) : (
     <>
-      <Container component="main" maxWidth="xs">
-        <h1>Welcome, {user.fullname}</h1>
-        <Button
-          onClick={() => {
-            navigate(`/my/profile/edit/${id}`);
-          }}
-        >
-          Edit Your Profile
-        </Button>
+      <Container component="main" maxWidth="md">
+        <Typography variant="h4" component="h1" sx={{ m: 4 }} align="center">
+          Welcome, {user.fullname}!
+        </Typography>
+        <Typography variant="body1" sx={{ m: 2 }} align="center">
+          As a {user.role}, you can edit your profile, submit and review files,
+          and much more things!
+        </Typography>
       </Container>
     </>
   );

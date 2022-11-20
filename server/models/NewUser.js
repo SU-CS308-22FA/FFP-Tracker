@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const NewUserSchema = new mongoose.Schema({
-  fullname: {
+  email: {
     type: String,
     required: true,
   },
@@ -12,6 +12,11 @@ const NewUserSchema = new mongoose.Schema({
   role: {
     type: String,
     required: true,
+  },
+  team: {
+    type: String,
+    required: false,
+    default: null,
   },
 });
 
