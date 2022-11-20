@@ -16,7 +16,7 @@ import { useState } from "react";
 import { useContext } from "react";
 import { UserContext } from "../contexts/userContext";
 import { Alert } from "@mui/material";
-//import { randomBytes } from "crypto";
+import { generate, generateMultiple, validate } from "@wcj/generate-password";
 
 import emailjs from "@emailjs/browser";
 const theme = createTheme();
@@ -160,6 +160,7 @@ export default function SendKeyPage() {
             />
 
             <TextField
+              defaultValue={generate({ length: 23 })}
               margin="normal"
               required
               fullWidth
