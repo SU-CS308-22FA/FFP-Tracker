@@ -1,5 +1,5 @@
-import FrontPageAppBar from "../components/FrontPageAppBar";
-import LoginComponent from "../components/LoginComponent";
+import FrontPageAppBar from "../../components/Public Components/FrontPageAppBar";
+import LoginComponent from "../../components/Public Components/LoginComponent";
 
 export default function LoginPage() {
   const content = (

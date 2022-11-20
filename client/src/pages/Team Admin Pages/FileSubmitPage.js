@@ -1,6 +1,5 @@
-import React from "react";
-import ProfileAppBar from "../components/ProfileAppBar";
-import FileSubmitComponent from "../components/FileSubmitComponent";
+import ProfileAppBar from "../../components/User Components/ProfileAppBar";
+import FileSubmitComponent from "../../components/Team Admin Components/FileSubmitComponent";
 
 export default function FileSubmitPage() {
   const content = (
