@@ -1,6 +1,6 @@
 import React from "react";
 import FrontPageAppBar from "../components/Public Components/FrontPageAppBar";
-import "bootstrap/dist/css/bootstrap.min.css";
+//import "bootstrap/dist/css/bootstrap.min.css";
 import ContactUs from "../components/NotificationForm";
 
 export default function NotificationPage() {
