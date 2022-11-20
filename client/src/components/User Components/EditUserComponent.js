@@ -1,8 +1,7 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import CircularProgressComponent from "./CircularProgressComponent";
+import CircularProgressComponent from "../Public Components/CircularProgressComponent";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -11,7 +10,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import { Alert } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
-import FFP_API from "../app/api";
+import FFP_API from "../../app/api";
 
 const theme = createTheme();
 
@@ -71,7 +70,9 @@ export default function EditUserComponent() {
     }
   };
 
-  const handleDeleteAccount = async (e) => {};
+  const handleDeleteAccount = async (e) => {
+    // Look at here!
+  };
 
   return !user ? (
     <CircularProgressComponent />

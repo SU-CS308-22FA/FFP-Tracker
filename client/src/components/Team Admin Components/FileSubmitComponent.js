@@ -8,8 +8,8 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import { Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import FFP_API from "../app/api";
-import { UserContext } from "../contexts/userContext";
+import FFP_API from "../../app/api";
+import { UserContext } from "../../contexts/userContext";
 import FileUploadComponent from "./FileUploadComponent";
 import { useContext } from "react";
 

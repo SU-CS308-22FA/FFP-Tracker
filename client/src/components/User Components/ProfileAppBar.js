@@ -7,11 +7,10 @@ import { Link } from "react-router-dom";
 import { Avatar, Button } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useContext } from "react";
-import { UserContext } from "../contexts/userContext";
+import { UserContext } from "../../contexts/userContext";
 
 function ProfileAppBar(navItems) {
   const { user, setUser } = useContext(UserContext);
-  console.log(user._id);
   const nav = navItems["navItems"];
   return (
     <Box sx={{ display: "flex" }}>

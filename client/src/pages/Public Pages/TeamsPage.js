@@ -1,5 +1,5 @@
-import FrontPageAppBar from "../components/FrontPageAppBar";
-import TeamsComponent from "../components/TeamsComponent";
+import FrontPageAppBar from "../../components/Public Components/FrontPageAppBar";
+import TeamsComponent from "../../components/Public Components/TeamsComponent";
 
 export default function TeamsPage() {
   const content = (

@@ -1,6 +1,5 @@
 import { Box, Typography, Container } from "@mui/material";
-import React from "react";
-import FrontPageAppBar from "../components/FrontPageAppBar";
+import FrontPageAppBar from "../../components/Public Components/FrontPageAppBar";
 import { Avatar } from "@mui/material";
 
 export default function HomePage() {

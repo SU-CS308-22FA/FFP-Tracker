@@ -18,7 +18,7 @@ const login = asyncHandler(async (req, res) => {
   }
   const match = await bcrypt.compare(password, foundUser.password);
   if (!match) return res.status(401).json({ error: "Wrong Credentials!" });
-  return res
+  res
     .status(200)
     .json({ message: "Logged in", user: foundUser, isLoggedIn: true });
 });
