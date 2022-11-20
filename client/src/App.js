@@ -7,6 +7,7 @@ import TeamsPage from "./pages/TeamsPage";
 import DetailedTeamPage from "./pages/DetailedTeamPage";
 import EditUserPage from "./pages/EditUserPage";
 import ProfilePage from "./pages/ProfilePage";
+import NotificationPage from "./pages/NotificationPage";
 import { UserContextProvider } from "./contexts/userContext";
 import FileSubmitPage from "./pages/FileSubmitPage";
 
@@ -28,6 +29,7 @@ function App() {
           <Route path="submit/:id" element={<FileSubmitPage />} />
         </Route>
         <Route path="/submit" element={<FileSubmitPage />} />
+        <Route path="/notification" element={<NotificationPage />} />
       </Routes>
     </UserContextProvider>
   );

@@ -25,6 +25,7 @@ export default function HomePage() {
           React, Node.js, Express, and MongoDB. The site is hosted on Heroku.
         </Typography>
       </Container>
+
     </>
   );
   return content;

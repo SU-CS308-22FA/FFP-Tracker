@@ -6,6 +6,7 @@ export default function DetailedTeamPage() {
     <>
       <CustomAppBar navItems={["Home", "Teams"]} />
       <DetailedTeamPageComponent />
+      
     </>
   );
   return content;
