@@ -5,25 +5,25 @@ export default function HomePage() {
   const content = (
     <>
       <FrontPageAppBar navItems={["Teams", "Notification", "Login", "Sign Up"]} />
-      <center>
-        <h1>About This Site</h1>
-      </center>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque lacus
-        arcu, sodales vitae libero quis, suscipit elementum tortor. Maecenas
-        varius finibus magna, vel varius libero porttitor at. Pellentesque
-        habitant morbi tristique senectus et netus et malesuada fames ac turpis
-        egestas. Nulla porta in velit eleifend cursus. Duis varius vehicula
-        vehicula. Nam dignissim blandit feugiat. Praesent vitae massa mauris.
-        Vestibulum tempor nisl et condimentum hendrerit. Lorem ipsum dolor sit
-        amet, consectetur adipiscing elit. Quisque lacus arcu, sodales vitae
-        libero quis, suscipit elementum tortor. Maecenas varius finibus magna,
-        vel varius libero porttitor at. Pellentesque habitant morbi tristique
-        senectus et netus et malesuada fames ac turpis egestas. Nulla porta in
-        velit eleifend cursus. Duis varius vehicula vehicula. Nam dignissim
-        blandit feugiat. Praesent vitae massa mauris. Vestibulum tempor nisl et
-        condimentum hendrerit.
-      </p>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
+        <Avatar
+          align="center"
+          src="favicon.ico"
+          sx={{ width: 400, height: 200 }}
+          variant="square"
+        />
+      </Box>
+      <Typography variant="h4" align="center" sx={{ mt: 4 }}>
+        About This Site - Financial Fair Play Tracker
+      </Typography>
+      <Container maxWidth="md">
+        <Typography variant="body1" align="center" sx={{ m: 4 }}>
+          This site is for TFF to track the financial status of the teams in the
+          Turkish Super League, developed by Team 19. The site is built using
+          React, Node.js, Express, and MongoDB. The site is hosted on Heroku.
+        </Typography>
+      </Container>
+
     </>
   );
   return content;

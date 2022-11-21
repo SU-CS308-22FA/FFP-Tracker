@@ -15,6 +15,7 @@ import PersistLogin from "./components/PersistLogin";
 import SendKeyPage from "./pages/TFF Admin Pages/SendKeyPage";
 import FileSubmitPage from "./pages/Team Admin Pages/FileSubmitPage";
 import NotificationPage from "./pages/NotificationPage";
+import SendNotificationPage from "./pages/SendNotificationPage";
 
 function App() {
   return (
@@ -44,6 +45,8 @@ function App() {
           </Route>
         </Route>
         <Route path="/notification" element={<NotificationPage />} />
+        <Route path="/sendnotification" element={<SendNotificationPage />} />
+        
       </Routes>
     </UserContextProvider>
   );
