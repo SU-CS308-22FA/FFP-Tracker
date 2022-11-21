@@ -39,18 +39,6 @@ export default function ProfilePageComponent() {
   }, [setUser, setNotifications, id]);
 
 
-  // get user name from user id
-  const getUserName = (senderid) => {
-    const user = FFP_API.get(`/users/${senderid}`);
-    return user.data.fullname;
-  }; 
-
-// mark a notification as read
-  const markAsRead = async (notificationid) => {
-    const response = await FFP_API.patch(`/notifications/${notificationid}`);
-    console.log(response.data);
-    setNotifications(response.data);
-  };
 
   // delete a notification
   const deleteNotification = async (notificationid) => {
@@ -72,6 +60,50 @@ export default function ProfilePageComponent() {
   };
 
 
+const getUserByID = async (id) => {
+  const response = await FFP_API.get(`/users/${id}`);
+  return response.data;
+}
+
+//get user mail by username
+const getUserMailbyUsername = async (username) => {
+  const response = await FFP_API.get(`/users/`);
+  console.log(response.data);
+  const user = response.data.find(user => user.username === username);
+  return user.email;
+}
+
+// create a form for creating a notification
+  const createNotificationForm = async (e) => {
+    e.preventDefault();
+    console.log(e.target.message.value);
+    console.log(e.target.subject.value);
+    const senderid = await getUserMailbyUsername(e.target.sender.value);
+    const recieverid = await getUserMailbyUsername(e.target.reciever.value);
+    console.log(e.target.message.value);
+    console.log(e.target.subject.value);
+    createNotification(senderid, recieverid, e.target.subject.value, e.target.message.value);
+    e.target.reset();
+  };
+
+  // create a form content for creating a notification
+  const createNotificationFormContent = () => {
+    return (
+      <form onSubmit={createNotificationForm}>
+        <label> Sender: </label>
+        <input type="text" name="sender" />
+        <label> Reciever: </label>
+        <input type="text" name="reciever" />
+        <label> Subject: </label>
+        <input type="text" name="subject" />
+        <label> Message: </label>
+        <input type="text" name="message" />
+        <input type="submit" value="Create Notification" />
+      </form>
+    );
+  };
+
+ 
 
 
 // create a notification template showing the notification subject, message, from and read status using list and list items
@@ -84,7 +116,6 @@ export default function ProfilePageComponent() {
         <Divider variant="inset" component="li" />
         <ListItem>
           <ListItemText primary={notification.sender}/>
-          <Button variant="contained" onClick={() => markAsRead(notification._id)}>Mark as Read</Button>
           <Button variant="contained" onClick={() => deleteNotification(notification._id)}>Delete</Button>
         </ListItem>
         
@@ -97,6 +128,7 @@ export default function ProfilePageComponent() {
   function showNotifications(notifications) {
     let unread = [];
     let read = [];
+    let all = [];
     for (const [key, value] of Object.entries(notifications)) {
       if (value.read === false && value.reciever === user._id) {
         unread.push(value);
@@ -104,19 +136,37 @@ export default function ProfilePageComponent() {
         read.push(value);
       }
     }
+
+    for (const [key, value] of Object.entries(notifications)) {
+      all.push(value);
+    }
+
+
+    // return (
+    //   <div>
+    //     <Typography variant="h5" component="h2" gutterBottom>
+    //       Unread Notifications
+    //     </Typography>
+    //     {unread.map((notification) => ( notificationTemplate(notification)))}
+    //     <Typography variant="h5" component="h2" gutterBottom>
+    //       Read Notifications
+    //     </Typography>
+    //     {read.map((notification) => ( notificationTemplate(notification)))}
+    //   </div>
+    // );
+
     return (
       <div>
         <Typography variant="h5" component="h2" gutterBottom>
-          Unread Notifications
+          All Notifications
         </Typography>
-        {unread.map((notification) => ( notificationTemplate(notification)))}
-        <Typography variant="h5" component="h2" gutterBottom>
-          Read Notifications
-        </Typography>
-        {read.map((notification) => ( notificationTemplate(notification)))}
+        {all.map((notification) => ( notificationTemplate(notification)))}
       </div>
     );
+
   }
+
+// <Button variant="contained" sx={{ m: 2 }} onClick={() => createNotification("636f949c4f57d04b87cb2b98", "636abddd67312dcd2ad11076", "Test Subject", "Test Message")}> Create Notification</Button>
 
   
 
@@ -132,7 +182,6 @@ export default function ProfilePageComponent() {
           As a {user.role}, you can edit your profile, submit and review files,
           and much more things!
         </Typography>
-        <Button variant="contained" sx={{ m: 2 }} onClick={() => createNotification("636f949c4f57d04b87cb2b98", "636abddd67312dcd2ad11076", "Test Subject", "Test Message")}> Create Notification</Button>
         {showNotifications(notifications)}
               
       </Container>
