@@ -26,14 +26,21 @@ const createNotification = asyncHandler(async (req, res) => {
     if (!reciever || !sender || !message || !subject) {
         return res.status(400).json({ error: "All fields are required!" });
     }
-    const notification = await Notification.create({
-        reciever: reciever,
-        sender: sender,
-        message: message,
-        subject: subject,
-        read: false,
-    });
-    return res.status(201).json(notification);
+    try {
+        const notification = await Notification.create({
+            reciever: reciever,
+            sender: sender,
+            message: message,
+            subject: subject,
+            read: false,
+        });
+        return res.status(201).json(notification);
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Internal Server Error!" });
+    }
+    
 });
 
 

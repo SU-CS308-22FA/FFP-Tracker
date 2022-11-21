@@ -8,12 +8,14 @@ export default function NotificationPage() {
     <>
       <FrontPageAppBar navItems={["Home", "Teams", "Login", "Sign Up"]} />
       <center>
-        <h1>Notifications</h1>
+        <h1>Send Notifications</h1>
       </center>
       <div className="App">
+        <br></br>
         <div className="container">
           <ContactUs />
         </div>
+        <br></br>
       </div>
     </>
   );

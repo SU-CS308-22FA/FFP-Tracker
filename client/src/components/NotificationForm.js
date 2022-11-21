@@ -3,13 +3,48 @@ import emailjs from "emailjs-com";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Button } from "@mui/material";
+import FFP_API from "../app/api";
+import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+
 //import form from "react-bootstrap/Form";
 
 export default function ContactUs() {
+    // const[user, setUser] = useState(null);
+    // const { id } = useParams();
+    // useEffect(() => {
+    //     const fetchUser = async () => {
+    //         const response = await FFP_API.get(`/users/${id}`);
+    //         setUser(response.data);
+    //     };
+    //     fetchUser();
+    // }, [setUser, id]);
+
+
+    //create a notification from the contact form
+    function createNotification(senderid, recieverid, subject, message) {
+        const response = FFP_API.post(`/notifications/`, {
+            sender: senderid,
+            reciever: recieverid,
+            subject: subject,
+            message: message,
+        });
+        console.log(response.data);
+    }
+
+    //get user id by email
+    const getUserIDbyEmail = async (email) => {
+        const response = await FFP_API.get(`/users/`);
+        console.log(response.data);
+        const user = response.data.find(user => user.email === email);
+        return user._id;
+    }
+
 
     function sendEmail(e) {
         e.preventDefault();
-
+        console.log(e.target.message.value);
+        console.log(e.target.subject.value);
     emailjs.sendForm('gmail', 'template_46kzdyk', e.target, 'vHB_tCaBZcPIUtpPO')
         .then((result) => {
             console.log(result.text);
@@ -20,6 +55,7 @@ export default function ContactUs() {
     }
 
     
+
 
 
     return (
@@ -43,6 +79,7 @@ export default function ContactUs() {
                         placeholder="To EMail"
                         variant="outlined"
                         name="to_email"
+                        
                     />
                 </div>
                 <div className="col-8 form-group pt-5 mx-auto">
@@ -54,6 +91,17 @@ export default function ContactUs() {
                         placeholder="To Name"
                         variant="outlined"
                         name="to_name"
+                    />
+                </div>
+                <div className="col-8 form-group pt-5 mx-auto">
+                <TextField
+                        required
+                        id="outlined-required"
+                        label="From Email"
+                        defaultValue=""
+                        placeholder="From EMail"
+                        variant="outlined"
+                        name="from_email"
                     />
                 </div>
                 <div className="col-8 form-group pt-5 mx-auto">
@@ -100,34 +148,4 @@ export default function ContactUs() {
         </>
     );
 
-
-
-    // return(
-    //     <div>
-    //         <div className="container">
-    //         <form onSubmit={sendEmail}>
-    //                 <div className="row pt-5 mx-auto">
-    //                     <div className="col-8 form-group pt-2 mx-auto">
-    //                         <input type="text" className="form-control" placeholder="To Email Adress" name="to_email"/>
-    //                     </div>  
-    //                     <div className="col-8 form-group pt-2 mx-auto">
-    //                         <input type="text" className="form-control" placeholder="To" name="to_name"/>
-    //                     </div>
-    //                     <div className="col-8 form-group pt-2 mx-auto">
-    //                         <input type="text" className="form-control" placeholder="From" name="from_name"/>
-    //                     </div>
-    //                     <div className="col-8 form-group pt-2 mx-auto">
-    //                         <input type="text" className="form-control" placeholder="Subject" name="subject"/>
-    //                     </div>
-    //                     <div className="col-8 form-group pt-2 mx-auto">
-    //                         <textarea className="form-control" id="" cols="30" rows="8" placeholder="Your message" name="message"></textarea>
-    //                     </div>
-    //                     <div className="col-8 pt-3 mx-auto">
-    //                         <input type="submit" className="btn btn-info" value="Send Notification"></input>
-    //                     </div>
-    //                 </div>
-    //             </form>
-    //         </div>
-    //     </div>
-    // )
 }
