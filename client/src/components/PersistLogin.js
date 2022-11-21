@@ -23,7 +23,6 @@ export default function PersistLogin() {
         };
         try {
           await FFP_API.request("/users/me", requestOptions).then((res) => {
-            console.log(res.data);
             setUser(res.data);
           });
         } catch (err) {

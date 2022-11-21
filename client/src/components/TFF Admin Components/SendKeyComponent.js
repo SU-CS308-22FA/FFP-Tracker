@@ -1,32 +1,29 @@
-import * as React from "react";
-import { useRef } from "react";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
+import {
+  Alert,
+  Button,
+  CssBaseline,
+  TextField,
+  Box,
+  Container,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+} from "@mui/material";
+import { useRef, useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
 import FFP_API from "../../app/api";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { useContext } from "react";
-import { UserContext } from "../../contexts/userContext";
-import { Alert } from "@mui/material";
 import { generate } from "@wcj/generate-password";
 import emailjs from "@emailjs/browser";
 
 const theme = createTheme();
 
 export default function SendKeyComponent() {
-  const { user } = useContext(UserContext);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const form = useRef();
-  const [role, setRole] = React.useState("");
+  const [role, setRole] = useState("");
   const navigate = useNavigate();
 
   const handleChange = (event) => {
@@ -35,7 +32,6 @@ export default function SendKeyComponent() {
   const sendEmail = async (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    console.log(data.get("email"), data.get("role"), data.get("key"));
     try {
       if (role === "Team Admin") {
         await FFP_API.post("/register", {

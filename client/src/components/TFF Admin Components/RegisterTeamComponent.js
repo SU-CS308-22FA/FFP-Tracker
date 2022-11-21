@@ -1,23 +1,21 @@
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import {
+  Alert,
+  Button,
+  CssBaseline,
+  TextField,
+  Box,
+  Container,
+  Typography,
+  Grid,
+} from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState, useEffect } from "react";
-import { Alert } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import FFP_API from "../../app/api";
-import { useContext } from "react";
-import { UserContext } from "../../contexts/userContext";
 
 const theme = createTheme();
 
 export default function RegisterTeamComponent() {
-  const { id } = useParams();
-  const { user, setUser } = useContext(UserContext);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 

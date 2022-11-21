@@ -1,7 +1,7 @@
+import CircularProgressComponent from "./CircularProgressComponent";
+import FFP_API from "../../app/api";
 import Plot from "react-plotly.js";
 import { useState, useEffect } from "react";
-import FFP_API from "../../app/api";
-import CircularProgressComponent from "./CircularProgressComponent";
 import { Typography } from "@mui/material";
 
 export default function TeamsComponent() {

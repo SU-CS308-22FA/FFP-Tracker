@@ -1,18 +1,16 @@
 import Plot from "react-plotly.js";
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
 import FFP_API from "../../app/api";
 import CircularProgressComponent from "./CircularProgressComponent";
-import Typography from "@mui/material/Typography";
-import { Avatar, Grid } from "@mui/material";
-import { Box } from "@mui/system";
+import { Grid, Typography } from "@mui/material";
+import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 export default function DetailedTeamPageComponent() {
   const [team, setTeam] = useState(null);
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
-
   const { id } = useParams();
+
   useEffect(() => {
     const fetchTeam = async () => {
       const response = await FFP_API.get(`/teams/${id}`);

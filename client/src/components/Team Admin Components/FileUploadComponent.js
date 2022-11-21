@@ -10,16 +10,7 @@ export default function FileUploadComponent() {
     setSelectedFile(event.target.files[0]);
     setIsSelected(true);
   };
-  */
 
-  const handleFilePicker = () => {
-    const filestackApikey = "AJ72c4DJLSPqnTctAvQ0wz"; //insert here with your own api key
-    const filestack = client.init(filestackApikey);
-    const picker = filestack.picker();
-    picker.open();
-  };
-
-  /*
   const handleSubmission = async () => {
     const formData = new FormData();
     formData.append("File", selectedFile);
@@ -39,6 +30,13 @@ export default function FileUploadComponent() {
       });
   };
   */
+
+  const handleFilePicker = () => {
+    const filestackApikey = "AJ72c4DJLSPqnTctAvQ0wz"; //insert here with your own api key
+    const filestack = client.init(filestackApikey);
+    const picker = filestack.picker();
+    picker.open();
+  };
 
   return (
     <Button

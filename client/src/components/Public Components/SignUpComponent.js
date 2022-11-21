@@ -1,16 +1,17 @@
-import * as React from "react";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import {
+  Alert,
+  Button,
+  CssBaseline,
+  TextField,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+} from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState } from "react";
-import { Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import FFP_API from "../../app/api";
 import Avatar from "@mui/material/Avatar";
 
@@ -53,7 +54,6 @@ export default function SignUpComponent() {
       setErrorMessage(result);
     } else {
       try {
-        console.log(data.get("key"));
         await FFP_API.post("/users", {
           fullname: data.get("firstname") + " " + data.get("lastname"),
           username: data.get("username"),
