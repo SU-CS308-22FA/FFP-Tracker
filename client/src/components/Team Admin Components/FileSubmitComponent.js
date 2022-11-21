@@ -1,30 +1,28 @@
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
+import {
+  Alert,
+  Button,
+  CssBaseline,
+  TextField,
+  Box,
+  Container,
+  Typography,
+} from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Typography from "@mui/material/Typography";
-import { useState } from "react";
-import { Alert } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import FFP_API from "../../app/api";
 import { UserContext } from "../../contexts/userContext";
+import { useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
 import FileUploadComponent from "./FileUploadComponent";
-import { useContext } from "react";
+import FFP_API from "../../app/api";
 
 const theme = createTheme();
+
 export default function FileSubmitComponent() {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [date, setDate] = useState("");
 
   const navigate = useNavigate();
-
-  const handleChange = (event) => {
-    setDate(event.target.value);
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
