@@ -1,13 +1,14 @@
 const mongoose = require("mongoose");
 
 const NotificationSchema = new mongoose.Schema({
-    userId: {
+    reciever: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
     },
-    from: {
-        type: String,
+    sender: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true,
     },
     message: {
@@ -17,11 +18,13 @@ const NotificationSchema = new mongoose.Schema({
     read: {
         type: Boolean,
         default: false,
+        required: true,
     },
     subject: {
         type: String,
         required: true,
     },
+
 });
 
 module.exports = mongoose.model("Notification", NotificationSchema);
