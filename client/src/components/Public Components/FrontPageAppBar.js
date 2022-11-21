@@ -25,7 +25,6 @@ function FrontPageAppBar(navItems) {
           >
             <Link to="/home">FFP Tracker for TFF</Link>
           </Typography>
-
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navigationItems.map((item) => (
               <Button key={item} sx={{ color: "#FFFFFF" }}>
