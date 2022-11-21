@@ -9,6 +9,7 @@ import {
   MenuItem,
   FormControl,
   Select,
+  Typography,
 } from "@mui/material";
 import { useRef, useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -76,12 +77,15 @@ export default function SendKeyComponent() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 4,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
+          <Typography component="h1" variant="h4" sx={{ mb: 1 }}>
+            Send Key to A New User
+          </Typography>
           <Box ref={form} component="form" onSubmit={sendEmail}>
             <TextField
               margin="normal"
@@ -124,11 +128,9 @@ export default function SendKeyComponent() {
                 label="Team Name"
                 name="team"
                 autoComplete="team"
+                sx={{ mt: 3 }}
               />
             ) : (
-              <></>
-            )}
-            {role !== "Team Admin" ? (
               <Box
                 sx={{
                   marginTop: 1,
@@ -136,11 +138,8 @@ export default function SendKeyComponent() {
                   flexDirection: "column",
                   alignItems: "center",
                 }}
-              ></Box>
-            ) : (
-              <></>
+              />
             )}
-
             <TextField
               margin="normal"
               required
@@ -170,7 +169,13 @@ export default function SendKeyComponent() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 4 }}
+              sx={{
+                mt: 3,
+                backgroundColor: "#51087E",
+                "&:hover": {
+                  backgroundColor: "#51087E",
+                },
+              }}
             >
               SEND KEY
             </Button>
