@@ -26,7 +26,30 @@ export default function FileSubmitComponent() {
     setDate(event.target.value);
   };
 
-  const handleSubmit = async (event) => {};
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    try {
+      await FFP_API.patch(`/revenues/${user.team}`, {
+        ticketing: data.get("Ticketing"),
+        marketing: data.get("Marketing"),
+        broadcasting: data.get("Broadcasting"),
+        month: date.substring(0, 7),
+      });
+      await FFP_API.patch(`/expenses/${user.team}`, {
+        salaries: data.get("Salaries"),
+        amortization: data.get("Amortization"),
+        operational: data.get("Operational"),
+        month: date.substring(0, 7),
+      });
+
+      alert("Successfully submitted!");
+      navigate(`/my/profile/`);
+    } catch (error) {
+      setE(true);
+      setErrorMessage(error.response.data);
+    }
+  };
 
   return (
     <>
