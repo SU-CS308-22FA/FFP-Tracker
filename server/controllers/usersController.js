@@ -7,7 +7,7 @@ const bcrypt = require("bcrypt");
 // @route GET /users
 // @access private --> to be handled later
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find().select("-password").lean();
+  const users = await User.find().select("-password -__v").lean();
   if (!users?.length)
     return res.status(400).json({ error: "No users were found!" });
   res.json(users);
@@ -17,7 +17,7 @@ const getSingleUser = asyncHandler(async (req, res) => {
   const id = req.user;
   const role = req.role;
   if (!id) return res.status(403).json({ error: "Forbidden" });
-  const user = await User.findOne({ _id: id }).select("-password, -__v").lean();
+  const user = await User.findOne({ _id: id }).select("-password -__v").lean();
   if (!user) return res.status(404).json({ error: "User not found!" });
   res.json(user);
 });
@@ -27,7 +27,7 @@ const getSingleUser = asyncHandler(async (req, res) => {
 // @access private --> to be handled later
 const getUserById = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  const user = await User.findOne({ _id: id }).select("-password").lean();
+  const user = await User.findOne({ _id: id }).select("-password -__v").lean();
   if (!user) return res.status(400).json({ error: "No user was found!" });
   res.json(user);
 });

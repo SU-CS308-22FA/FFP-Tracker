@@ -29,7 +29,8 @@ function App() {
         </Route>
         {/*Protected Routes*/}
         <Route element={<PersistLogin />}>
-          <Route path="/my/profile/" element={<ProfilePage />}>
+          <Route path="/my/profile">
+            <Route index element={<ProfilePage />} />
             <Route path="edit" element={<EditUserPage />} />
             {/*<Route path="notifications" element={} />*/}
           </Route>

@@ -56,18 +56,18 @@ export default function RegisterTeamComponent() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="sm">
           <CssBaseline />
           <Box
             sx={{
-              marginTop: 8,
+              marginTop: 4,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
             }}
           >
-            <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
-              Register A New Team to the System
+            <Typography component="h1" variant="h4" sx={{ mb: 2 }}>
+              Add A Team to the System
             </Typography>
             <Box component="form" onSubmit={handleNewTeam}>
               <Grid container spacing={2}>
@@ -102,7 +102,14 @@ export default function RegisterTeamComponent() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 2, mb: 4 }}
+                sx={{
+                  mt: 2,
+                  mb: 4,
+                  backgroundColor: "#51087E",
+                  "&:hover": {
+                    backgroundColor: "#51087E",
+                  },
+                }}
               >
                 Register
               </Button>

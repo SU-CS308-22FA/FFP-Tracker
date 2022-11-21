@@ -6,7 +6,7 @@ export const UserContext = createContext();
 export const UserContextProvider = (props) => {
   const [token, setToken] = useState(sessionStorage.getItem("token"));
   const [login, setLogin] = useState(sessionStorage.getItem("login"));
-  const [user, setUser] = useState(sessionStorage.getItem("user"));
+  const [user, setUser] = useState(JSON.parse(sessionStorage.getItem("user")));
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -25,7 +25,7 @@ export const UserContextProvider = (props) => {
         }
         sessionStorage.setItem("token", token);
         sessionStorage.setItem("login", login);
-        sessionStorage.setItem("user", user);
+        sessionStorage.setItem("user", JSON.stringify(user));
       });
     };
     fetchUser();

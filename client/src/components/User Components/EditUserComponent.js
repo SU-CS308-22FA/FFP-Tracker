@@ -7,9 +7,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Alert } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import FFP_API from "../../app/api";
 
 const theme = createTheme();
@@ -17,16 +17,8 @@ const theme = createTheme();
 const USER_REGEX = /^[A-z0-9]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,20}$/;
 
-export default function EditUserComponent() {
-  const { id } = useParams();
-  const [user, setUser] = useState(null);
-  useEffect(() => {
-    const fetchUser = async () => {
-      const response = await FFP_API.get(`/users/${id}`);
-      setUser(response.data);
-    };
-    fetchUser();
-  }, [id]);
+export default function EditUserComponent({ user }) {
+  console.log(user);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -57,7 +49,7 @@ export default function EditUserComponent() {
       setErrorMessage(result);
     } else {
       try {
-        await FFP_API.patch(`/users/${id}`, {
+        await FFP_API.patch(`/users/${user._id}`, {
           fullname: data.get("fullname"),
           username: data.get("username"),
           password: data.get("password"),
