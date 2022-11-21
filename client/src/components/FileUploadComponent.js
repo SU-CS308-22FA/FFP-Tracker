@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
-import { client } from "filestack-react";
+//import { client } from "filestack-react";
 
 export default function FileUploadComponent() {
   const [selectedFile, setSelectedFile] = useState();
@@ -13,9 +13,9 @@ export default function FileUploadComponent() {
 
   const handleFilePicker = () => {
     const filestackApikey = "AJ72c4DJLSPqnTctAvQ0wz"; //insert here with your own api key
-    const filestack = client.init(filestackApikey);
-    const picker = filestack.picker();
-    picker.open();
+    // const filestack = client.init(filestackApikey);
+    // const picker = filestack.picker();
+    // picker.open();
   };
 
   const handleSubmission = async () => {

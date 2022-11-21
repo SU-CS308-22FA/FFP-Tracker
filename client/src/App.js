@@ -10,6 +10,7 @@ import ProfilePage from "./pages/ProfilePage";
 import NotificationPage from "./pages/NotificationPage";
 import { UserContextProvider } from "./contexts/userContext";
 import FileSubmitPage from "./pages/FileSubmitPage";
+import SendNotificationPage from "./pages/SendNotificationPage";
 
 function App() {
   return (
@@ -30,6 +31,8 @@ function App() {
         </Route>
         <Route path="/submit" element={<FileSubmitPage />} />
         <Route path="/notification" element={<NotificationPage />} />
+        <Route path="/sendnotification" element={<SendNotificationPage />} />
+        
       </Routes>
     </UserContextProvider>
   );

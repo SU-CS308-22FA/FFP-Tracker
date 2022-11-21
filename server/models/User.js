@@ -27,16 +27,12 @@ const UserSchema = new mongoose.Schema({
     ref: "Team",
     default: null,
   },
-  readNotif: {
+  notifications: {
     type: Array,
     default: [],
     required: false,
   },
-  unreadNotif: {
-    type: Array,
-    default: [],
-    required: false,
-  },
+  
 });
 
 module.exports = mongoose.model("User", UserSchema);

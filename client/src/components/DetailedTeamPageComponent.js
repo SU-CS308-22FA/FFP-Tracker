@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import FFP_API from "../app/api";
 import CircularProgressComponent from "./CircularProgressComponent";
 import Typography from "@mui/material/Typography";
-import { Avatar, Grid } from "@mui/material";
+import { Avatar, Button, Grid } from "@mui/material";
 import { Box } from "@mui/system";
 
 export default function DetailedTeamPageComponent() {
@@ -133,6 +133,10 @@ export default function DetailedTeamPageComponent() {
             <Box sx={{ m: 2, display: "flex", justifyContent: "center" }}>
               <Avatar align="center" />
             </Box>
+            <Typography variant="h6" align="center">
+            <Button variant="contained" color="secondary" href="/sendnotification"> SEND NOTIFICATION </Button>
+            </Typography>
+            
             <Grid container spacing={2} sx={{ mt: 6 }}>
               <Grid item xs={6}>
                 <Typography variant="body1" align="center">
