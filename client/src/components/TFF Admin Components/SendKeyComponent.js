@@ -9,20 +9,20 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import FFP_API from "../app/api";
+import Select from "@mui/material/Select";
+import FFP_API from "../../app/api";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useContext } from "react";
-import { UserContext } from "../contexts/userContext";
+import { UserContext } from "../../contexts/userContext";
 import { Alert } from "@mui/material";
-import { generate, generateMultiple, validate } from "@wcj/generate-password";
-
+import { generate } from "@wcj/generate-password";
 import emailjs from "@emailjs/browser";
+
 const theme = createTheme();
-export default function SendKeyPage() {
-  function generateRandomKey() {}
-  const { user, setUser } = useContext(UserContext);
+
+export default function SendKeyComponent() {
+  const { user } = useContext(UserContext);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const form = useRef();
@@ -34,42 +34,40 @@ export default function SendKeyPage() {
   };
   const sendEmail = async (e) => {
     e.preventDefault();
-
-    await emailjs
-      .sendForm(
-        "service_rqfjoti",
-        "contact_form",
-        form.current,
-        "TC_tgAG2yFIFr2Izm"
-      )
-      .then(
-        (result) => {
-          console.log(result.text);
-        },
-        (error) => {
-          console.log(error.text);
-        }
-      );
-
     const data = new FormData(e.currentTarget);
-
+    console.log(data.get("email"), data.get("role"), data.get("key"));
     try {
       if (role === "Team Admin") {
         await FFP_API.post("/register", {
           email: data.get("email"),
           key: data.get("key"),
-          role: data.get("role"),
+          role: role,
           team: data.get("team"),
         });
       } else {
         await FFP_API.post("/register", {
           email: data.get("email"),
           key: data.get("key"),
-          role: data.get("role"),
+          role: role,
         });
       }
       alert("Successfully key registered!");
-      navigate(`/my/profile/${user._id}`);
+      await emailjs
+        .sendForm(
+          "service_rqfjoti",
+          "contact_form",
+          form.current,
+          "TC_tgAG2yFIFr2Izm"
+        )
+        .then(
+          (result) => {
+            console.log(result.text);
+          },
+          (error) => {
+            console.log(error.text);
+          }
+        );
+      navigate(`/my/profile/`);
     } catch (error) {
       setE(true);
       setErrorMessage(error.response.data.error);
@@ -130,7 +128,6 @@ export default function SendKeyPage() {
                 label="Team Name"
                 name="team"
                 autoComplete="team"
-                autoFocus
               />
             ) : (
               <></>
@@ -156,9 +153,7 @@ export default function SendKeyPage() {
               label="Email Address"
               name="email"
               autoComplete="email"
-              autoFocus
             />
-
             <TextField
               defaultValue={generate({ length: 23 })}
               margin="normal"

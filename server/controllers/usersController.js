@@ -13,6 +13,15 @@ const getAllUsers = asyncHandler(async (req, res) => {
   res.json(users);
 });
 
+const getSingleUser = asyncHandler(async (req, res) => {
+  const id = req.user;
+  const role = req.role;
+  if (!id) return res.status(403).json({ error: "Forbidden" });
+  const user = await User.findOne({ _id: id }).select("-password, -__v").lean();
+  if (!user) return res.status(404).json({ error: "User not found!" });
+  res.json(user);
+});
+
 // @desc Get a user by id
 // @route GET /users/:id
 // @access private --> to be handled later
@@ -40,7 +49,7 @@ const createUser = asyncHandler(async (req, res) => {
   const duplicate_email = await User.findOne({ email }).lean().exec();
   if (!userInfo) {
     return res.status(400).json({ error: "Invalid key!" });
-  } else if (userInfo.fullname.toUpperCase() !== fullname.toUpperCase()) {
+  } else if (userInfo.email !== email) {
     return res
       .status(403)
       .json({ error: "You cannot register with this key!" });
@@ -117,6 +126,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 module.exports = {
   getAllUsers,
   getUserById,
+  getSingleUser,
   createUser,
   updateUser,
   deleteUser,

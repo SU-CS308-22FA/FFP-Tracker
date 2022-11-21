@@ -17,7 +17,7 @@ import { useContext } from "react";
 const theme = createTheme();
 
 export default function LoginComponent() {
-  const { user, setUser } = useContext(UserContext);
+  const { setToken, setLogin } = useContext(UserContext);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -29,17 +29,14 @@ export default function LoginComponent() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     try {
-      const res = await FFP_API.post(
-        "/auth",
-        {
-          email: data.get("email"),
-          password: data.get("password"),
-        },
-        { withCredentials: true }
-      );
-      setUser(res.data.user);
+      const res = await FFP_API.post("/auth", {
+        email: data.get("email"),
+        password: data.get("password"),
+      });
+      setToken(res.data.accessToken);
+      setLogin(true);
       alert("You have successfully logged in!");
-      navigate("/my/profile/" + res.data.user._id);
+      navigate("/my/profile/");
     } catch (error) {
       setE(true);
       setErrorMessage(error.response.data.error);
