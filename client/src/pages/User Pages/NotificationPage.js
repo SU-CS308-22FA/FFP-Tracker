@@ -12,15 +12,15 @@ export default function NotificationPage() {
   const content = (
     <>
       <ProfileAppBar user={user} />
+      <center>
+        <h1>Send Email Notification</h1>
+      </center>
       <div className="App">
+        <br></br>
         <div className="container">
-          <Button
-            variant="contained"
-            color="primary"
-            href="/sendnotification"
-            sx={{ mt: 2, alignSelf: "center" }}
-          >
-            Send Notification Through Email
+          <Button variant="contained" color="primary" href="/sendnotification">
+            {" "}
+            SEND EMAIL NOTIFICATION{" "}
           </Button>
         </div>
         <br></br>
