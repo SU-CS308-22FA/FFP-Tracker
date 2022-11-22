@@ -23,21 +23,31 @@ export default function TeamsComponent() {
   });
 
   function plot(team, revenues, expenses) {
-    let index;
+    let index1 = -1;
     for (let i = 0; i < revenues.length; i++) {
       if (revenues[i].teamId === team._id) {
-        index = i;
+        index1 = i;
         break;
       }
     }
-    const revs = revenues[index];
+    const revs = revenues[index1];
+    let index2 = -1;
     for (let i = 0; i < expenses.length; i++) {
       if (expenses[i].teamId === team._id) {
-        index = i;
+        index2 = i;
         break;
       }
     }
-    const exps = expenses[index];
+    const exps = expenses[index2];
+    if (index1 === -1 || index2 === -1) {
+      return (
+        <Box
+          sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+        >
+          <Typography>No data available for {team.teamName}.</Typography>
+        </Box>
+      );
+    }
     let months = [];
     let rev = [];
     let cumRev = [];
@@ -70,49 +80,59 @@ export default function TeamsComponent() {
         );
       }
     }
-    const plotContent = (
-      <Plot
-        key={team._id}
-        data={[
-          {
-            type: "bar",
-            x: months,
-            y: rev,
-            name: "Monthly Revenues",
-          },
-          {
-            type: "bar",
-            x: months,
-            y: exp,
-            name: "Monthly Expenses",
-          },
-          {
-            type: "line",
-            x: months,
-            y: cumExp,
-            name: "Cumulative Expenses",
-          },
-          {
-            type: "line",
-            x: months,
-            y: cumRev,
-            name: "Cumulative Revenues",
-          },
-        ]}
-        layout={{
-          width: 400,
-          height: 300,
-          title: `<a href = "/teams/${team._id}" target = "_self">${team.teamName}</a>`,
-          yaxis: {
-            title: "Amount in Million TLs",
-          },
-          xaxis: {
-            title: "Months",
-          },
-        }}
-      />
-    );
-    return plotContent;
+    if (months.length === 0) {
+      return (
+        <Box
+          sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+        >
+          <Typography>There are no records for {team.teamName}.</Typography>
+        </Box>
+      );
+    } else {
+      const plotContent = (
+        <Plot
+          key={team._id}
+          data={[
+            {
+              type: "bar",
+              x: months,
+              y: rev,
+              name: "Monthly Revenues",
+            },
+            {
+              type: "bar",
+              x: months,
+              y: exp,
+              name: "Monthly Expenses",
+            },
+            {
+              type: "line",
+              x: months,
+              y: cumExp,
+              name: "Cumulative Expenses",
+            },
+            {
+              type: "line",
+              x: months,
+              y: cumRev,
+              name: "Cumulative Revenues",
+            },
+          ]}
+          layout={{
+            width: 400,
+            height: 300,
+            title: `<a href = "/teams/${team._id}" target = "_self">${team.teamName}</a>`,
+            yaxis: {
+              title: "Amount in Million TLs",
+            },
+            xaxis: {
+              title: "Months",
+            },
+          }}
+        />
+      );
+      return plotContent;
+    }
   }
   const content = (
     <>

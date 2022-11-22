@@ -45,7 +45,7 @@ export default function RegisterTeamComponent() {
           seasonBudget: data.get("seasonBudget"),
         });
         alert("Team created successfully!");
-        navigate(`/`);
+        navigate(`/my/profile`);
       } catch (error) {
         setE(true);
         setErrorMessage(error.response.data.error);
@@ -85,7 +85,6 @@ export default function RegisterTeamComponent() {
                   <TextField
                     required
                     fullWidth
-                    type="number"
                     id="seasonBudget"
                     label="Season Budget"
                     name="seasonBudget"

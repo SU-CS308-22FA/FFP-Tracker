@@ -84,6 +84,11 @@ const createUser = asyncHandler(async (req, res) => {
   const user = await User.create(userObject);
   if (user) {
     NewUser.deleteOne({ key }).exec();
+    if (user.role === "Team Admin") {
+      const team = await Team.findOne({ _id: user.team }).exec();
+      team.teamAdmin = user._id;
+      await team.save();
+    }
     res.status(201).json({ message: `New user ${username} created` });
   } else {
     res.status(400).json({

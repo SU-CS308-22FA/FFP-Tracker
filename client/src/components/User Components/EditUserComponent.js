@@ -18,12 +18,9 @@ const USER_REGEX = /^[A-z0-9]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,20}$/;
 
 export default function EditUserComponent({ user }) {
-  console.log(user);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   const navigate = useNavigate();
-
   const validate = (data) => {
     setE(false);
     setErrorMessage("");
