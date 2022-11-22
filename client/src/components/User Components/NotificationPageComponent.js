@@ -233,10 +233,8 @@ export default function NotificationPageComponent() {
   };
 
   return (
-    <>
-      <Typography variant="h5" component="div" gutterBottom>
-        Notifications
-      </Typography>
+    <div>
+      <h1>Notifications</h1>
       <List
         sx={{
           alignItems: "center",
@@ -248,6 +246,6 @@ export default function NotificationPageComponent() {
         {displayNotifications(user._id)}
       </List>
       {sendNotificationForm()}
-    </>
+    </div>
   );
 }
