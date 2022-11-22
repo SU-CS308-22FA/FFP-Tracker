@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
 import CircularProgressComponent from "./CircularProgressComponent";
-import { Typography } from "@mui/material";
+import { Typography, TextField } from "@mui/material";
 import { useContext } from "react";
 import { UserContext } from "../contexts/userContext";
 import FFP_API from "../app/api";
@@ -17,9 +17,12 @@ import ListItemText from '@mui/material/ListItemText';
 
 
 
+
 export default function ProfilePageComponent() {
   const[notifications, setNotifications] = useState(null);
   const[user, setUser] = useState(null);
+  const[users, setUsers] = useState(null);
+  const[reciever, setReciever] = useState("");
 
   const { id } = useParams();
   useEffect(() => {
@@ -33,12 +36,20 @@ export default function ProfilePageComponent() {
       const response = await FFP_API.get(`/users/${id}`);
       setUser(response.data);
     };
+    const fetchUsers = async () => {
+      const response = await FFP_API.get(`/users/`);
+      setUsers(response.data);
+    };
     fetchNotifications();
     fetchUser();
+    fetchUsers();
     
   }, [setUser, setNotifications, id]);
 
 
+  const handleChange = (event) => {
+    setReciever(event.target.value);
+  };
 
   // delete a notification
   const deleteNotification = async (notificationid) => {
@@ -60,48 +71,71 @@ export default function ProfilePageComponent() {
   };
 
 
-const getUserByID = async (id) => {
-  const response = await FFP_API.get(`/users/${id}`);
-  return response.data;
-}
 
-//get user mail by username
-const getUserMailbyUsername = async (username) => {
-  const response = await FFP_API.get(`/users/`);
-  console.log(response.data);
-  const user = response.data.find(user => user.username === username);
-  return user.email;
-}
+// show all users
+  const showUsers = () => {
+    if (users) {
+      return users.map((user) => {
+        return (
+          <ListItem key={user.id}>
+            <ListItemText primary={user.username} />
+          </ListItem>
+        );
+      });
+    }
+  };
 
 // create a form for creating a notification
   const createNotificationForm = async (e) => {
     e.preventDefault();
+    const sender = user._id;
     console.log(e.target.message.value);
     console.log(e.target.subject.value);
-    const senderid = await getUserMailbyUsername(e.target.sender.value);
-    const recieverid = await getUserMailbyUsername(e.target.reciever.value);
-    console.log(e.target.message.value);
-    console.log(e.target.subject.value);
-    createNotification(senderid, recieverid, e.target.subject.value, e.target.message.value);
+    console.log(sender);
+    console.log(e.target.reciever.value);
+    createNotification(sender, e.target.reciever.value, e.target.subject.value, e.target.message.value);
     e.target.reset();
   };
 
-  // create a form content for creating a notification
-  const createNotificationFormContent = () => {
+
+  //create a notification form for the user
+  const createNotificationFormComponent = () => {
     return (
-      <form onSubmit={createNotificationForm}>
-        <label> Sender: </label>
-        <input type="text" name="sender" />
-        <label> Reciever: </label>
-        <input type="text" name="reciever" />
-        <label> Subject: </label>
-        <input type="text" name="subject" />
-        <label> Message: </label>
-        <input type="text" name="message" />
-        <input type="submit" value="Create Notification" />
-      </form>
+      <Box
+        component="form"
+        sx={{
+          '& .MuiTextField-root': { m: 1, width: '25ch' },
+        }}
+        noValidate
+        autoComplete="off"
+        onSubmit={createNotificationForm}
+      >
+        <div>
+          <TextField
+            required
+            id="reciever"
+            label="Reciever"
+            defaultValue=""
+          />
+          <TextField
+            required
+            id="subject"
+            label="Subject"
+            defaultValue=""
+          />
+          <TextField
+            required
+            id="message"
+            label="Message"
+            defaultValue=""
+          />
+        </div>
+        <Button type="submit" variant="contained">Create Notification</Button>
+      </Box>
     );
   };
+
+
 
  
 
@@ -138,8 +172,11 @@ const getUserMailbyUsername = async (username) => {
     }
 
     for (const [key, value] of Object.entries(notifications)) {
-      all.push(value);
+      if(value.reciever === user._id){
+        all.push(value);
+      }
     }
+
 
 
     // return (
@@ -183,6 +220,9 @@ const getUserMailbyUsername = async (username) => {
           and much more things!
         </Typography>
         {showNotifications(notifications)}
+
+        Send A Notification
+        {createNotificationFormComponent()}
               
       </Container>
     </>

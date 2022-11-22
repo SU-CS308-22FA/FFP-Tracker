@@ -32,13 +32,9 @@ export default function ContactUs() {
         console.log(response.data);
     }
 
-    //get user id by email
-    const getUserIDbyEmail = async (email) => {
-        const response = await FFP_API.get(`/users/`);
-        console.log(response.data);
-        const user = response.data.find(user => user.email === email);
-        return user._id;
-    }
+    
+    
+
 
 
     function sendEmail(e) {
@@ -51,6 +47,8 @@ export default function ContactUs() {
         }, (error) => {
             console.log(error.text);
         });
+
+        //createNotification(getUserID(e.target.from_email.value), getUserID(e.target.to_email.value), e.target.subject.value, e.target.message.value);
         e.target.reset()
     }
 
