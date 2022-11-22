@@ -131,13 +131,6 @@ export default function DetailedTeamPageComponent() {
                 <a href={team.wikiLink}>{team.teamName}</a>
               </Typography>
             </Typography>
-            <Box sx={{ m: 2, display: "flex", justifyContent: "center" }}>
-              <Avatar align="center" />
-            </Box>
-            <Typography variant="h6" align="center">
-            <Button variant="contained" color="secondary" href="/sendnotification"> SEND NOTIFICATION </Button>
-            </Typography>
-            
             <Grid container spacing={2} sx={{ mt: 6 }}>
               <Grid item xs={6}>
                 <Typography variant="body1" align="center">
