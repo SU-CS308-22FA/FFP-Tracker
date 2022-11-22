@@ -5,7 +5,7 @@ import { Avatar } from "@mui/material";
 export default function HomePage() {
   const content = (
     <>
-      <FrontPageAppBar navItems={["Teams", "Login", "Sign Up"]} />
+      <FrontPageAppBar navItems={["Teams", "Notification", "Login", "Sign Up"]} />
       <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
         <Avatar
           align="center"
@@ -24,6 +24,7 @@ export default function HomePage() {
           React, Node.js, Express, and MongoDB. The site is hosted on Heroku.
         </Typography>
       </Container>
+
     </>
   );
   return content;
