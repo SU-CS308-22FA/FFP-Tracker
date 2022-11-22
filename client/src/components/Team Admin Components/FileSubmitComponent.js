@@ -13,6 +13,8 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import FileUploadComponent from "./FileUploadComponent";
 import FFP_API from "../../app/api";
+import {useEffect } from "react";
+
 
 const theme = createTheme();
 
@@ -21,8 +23,102 @@ export default function FileSubmitComponent() {
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [date, setDate] = useState("");
+  const [notification, setNotification] = useState(null);
+  const [users, setUsers] = useState(null);
+  const [teams, setTeams] = useState(null);
+
+  useEffect(() => {
+    const fetchNotification = async () => {
+      const response = await FFP_API.get(`/notifications`);
+      setNotification(response.data);
+    };
+    const fetchUsers = async () => {
+      const response = await FFP_API.get(`/users`);
+      setUsers(response.data);
+    };
+    const fetchTeams = async () => {
+      const response = await FFP_API.get(`/teams`);
+      setTeams(response.data);
+    };
+    fetchUsers();
+    fetchNotification();
+    fetchTeams();
+  }, [setNotification , setUsers, setTeams]);
+
+
+
+
+
 
   const navigate = useNavigate();
+
+  // get list of all users with role of TFF Admin
+  const getTFFAdmins = () => {
+    if (users) {
+      let tffAdmins = [];
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].role === "TFF Admin") {
+          tffAdmins.push(users[i]);
+        }
+      }
+      return tffAdmins;
+    }
+  };
+
+
+  // create notification function
+  function createNotification(sender, receiver, subject, message) {
+    FFP_API.post(`/notifications`, {
+      sender: sender,
+      receiver: receiver,
+      subject: subject,
+      message: message,
+    })
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.log(error);
+        setE(true);
+        setErrorMessage("Error creating notification Error:" + error);
+      });
+  }
+
+
+  // get team name from team id
+  const getTeamName = (id) => {
+    if (teams) {
+      for (let i = 0; i < teams.length; i++) {
+        if (teams[i]._id === id) {
+          return teams[i].name;
+        }
+      }
+    }
+  };
+
+  function sendNotificationToTFFAdmins() {
+    const tffAdmins = getTFFAdmins();
+    for (let i = 0; i < tffAdmins.length; i++) {
+      createNotification(
+        user._id,
+        tffAdmins[i]._id,
+        "File Submission",
+        "A file has been submitted for review by " + user.fullname + "-" + getTeamName(user.team)
+      );
+    }
+    console.log("succesfully send Notification To TFFAdmins");
+  }
+
+  function sendNotificationToUser() {
+    createNotification(
+      user._id,
+      user._id,
+      "File Submission",
+      "Your file has been submitted for review."
+    );
+    console.log("succesfully submitted file notification is sent"); 
+  }
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -42,12 +138,17 @@ export default function FileSubmitComponent() {
       });
 
       alert("Successfully submitted!");
+      sendNotificationToTFFAdmins();
+      sendNotificationToUser();
       navigate(`/my/profile/`);
     } catch (error) {
       setE(true);
       setErrorMessage(error.response.data);
     }
   };
+
+
+
 
   return (
     <>

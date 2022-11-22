@@ -22,13 +22,14 @@ const getNotificationById = asyncHandler(async (req, res) => {
 
 // create a new notification with a sender and reciever
 const createNotification = asyncHandler(async (req, res) => {
-    const { reciever, sender, message, subject } = req.body;
-    if (!reciever || !sender || !message || !subject) {
+    console.log("create notification");
+    const { receiver, sender, message, subject } = req.body;
+    if (!receiver || !sender || !message || !subject) {
         return res.status(400).json({ error: "All fields are required!" });
     }
     try {
         const notification = await Notification.create({
-            reciever: reciever,
+            receiver: receiver,
             sender: sender,
             message: message,
             subject: subject,

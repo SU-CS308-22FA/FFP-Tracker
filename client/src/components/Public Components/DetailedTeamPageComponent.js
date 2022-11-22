@@ -5,8 +5,7 @@ import { Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-import Typography from "@mui/material/Typography";
-import { Avatar, Button, Grid } from "@mui/material";
+import { Avatar, Button } from "@mui/material";
 import { Box } from "@mui/system";
 
 export default function DetailedTeamPageComponent() {
