@@ -94,7 +94,7 @@ export default function RegisterTeamComponent() {
               </Grid>
               <Box sx={{ mt: 2 }} />
               {e && (
-                <Alert variant="outlined" severity="error">
+                <Alert variant="outlined" severity="error" sx={{ mt: 1 }}>
                   {errorMessage}
                 </Alert>
               )}

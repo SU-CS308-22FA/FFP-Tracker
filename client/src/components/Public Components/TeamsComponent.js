@@ -2,7 +2,7 @@ import CircularProgressComponent from "./CircularProgressComponent";
 import FFP_API from "../../app/api";
 import Plot from "react-plotly.js";
 import { useState, useEffect } from "react";
-import { Typography } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 
 export default function TeamsComponent() {
   const [teams, setTeams] = useState(null);
@@ -119,7 +119,13 @@ export default function TeamsComponent() {
       <Typography variant="h4" align="center" sx={{ mt: 4 }}>
         All Teams in Super League
       </Typography>
-      <div>
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+        }}
+      >
         {!loading ? (
           teams.map((team) => {
             return plot(team, revenues, expenses);
@@ -127,7 +133,7 @@ export default function TeamsComponent() {
         ) : (
           <CircularProgressComponent />
         )}
-      </div>
+      </Box>
     </>
   );
   return content;
