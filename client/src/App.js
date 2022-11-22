@@ -34,15 +34,11 @@ function App() {
           <Route path="/my/profile">
             <Route index element={<ProfilePage />} />
             <Route path="edit" element={<EditUserPage />} />
-            {/*<Route path="notifications" element={} />*/}
-          </Route>
-          <Route path="/notifications">
-            <Route index element={<NotificationPage />}></Route>
+            <Route path="notifications" element={<NotificationPage />} />
           </Route>
           <Route path="/sendnotification">
             <Route index element={<SendNotificationPage />}></Route>
           </Route>
-
           <Route element={<RequireAuth allowedRoles={[ROLES.TEAM_ADMIN]} />}>
             <Route path="/submit" element={<FileSubmitPage />} />
           </Route>
@@ -51,8 +47,6 @@ function App() {
             <Route path="register" element={<SendKeyPage />} />
           </Route>
         </Route>
-        <Route path="/notification" element={<NotificationPage />} />
-        <Route path="/sendnotification" element={<SendNotificationPage />} />
       </Routes>
     </UserContextProvider>
   );
