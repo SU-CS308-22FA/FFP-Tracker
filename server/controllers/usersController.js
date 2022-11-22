@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const NewUser = require("../models/NewUser");
+const Team = require("../models/Team");
 const asyncHandler = require("express-async-handler"); // Lessen the try catch blocks
 const bcrypt = require("bcrypt");
 
@@ -7,10 +8,19 @@ const bcrypt = require("bcrypt");
 // @route GET /users
 // @access private --> to be handled later
 const getAllUsers = asyncHandler(async (req, res) => {
-  const users = await User.find().select("-password").lean();
+  const users = await User.find().select("-password -__v").lean();
   if (!users?.length)
     return res.status(400).json({ error: "No users were found!" });
   res.json(users);
+});
+
+const getSingleUser = asyncHandler(async (req, res) => {
+  const id = req.user;
+  const role = req.role;
+  if (!id) return res.status(403).json({ error: "Forbidden" });
+  const user = await User.findOne({ _id: id }).select("-password -__v").lean();
+  if (!user) return res.status(404).json({ error: "User not found!" });
+  res.json(user);
 });
 
 // @desc Get a user by id
@@ -18,7 +28,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 // @access private --> to be handled later
 const getUserById = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  const user = await User.findOne({ _id: id }).select("-password").lean();
+  const user = await User.findOne({ _id: id }).select("-password -__v").lean();
   if (!user) return res.status(400).json({ error: "No user was found!" });
   res.json(user);
 });
@@ -40,7 +50,7 @@ const createUser = asyncHandler(async (req, res) => {
   const duplicate_email = await User.findOne({ email }).lean().exec();
   if (!userInfo) {
     return res.status(400).json({ error: "Invalid key!" });
-  } else if (userInfo.fullname.toUpperCase() !== fullname.toUpperCase()) {
+  } else if (userInfo.email !== email) {
     return res
       .status(403)
       .json({ error: "You cannot register with this key!" });
@@ -52,16 +62,33 @@ const createUser = asyncHandler(async (req, res) => {
   // Hash the password
   const hashedPw = await bcrypt.hash(password, 10); // 10 Salt-rounds
   // Create and store the new user
-  const userObject = {
-    fullname,
-    username,
-    email,
-    password: hashedPw,
-    role: userInfo.role,
-  };
+  let userObject;
+  if (userInfo.role === "Team Admin") {
+    userObject = {
+      fullname,
+      username,
+      email,
+      password: hashedPw,
+      role: userInfo.role,
+      team: userInfo.team,
+    };
+  } else {
+    userObject = {
+      fullname,
+      username,
+      email,
+      password: hashedPw,
+      role: userInfo.role,
+    };
+  }
   const user = await User.create(userObject);
   if (user) {
     NewUser.deleteOne({ key }).exec();
+    if (user.role === "Team Admin") {
+      const team = await Team.findOne({ _id: user.team }).exec();
+      team.teamAdmin = user._id;
+      await team.save();
+    }
     res.status(201).json({ message: `New user ${username} created` });
   } else {
     res.status(400).json({
@@ -117,6 +144,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 module.exports = {
   getAllUsers,
   getUserById,
+  getSingleUser,
   createUser,
   updateUser,
   deleteUser,

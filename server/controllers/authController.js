@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const asyncHandler = require("express-async-handler");
+const jwt = require("jsonwebtoken");
 
 // @desc Login
 // @route POST /auth
@@ -10,15 +11,20 @@ const login = asyncHandler(async (req, res) => {
   if (!email || !password) {
     return res.status(400).json({ error: "All fields are required" });
   }
-  const foundUser = await User.findOne({ email }).exec();
+  const foundUser = await User.findOne({ email })
+    .select("-password, -__v")
+    .lean();
   if (!foundUser) {
     return res.status(404).json({ error: "Wrong Credentials!" });
   }
   const match = await bcrypt.compare(password, foundUser.password);
   if (!match) return res.status(401).json({ error: "Wrong Credentials!" });
-  return res
-    .status(200)
-    .json({ message: "Logged in", user: foundUser, isLoggedIn: true });
+  const accessToken = jwt.sign(
+    { id: foundUser._id, role: foundUser.role },
+    process.env.ACCESS_TOKEN_SECRET,
+    { expiresIn: "30m" }
+  );
+  res.status(200).json({ accessToken });
 });
 
 // @desc Login

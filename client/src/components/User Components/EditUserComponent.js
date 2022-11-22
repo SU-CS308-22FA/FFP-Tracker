@@ -1,8 +1,7 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
+import CircularProgressComponent from "../Public Components/CircularProgressComponent";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -11,20 +10,17 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import FFP_API from "../app/api";
+import FFP_API from "../../app/api";
 
 const theme = createTheme();
 
 const USER_REGEX = /^[A-z0-9]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,20}$/;
-const EMAIL_REGEX = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-export default function SignUpComponent() {
+export default function EditUserComponent({ user }) {
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   const navigate = useNavigate();
-
   const validate = (data) => {
     setE(false);
     setErrorMessage("");
@@ -35,15 +31,13 @@ export default function SignUpComponent() {
     } else if (!PWD_REGEX.test(data.get("password"))) {
       error =
         "Password must be 4-20 characters long and contain only letters, numbers, and !@#$%.";
-    } else if (!EMAIL_REGEX.test(data.get("email"))) {
-      error = "Email must be a valid email address.";
     } else if (data.get("password") !== data.get("repassword")) {
       error = "Passwords must match.";
     }
     return error;
   };
 
-  const handleSubmit = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const result = validate(data);
@@ -52,24 +46,26 @@ export default function SignUpComponent() {
       setErrorMessage(result);
     } else {
       try {
-        console.log(data.get("key"));
-        await FFP_API.post("/users", {
-          fullname: data.get("firstname") + " " + data.get("lastname"),
+        await FFP_API.patch(`/users/${user._id}`, {
+          fullname: data.get("fullname"),
           username: data.get("username"),
-          email: data.get("email"),
           password: data.get("password"),
-          key: data.get("key"),
         });
-        alert("Successfully created your account. Please log in!");
-        navigate("/login");
+        navigate("/users");
       } catch (error) {
         setE(true);
-        setErrorMessage(error.response.data.error);
+        setErrorMessage(error.response.data);
       }
     }
   };
 
-  return (
+  const handleDeleteAccount = async (e) => {
+    // Look at here!
+  };
+
+  return !user ? (
+    <CircularProgressComponent />
+  ) : (
     <>
       <ThemeProvider theme={theme}>
         <Container component="main" maxWidth="xs">
@@ -82,69 +78,33 @@ export default function SignUpComponent() {
               alignItems: "center",
             }}
           >
-            <Typography component="h1" variant="h5">
-              Sign Up
+            <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
+              Edit Your Information
             </Typography>
-            <Grid container justifyContent="flex-centre">
-              <Grid item sx={{ mt: 2, mb: 2 }}>
-                Already have an account? <Link href="/login">Sign in!</Link>
-              </Grid>
-            </Grid>
-            <Box component="form" onSubmit={handleSubmit}>
+            <Box component="form" onSubmit={handleUpdate}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
-                    name="key"
-                    required
-                    fullWidth
-                    id="key"
-                    label="Registration Key"
-                    autoFocus
-                  />
-                </Grid>
-                <Grid item xs={12} sm={5.5}>
-                  <TextField
                     autoComplete="given-name"
-                    name="firstname"
-                    required
+                    name="fullname"
                     fullWidth
-                    id="firstname"
-                    label="First Name"
+                    id="fullname"
+                    label="Full Name"
                     autoFocus
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6.5}>
-                  <TextField
-                    required
-                    fullWidth
-                    id="lastname"
-                    label="Last Name"
-                    name="lastname"
-                    autoComplete="family-name"
+                    value={user.fullname}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
-                    required
-                    fullWidth
-                    id="email"
-                    label="Email Address"
-                    name="email"
-                    autoComplete="email"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
                     fullWidth
                     id="username"
                     label="Username"
                     name="username"
+                    value={user.username}
                   />
                 </Grid>
                 <Grid item xs={12} sm={5.5}>
                   <TextField
-                    required
                     fullWidth
                     name="password"
                     label="Password"
@@ -155,7 +115,6 @@ export default function SignUpComponent() {
                 </Grid>
                 <Grid item xs={12} sm={6.5}>
                   <TextField
-                    required
                     fullWidth
                     name="repassword"
                     label="Re-Password"
@@ -176,7 +135,15 @@ export default function SignUpComponent() {
                 variant="contained"
                 sx={{ mt: 2, mb: 4 }}
               >
-                Sign Up
+                Update
+              </Button>
+              <Button
+                fullWidth
+                variant="outlined"
+                color="error"
+                onClick={handleDeleteAccount}
+              >
+                Delete Your account
               </Button>
             </Box>
           </Box>
