@@ -26,7 +26,7 @@ function ProfileAppBar() {
           Add Team
         </Button>
         <Button color="inherit" component={Link} to="/register">
-          Register User
+          Send Key
         </Button>
       </>
     );

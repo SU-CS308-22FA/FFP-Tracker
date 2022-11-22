@@ -47,11 +47,4 @@ function App() {
   );
 }
 
-/*
-<Route path="/my/profile/">
-          <Route path=":id" element={<ProfilePage />} />
-          <Route path="edit/:id" element={<EditUserPage />} />
-          <Route path="submit/:id" element={<FileSubmitPage />} />
-        </Route>
-*/
 export default App;

@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const NewUser = require("../models/NewUser");
+const Team = require("../models/Team");
 const asyncHandler = require("express-async-handler"); // Lessen the try catch blocks
 const bcrypt = require("bcrypt");
 
@@ -61,13 +62,25 @@ const createUser = asyncHandler(async (req, res) => {
   // Hash the password
   const hashedPw = await bcrypt.hash(password, 10); // 10 Salt-rounds
   // Create and store the new user
-  const userObject = {
-    fullname,
-    username,
-    email,
-    password: hashedPw,
-    role: userInfo.role,
-  };
+  let userObject;
+  if (userInfo.role === "Team Admin") {
+    userObject = {
+      fullname,
+      username,
+      email,
+      password: hashedPw,
+      role: userInfo.role,
+      team: userInfo.team,
+    };
+  } else {
+    userObject = {
+      fullname,
+      username,
+      email,
+      password: hashedPw,
+      role: userInfo.role,
+    };
+  }
   const user = await User.create(userObject);
   if (user) {
     NewUser.deleteOne({ key }).exec();
