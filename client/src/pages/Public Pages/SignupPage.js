@@ -4,7 +4,7 @@ import SignUpComponent from "../../components/Public Components/SignUpComponent"
 export default function SignupPage() {
   const content = (
     <>
-      <FrontPageAppBar navItems={["Home", "Teams", "Login"]} />
+      <FrontPageAppBar navItems={["Home", "Teams"]} />
       <SignUpComponent />
     </>
   );

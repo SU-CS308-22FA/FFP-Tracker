@@ -1,8 +1,11 @@
 import AppBar from "@mui/material/AppBar";
 import { Link } from "react-router-dom";
 import { Avatar, Box, Toolbar, Typography, Button } from "@mui/material";
+import { useContext } from "react";
+import { UserContext } from "../../contexts/userContext";
 
 function FrontPageAppBar(navItems) {
+  const { user } = useContext(UserContext);
   const navigationItems = navItems["navItems"];
   return (
     <Box sx={{ display: "flex" }}>
@@ -29,6 +32,15 @@ function FrontPageAppBar(navItems) {
                 </Link>
               </Button>
             ))}
+            {user ? (
+              <Button sx={{ color: "#FFFFFF" }}>
+                <Link to={`/my/profile`}>Profile</Link>
+              </Button>
+            ) : (
+              <Button sx={{ color: "#FFFFFF" }}>
+                <Link to={`/login`}>Login</Link>
+              </Button>
+            )}
           </Box>
         </Toolbar>
       </AppBar>
