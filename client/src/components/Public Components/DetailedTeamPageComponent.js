@@ -5,6 +5,10 @@ import { Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 
+import Typography from "@mui/material/Typography";
+import { Avatar, Button, Grid } from "@mui/material";
+import { Box } from "@mui/system";
+
 export default function DetailedTeamPageComponent() {
   const [team, setTeam] = useState(null);
   const [revenues, setRevenues] = useState(null);
@@ -128,6 +132,13 @@ export default function DetailedTeamPageComponent() {
                 <a href={team.wikiLink}>{team.teamName}</a>
               </Typography>
             </Typography>
+            <Box sx={{ m: 2, display: "flex", justifyContent: "center" }}>
+              <Avatar align="center" />
+            </Box>
+            <Typography variant="h6" align="center">
+            <Button variant="contained" color="secondary" href="/sendnotification"> SEND NOTIFICATION </Button>
+            </Typography>
+            
             <Grid container spacing={2} sx={{ mt: 6 }}>
               <Grid item xs={6}>
                 <Typography variant="body1" align="center">

@@ -7,6 +7,7 @@ import TeamsPage from "./pages/Public Pages/TeamsPage";
 import DetailedTeamPage from "./pages/Public Pages/DetailedTeamPage";
 import EditUserPage from "./pages/User Pages/EditUserPage";
 import ProfilePage from "./pages/User Pages/ProfilePage";
+import NotificationPage from "./pages/pages/NotificationPage"; // user pages ekle
 import { UserContextProvider } from "./contexts/userContext";
 import RegisterTeamPage from "./pages/TFF Admin Pages/RegisterTeamPage";
 import RequireAuth from "./components/RequireAuth";
@@ -14,6 +15,8 @@ import { ROLES } from "./app/roles";
 import PersistLogin from "./components/PersistLogin";
 import SendKeyPage from "./pages/TFF Admin Pages/SendKeyPage";
 import FileSubmitPage from "./pages/Team Admin Pages/FileSubmitPage";
+import SendNotificationPage from "./pages/SendNotificationPage";
+
 
 function App() {
   return (
@@ -34,6 +37,15 @@ function App() {
             <Route path="edit" element={<EditUserPage />} />
             {/*<Route path="notifications" element={} />*/}
           </Route>
+          <Route path="/notification">
+            <Route index element={<NotificationPage/>}>
+          </Route>
+          <Route path="/sendnotification">
+            <Route index element={<SendNotificationPage/>}>
+          </Route>
+
+
+
           <Route element={<RequireAuth allowedRoles={[ROLES.TEAM_ADMIN]} />}>
             <Route path="/submit" element={<FileSubmitPage />} />
           </Route>
@@ -42,6 +54,7 @@ function App() {
             <Route path="register" element={<SendKeyPage />} />
           </Route>
         </Route>
+
       </Routes>
     </UserContextProvider>
   );
