@@ -13,8 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import FileUploadComponent from "./FileUploadComponent";
 import FFP_API from "../../app/api";
-import {useEffect } from "react";
-
+import { useEffect } from "react";
 
 const theme = createTheme();
 
@@ -43,12 +42,7 @@ export default function FileSubmitComponent() {
     fetchUsers();
     fetchNotification();
     fetchTeams();
-  }, [setNotification , setUsers, setTeams]);
-
-
-
-
-
+  }, [setNotification, setUsers, setTeams]);
 
   const navigate = useNavigate();
 
@@ -65,10 +59,9 @@ export default function FileSubmitComponent() {
     }
   };
 
-
   // create notification function
-  function createNotification(sender, receiver, subject, message) {
-    FFP_API.post(`/notifications`, {
+  async function createNotification(sender, receiver, subject, message) {
+    await FFP_API.post(`/notifications`, {
       sender: sender,
       receiver: receiver,
       subject: subject,
@@ -84,18 +77,6 @@ export default function FileSubmitComponent() {
       });
   }
 
-
-  // get team name from team id
-  const getTeamName = (id) => {
-    if (teams) {
-      for (let i = 0; i < teams.length; i++) {
-        if (teams[i]._id === id) {
-          return teams[i].name;
-        }
-      }
-    }
-  };
-
   function sendNotificationToTFFAdmins() {
     const tffAdmins = getTFFAdmins();
     for (let i = 0; i < tffAdmins.length; i++) {
@@ -103,7 +84,7 @@ export default function FileSubmitComponent() {
         user._id,
         tffAdmins[i]._id,
         "File Submission",
-        "A file has been submitted for review by " + user.fullname + "-" + getTeamName(user.team)
+        "A file has been submitted for review by " + user.fullname
       );
     }
     console.log("succesfully send Notification To TFFAdmins");
@@ -116,39 +97,40 @@ export default function FileSubmitComponent() {
       "File Submission",
       "Your file has been submitted for review."
     );
-    console.log("succesfully submitted file notification is sent"); 
+    console.log("succesfully submitted file notification is sent");
   }
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    try {
-      await FFP_API.patch(`/revenues/${user.team}`, {
-        ticketing: data.get("Ticketing"),
-        marketing: data.get("Marketing"),
-        broadcasting: data.get("Broadcasting"),
-        month: date.substring(0, 7),
-      });
-      await FFP_API.patch(`/expenses/${user.team}`, {
-        salaries: data.get("Salaries"),
-        amortization: data.get("Amortization"),
-        operational: data.get("Operational"),
-        month: date.substring(0, 7),
-      });
-
-      alert("Successfully submitted!");
-      sendNotificationToTFFAdmins();
-      sendNotificationToUser();
-      navigate(`/my/profile/`);
-    } catch (error) {
+    if (!user?.team) {
       setE(true);
-      setErrorMessage(error.response.data);
+      setErrorMessage("You are not part of a team");
+    } else {
+      try {
+        await FFP_API.patch(`/revenues/${user.team}`, {
+          ticketing: data.get("Ticketing"),
+          marketing: data.get("Marketing"),
+          broadcasting: data.get("Broadcasting"),
+          month: date.substring(0, 7),
+        });
+        await FFP_API.patch(`/expenses/${user.team}`, {
+          salaries: data.get("Salaries"),
+          amortization: data.get("Amortization"),
+          operational: data.get("Operational"),
+          month: date.substring(0, 7),
+        });
+
+        alert("Successfully submitted!");
+        sendNotificationToTFFAdmins();
+        sendNotificationToUser();
+        navigate(`/my/profile/`);
+      } catch (error) {
+        setE(true);
+        setErrorMessage(error.response.data);
+      }
     }
   };
-
-
-
 
   return (
     <>

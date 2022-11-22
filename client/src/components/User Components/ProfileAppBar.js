@@ -62,7 +62,7 @@ function ProfileAppBar() {
             <Link to="/my/profile/edit">Edit Profile</Link>
           </Button>
           <Button sx={{ color: "#FFFFFF" }}>
-            <Link to="/notifications">Notifications</Link>
+            <Link to="/my/profile/notifications">Notifications</Link>
           </Button>
           <Button
             sx={{ color: "#FFFFFF" }}
