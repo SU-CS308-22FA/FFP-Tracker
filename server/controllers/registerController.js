@@ -35,12 +35,10 @@ const registerUser = asyncHandler(async (req, res) => {
   }
   let newUser;
   if (role === "Team Admin") {
-    console.log("here!");
     const teamExists = await Team.findOne({ teamName: team }).lean().exec();
     if (!teamExists) {
       return res.status(400).json({ error: "Team does not exist!" });
     }
-    console.log(teamExists._id);
     newUser = {
       email,
       key,

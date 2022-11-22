@@ -83,7 +83,23 @@ const createTeam = asyncHandler(async (req, res) => {
     currentBudget: seasonBudget,
   };
   const team = await Team.create(teamObject);
-  res.status(201).json(team);
+  if (team) {
+    const exp = await Expense.create({
+      teamId: team._id,
+      salaries: {},
+      amortization: {},
+      operational: {},
+    });
+    const rev = await Revenue.create({
+      teamId: team._id,
+      ticketing: {},
+      marketing: {},
+      broadcasting: {},
+    });
+    return res.status(201).json({ message: "Team created successfully!" });
+  } else {
+    res.status(500).json({ error: "Something went wrong!" });
+  }
 });
 
 module.exports = {
