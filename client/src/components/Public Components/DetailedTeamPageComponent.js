@@ -137,9 +137,16 @@ export default function DetailedTeamPageComponent() {
               <Avatar align="center" />
             </Box>
             <Typography variant="h6" align="center">
-            <Button variant="contained" color="secondary" href="/sendnotification"> SEND NOTIFICATION </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                href="/sendnotification"
+              >
+                {" "}
+                SEND NOTIFICATION{" "}
+              </Button>
             </Typography>
-            
+
             <Grid container spacing={2} sx={{ mt: 6 }}>
               <Grid item xs={6}>
                 <Typography variant="body1" align="center">
@@ -195,6 +202,7 @@ export default function DetailedTeamPageComponent() {
                   {" " + returnLastValueOfObject(revenues.broadcasting)} Mil. TL
                 </Typography>
               </Grid>
+              s
               <Grid item xs={6}>
                 <Typography variant="body1" align="center">
                   Last Month Salary Expenses:
