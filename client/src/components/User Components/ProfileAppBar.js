@@ -22,6 +22,9 @@ function ProfileAppBar() {
   } else if (user.role === "TFF Admin") {
     nav = (
       <>
+        <Button color="inherit" component={Link} to="/teams">
+          Teams
+        </Button>
         <Button color="inherit" component={Link} to="/newteam">
           Add Team
         </Button>
