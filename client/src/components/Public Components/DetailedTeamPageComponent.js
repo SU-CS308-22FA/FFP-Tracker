@@ -133,20 +133,16 @@ export default function DetailedTeamPageComponent() {
                 <a href={team.wikiLink}>{team.teamName}</a>
               </Typography>
             </Typography>
-            {user && user.role === "TFF Admin" ? (
-              <Typography variant="h6" align="center" sx={{ mt: 2 }}>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  href="/sendnotification"
-                >
-                  {" "}
-                  SEND NOTIFICATION{" "}
-                </Button>
-              </Typography>
-            ) : (
-              <></>
-            )}
+            <Typography variant="body1" align="center" sx={{ mt: 2 }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                href="/sendnotification"
+              >
+                {" "}
+                SEND NOTIFICATION{" "}
+              </Button>
+            </Typography>
             <Grid container spacing={2} sx={{ mt: 6 }}>
               <Grid item xs={6}>
                 <Typography variant="body1" align="center">
