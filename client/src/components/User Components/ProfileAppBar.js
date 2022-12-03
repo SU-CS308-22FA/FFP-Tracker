@@ -17,6 +17,9 @@ function ProfileAppBar() {
         <Button color="inherit" component={Link} to="/submit">
           Submit
         </Button>
+        <Button color="inherit" component={Link} to="/edit/team">
+          Edit Team
+        </Button>
       </>
     );
   } else if (user.role === "TFF Admin") {
