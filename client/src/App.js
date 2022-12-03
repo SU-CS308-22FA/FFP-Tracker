@@ -16,6 +16,7 @@ import PersistLogin from "./components/PersistLogin";
 import SendKeyPage from "./pages/TFF Admin Pages/SendKeyPage";
 import FileSubmitPage from "./pages/Team Admin Pages/FileSubmitPage";
 import SendNotificationPage from "./pages/User Pages/SendNotificationPage";
+import EditTeamPage from "./pages/Team Admin Pages/EditTeamPage";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           </Route>
           <Route element={<RequireAuth allowedRoles={[ROLES.TEAM_ADMIN]} />}>
             <Route path="/submit" element={<FileSubmitPage />} />
+            <Route path="edit/team/" element={<EditTeamPage />} />
           </Route>
           <Route element={<RequireAuth allowedRoles={[ROLES.TFF_ADMIN]} />}>
             <Route path="/newteam" element={<RegisterTeamPage />} />
