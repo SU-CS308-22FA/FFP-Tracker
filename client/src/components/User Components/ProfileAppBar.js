@@ -59,6 +59,9 @@ function ProfileAppBar() {
           </Typography>
           {nav}
           <Button sx={{ color: "#FFFFFF" }}>
+            <Link to="/status">File Status</Link>
+          </Button>
+          <Button sx={{ color: "#FFFFFF" }}>
             <Link to="/my/profile/edit">Edit Profile</Link>
           </Button>
           <Button sx={{ color: "#FFFFFF" }}>
