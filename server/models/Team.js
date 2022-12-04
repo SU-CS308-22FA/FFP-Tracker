@@ -14,7 +14,17 @@ const TeamSchema = new mongoose.Schema({
   wikiLink: {
     type: String,
     required: false,
+    default: "",
+  },
+  manager: {
+    type: String,
+    required: false,
     default: null,
+  },
+  logoURL: {
+    type: String,
+    required: false,
+    default: "",
   },
   seasonBudget: {
     type: Number,
