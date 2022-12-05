@@ -11,27 +11,34 @@ import { useState } from "react";
 import { Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import FFP_API from "../../app/api";
+import { useContext } from "react";
+import { UserContext } from "../../contexts/userContext";
 
 const theme = createTheme();
 
 const USER_REGEX = /^[A-z0-9]{3,20}$/;
 const PWD_REGEX = /^[A-z0-9!@#$%]{4,20}$/;
 
-export default function EditUserComponent({ user }) {
+export default function EditUserComponent() {
   const [e, setE] = useState(false);
+  const { user, setToken, setLogin, setUser } = useContext(UserContext);
   const [errorMessage, setErrorMessage] = useState("");
+  const [fullname, setFullname] = useState(user.fullname);
+  const [username, setUsername] = useState(user.username);
   const navigate = useNavigate();
   const validate = (data) => {
     setE(false);
     setErrorMessage("");
     let error = "";
+    let pass = data.get("password");
+    let repass = data.get("re-password");
     if (!USER_REGEX.test(data.get("username"))) {
       error =
         "Username must be 3-20 characters long and contain only letters and numbers.";
-    } else if (!PWD_REGEX.test(data.get("password"))) {
+    } else if (pass && !PWD_REGEX.test(data.get("password"))) {
       error =
         "Password must be 4-20 characters long and contain only letters, numbers, and !@#$%.";
-    } else if (data.get("password") !== data.get("repassword")) {
+    } else if (repass && data.get("password") !== data.get("repassword")) {
       error = "Passwords must match.";
     }
     return error;
@@ -39,6 +46,8 @@ export default function EditUserComponent({ user }) {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    setE(false);
+    setErrorMessage("");
     const data = new FormData(e.currentTarget);
     const result = validate(data);
     if (result !== "") {
@@ -51,7 +60,7 @@ export default function EditUserComponent({ user }) {
           username: data.get("username"),
           password: data.get("password"),
         });
-        navigate("/users");
+        navigate("/my/profile");
       } catch (error) {
         setE(true);
         setErrorMessage(error.response.data);
@@ -60,7 +69,24 @@ export default function EditUserComponent({ user }) {
   };
 
   const handleDeleteAccount = async (e) => {
-    // Look at here!
+    console.log("delete");
+    try {
+      console.log("here");
+      const options = {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      };
+      await FFP_API.request(`/users/${user._id}`, options);
+      setToken(null);
+      setLogin(false);
+      setUser(null);
+      navigate("/login");
+    } catch (error) {
+      setE(true);
+      setErrorMessage(error.response.data);
+    }
   };
 
   return !user ? (
@@ -88,19 +114,23 @@ export default function EditUserComponent({ user }) {
                     autoComplete="given-name"
                     name="fullname"
                     fullWidth
+                    required
                     id="fullname"
                     label="Full Name"
                     autoFocus
-                    value={user.fullname}
+                    value={fullname}
+                    onChange={(e) => setFullname(e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
+                    required
                     id="username"
                     label="Username"
                     name="username"
-                    value={user.username}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={12} sm={5.5}>
@@ -116,7 +146,7 @@ export default function EditUserComponent({ user }) {
                 <Grid item xs={12} sm={6.5}>
                   <TextField
                     fullWidth
-                    name="repassword"
+                    name="re-password"
                     label="Re-Password"
                     type="password"
                     id="re-password"
