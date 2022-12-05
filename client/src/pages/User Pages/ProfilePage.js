@@ -11,8 +11,8 @@ export default function ProfilePage() {
   }
   return (
     <>
-      <ProfileAppBar user={user} />
-      <ProfilePageComponent user={user} />
+      <ProfileAppBar />
+      <ProfilePageComponent />
     </>
   );
 }
