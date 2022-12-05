@@ -6,6 +6,13 @@ import {
   Box,
   Container,
   Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { UserContext } from "../../contexts/userContext";
@@ -42,6 +49,22 @@ export default function FileStatusComponent() {
     },
   ];
 
+  function displayRows(row) {
+    return (
+      <TableRow
+        key={row.name}
+        sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+      >
+        <TableCell component="th" scope="row">
+          {row.id}
+        </TableCell>
+        <TableCell align="right">{row.submitDate}</TableCell>
+        <TableCell align="right">{row.currentStatus}</TableCell>
+        <TableCell align="right">{row.lastUpdated}</TableCell>
+      </TableRow>
+    );
+  }
+
   const content = (
     <>
       <CssBaseline />
@@ -55,10 +78,21 @@ export default function FileStatusComponent() {
         <Typography variant="h3" component="h1" gutterBottom sx={{ mt: 4 }}>
           File Status
         </Typography>
-        {/* 
-        Use the table from MUI
-        Maybe add a new component to display the table
-        */}
+        <Container component="main" maxWidth="lg">
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>ID</TableCell>
+                  <TableCell align="right">Submit Date</TableCell>
+                  <TableCell align="right">Current Status</TableCell>
+                  <TableCell align="right">Last Updated</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>{mockData.map((row) => displayRows(row))}</TableBody>
+            </Table>
+          </TableContainer>
+        </Container>
       </Box>
     </>
   );
