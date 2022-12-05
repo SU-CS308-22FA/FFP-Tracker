@@ -108,7 +108,7 @@ export default function EditTeamComponent() {
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="h7" sx={{}}>
+                  <Typography variant="h7" sx={{ mb: 1 }}>
                     This will be your new team logo:
                   </Typography>
                   <Avatar src={selectedFile} sx={{ width: 56, height: 56 }} />
@@ -121,14 +121,23 @@ export default function EditTeamComponent() {
               alignItems="center"
               sx={{ mt: 4 }}
             >
-              <Button
-                onClick={handleFilePicker}
-                fullWidth
-                variant="contained"
-                sx={{ mt: -2, mb: 4 }}
-              >
-                Pick an Image to Upload
-              </Button>
+              <Container maxWidth="sm">
+                <Button
+                  onClick={handleFilePicker}
+                  fullWidth
+                  variant="contained"
+                  sx={{
+                    mt: -2,
+                    mb: 4,
+                    bgcolor: "#51087E",
+                    "&:hover": {
+                      backgroundColor: "#51087E",
+                    },
+                  }}
+                >
+                  Pick an Image to Upload
+                </Button>
+              </Container>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <TextField
