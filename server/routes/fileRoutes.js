@@ -4,7 +4,10 @@ const fileController = require("../controllers/fileController");
 
 router.route("/").get(fileController.getAllFiles);
 
-router.route("/team/:id").get(fileController.getFilesByTeamId);
+router
+  .route("/team/:id")
+  .get(fileController.getFilesByTeamId)
+  .post(fileController.createSubmission);
 
 router.route("/:id").get(fileController.getFileById);
 

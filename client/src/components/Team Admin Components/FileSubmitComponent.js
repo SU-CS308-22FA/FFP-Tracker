@@ -11,7 +11,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { UserContext } from "../../contexts/userContext";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
-import FileUploadComponent from "./FileUploadComponent";
+import { client } from "filestack-react";
 import FFP_API from "../../app/api";
 import { useEffect } from "react";
 
@@ -25,6 +25,7 @@ export default function FileSubmitComponent() {
   const [notification, setNotification] = useState(null);
   const [users, setUsers] = useState(null);
   const [teams, setTeams] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
     const fetchNotification = async () => {
@@ -87,7 +88,6 @@ export default function FileSubmitComponent() {
         "A file has been submitted for review by " + user.fullname
       );
     }
-    console.log("succesfully send Notification To TFFAdmins");
   }
 
   function sendNotificationToUser() {
@@ -97,17 +97,25 @@ export default function FileSubmitComponent() {
       "File Submission",
       "Your file has been submitted for review."
     );
-    console.log("succesfully submitted file notification is sent");
   }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setE(false);
+    setErrorMessage("");
     const data = new FormData(event.currentTarget);
     if (!user?.team) {
       setE(true);
       setErrorMessage("You are not part of a team");
+    } else if (selectedFile === null) {
+      setE(true);
+      setErrorMessage("You have to upload a file!");
     } else {
       try {
+        await FFP_API.post(`/files/team/${user.team}`, {
+          file: selectedFile,
+          submitDate: date,
+        });
         await FFP_API.patch(`/revenues/${user.team}`, {
           ticketing: data.get("Ticketing"),
           marketing: data.get("Marketing"),
@@ -120,7 +128,6 @@ export default function FileSubmitComponent() {
           operational: data.get("Operational"),
           month: date.substring(0, 7),
         });
-
         alert("Successfully submitted!");
         sendNotificationToTFFAdmins();
         sendNotificationToUser();
@@ -132,22 +139,65 @@ export default function FileSubmitComponent() {
     }
   };
 
+  const handleFilePicker = () => {
+    const filestackApikey = "AJ72c4DJLSPqnTctAvQ0wz"; //insert here with your own api key
+    const filestack = client.init(filestackApikey);
+    const options = {
+      onFileUploadFinished(file) {
+        setSelectedFile(file.url);
+      },
+    };
+    const picker = filestack.picker(options);
+    picker.open();
+  };
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+  };
+
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="sm">
           <CssBaseline />
           <Box
             sx={{
-              marginTop: 8,
+              mt: 4,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
             }}
           >
+            <Typography component="h1" variant="h3" sx={{}}>
+              File Submission
+            </Typography>
             <Box component="form" onSubmit={handleSubmit}>
-              <FileUploadComponent />
-              <Typography component="h1" variant="h5">
+              {selectedFile ? (
+                <>
+                  <Typography component="h2" variant="h5" sx={{ mb: 2 }}>
+                    Uploaded File:{" "}
+                    <a href={selectedFile} target="_blank" rel="noreferrer">
+                      Click here to view
+                    </a>
+                  </Typography>
+                  <Container maxWidth="sm">
+                    <Button sx={{ mb: 2 }} onClick={handleRemoveFile}>
+                      Remove File
+                    </Button>
+                  </Container>
+                </>
+              ) : (
+                <Button
+                  onClick={handleFilePicker}
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 2, mb: 2 }}
+                >
+                  Pick a file to Upload
+                </Button>
+              )}
+
+              <Typography component="h2" variant="h5">
                 Revenues
               </Typography>
               <TextField
@@ -186,7 +236,7 @@ export default function FileSubmitComponent() {
                 }}
               ></Box>
               <Typography component="h1" variant="h5">
-                EXPENSES
+                Expenses
               </Typography>
               <TextField
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
@@ -224,7 +274,7 @@ export default function FileSubmitComponent() {
                 }}
               ></Box>
               <Typography component="h1" variant="h5">
-                DATE
+                Date of Submission
               </Typography>
               <TextField
                 margin="normal"
@@ -238,7 +288,7 @@ export default function FileSubmitComponent() {
                 type="date"
               />
               {e && (
-                <Alert variant="outlined" severity="error">
+                <Alert variant="outlined" severity="error" sx={{ mt: 2 }}>
                   {errorMessage}
                 </Alert>
               )}
