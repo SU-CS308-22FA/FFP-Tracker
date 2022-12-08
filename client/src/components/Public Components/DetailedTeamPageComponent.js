@@ -5,12 +5,11 @@ import { Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Avatar, Button } from "@mui/material";
-import { Box } from "@mui/system";
 import { UserContext } from "../../contexts/userContext";
 import { useContext } from "react";
 
 export default function DetailedTeamPageComponent() {
-  const { user } = useContext(UserContext);
+  const { token } = useContext(UserContext);
   const [team, setTeam] = useState(null);
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
@@ -134,14 +133,16 @@ export default function DetailedTeamPageComponent() {
               </Typography>
             </Typography>
             <Typography variant="body1" align="center" sx={{ mt: 2 }}>
-              <Button
-                variant="contained"
-                color="secondary"
-                href="/sendnotification"
-              >
-                {" "}
-                SEND NOTIFICATION{" "}
-              </Button>
+              {token ? (
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  href="/sendnotification"
+                >
+                  {" "}
+                  SEND NOTIFICATION{" "}
+                </Button>
+              ) : null}
             </Typography>
             <Grid container spacing={2} sx={{ mt: 6 }}>
               <Grid item xs={6}>

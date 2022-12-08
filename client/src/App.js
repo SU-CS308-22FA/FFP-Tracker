@@ -37,9 +37,7 @@ function App() {
             <Route path="edit" element={<EditUserPage />} />
             <Route path="notifications" element={<NotificationPage />} />
           </Route>
-          <Route path="/sendnotification">
-            <Route index element={<SendNotificationPage />}></Route>
-          </Route>
+          <Route path="/sendnotification" element={<SendNotificationPage />} />
           <Route element={<RequireAuth allowedRoles={[ROLES.TEAM_ADMIN]} />}>
             <Route path="/submit" element={<FileSubmitPage />} />
             <Route path="edit/team/" element={<EditTeamPage />} />

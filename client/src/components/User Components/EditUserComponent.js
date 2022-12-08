@@ -60,7 +60,7 @@ export default function EditUserComponent() {
           username: data.get("username"),
           password: data.get("password"),
         });
-        navigate("/my/profile");
+        window.location.reload();
       } catch (error) {
         setE(true);
         setErrorMessage(error.response.data);
