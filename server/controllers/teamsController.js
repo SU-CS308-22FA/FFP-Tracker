@@ -108,7 +108,7 @@ const createTeam = asyncHandler(async (req, res) => {
 const updateTeam = asyncHandler(async (req, res) => {
   const id = req.params.id;
   const { wikiLink, manager, logoURL } = req.body;
-  if (!wikiLink || !manager || !logoURL) {
+  if (!wikiLink || !manager || logoURL === undefined) {
     return res
       .status(400)
       .json({ error: "All fields are required to update a team!" });

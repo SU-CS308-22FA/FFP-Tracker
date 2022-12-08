@@ -4,7 +4,7 @@ import CircularProgressComponent from "./CircularProgressComponent";
 import { Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Avatar, Button } from "@mui/material";
+import { Avatar, Button, Box } from "@mui/material";
 import { UserContext } from "../../contexts/userContext";
 import { useContext } from "react";
 
@@ -121,17 +121,29 @@ export default function DetailedTeamPageComponent() {
   const content = (
     <>
       {team && revenues && expenses ? (
-        <Grid container spacing={1}>
-          <Grid item xs={5.5}>
+        <Grid
+          container
+          spacing={1}
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Grid item xs={5.2}>
             {plot(team, revenues, expenses)}
           </Grid>
-          <Grid item xs={6.5}>
+          <Grid item xs={6.8}>
             <Typography variant="h4" align="center" sx={{ mt: 4 }}>
               Information About
               <Typography variant="h5" color="#0000FF">
                 <a href={team.wikiLink}>{team.teamName}</a>
               </Typography>
             </Typography>
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <Avatar
+                sx={{ width: 60, height: 60, mt: 2, mb: 2 }}
+                src={team.logoURL}
+              />
+            </Box>
             <Typography variant="body1" align="center" sx={{ mt: 2 }}>
               {token ? (
                 <Button

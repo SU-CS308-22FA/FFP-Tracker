@@ -27,6 +27,8 @@ export default function EditTeamComponent() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [wikiLink, setWikiLink] = useState("");
   const [manager, setManager] = useState("");
+  const [lawyers, setLawyers] = useState([]);
+  const [boardMembers, setBoardMembers] = useState([]);
 
   const navigate = useNavigate();
 
@@ -38,14 +40,28 @@ export default function EditTeamComponent() {
       team.manager !== manager ||
       selectedFile
     ) {
-      await FFP_API.patch(`/teams/${team._id}`, {
-        wikiLink: data.get("wikiLink"),
-        manager: data.get("manager"),
-        logoURL: selectedFile ? selectedFile : team.logoURL,
-      }).then((res) => {
-        alert("Team updated successfully!");
-        navigate("/my/profile");
-      });
+      const options = {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      };
+      await FFP_API.patch(
+        `/teams/${team._id}`,
+        {
+          wikiLink: data.get("wikiLink"),
+          manager: data.get("manager"),
+          logoURL: selectedFile ? selectedFile : team.logoURL,
+        },
+        options
+      )
+        .then((res) => {
+          alert("Team updated successfully!");
+          navigate("/my/profile");
+        })
+        .catch((err) => {
+          setE(true);
+          setErrorMessage(err.message);
+        });
     }
   };
 
@@ -69,6 +85,7 @@ export default function EditTeamComponent() {
           setTeam(res.data);
           setWikiLink(res.data.wikiLink);
           setManager(res.data.manager);
+          setLawyers(res.data.lawyers);
         })
         .catch((err) => {
           setE(true);
@@ -97,7 +114,7 @@ export default function EditTeamComponent() {
               Update Your Team's Information
             </Typography>
             <Typography variant="h6">Your Team is {team.teamName} </Typography>
-            <Avatar src={team.logoURL} sx={{ mt: 2, width: 56, height: 56 }} />
+            <Avatar src="" sx={{ mt: 2, width: 56, height: 56 }} />
             {selectedFile && (
               <>
                 <Box
@@ -162,8 +179,40 @@ export default function EditTeamComponent() {
                     name="manager"
                   />
                 </Grid>
+                <Container maxWidth="md">
+                  <Typography variant="h5" sx={{ mb: 1 }}>
+                    Your Lawyers:
+                  </Typography>
+                  {lawyers.length !== 0 ? (
+                    lawyers.map((lawyer) => {
+                      return (
+                        <>
+                          <Typography variant="h6" sx={{ mb: 1 }}>
+                            {lawyer}
+                            <Button
+                              key={lawyer}
+                              variant="contained"
+                              sx={{ ml: 2 }}
+                              onClick={() => {
+                                const newLawyers = lawyers.filter(
+                                  (l) => l !== lawyer
+                                );
+                                setLawyers(newLawyers);
+                              }}
+                            >
+                              Remove Lawyer
+                            </Button>
+                          </Typography>
+                        </>
+                      );
+                    })
+                  ) : (
+                    <Typography variant="h7" sx={{ mb: 1 }}>
+                      You have no lawyers yet!
+                    </Typography>
+                  )}
+                </Container>
               </Grid>
-              <Box sx={{ mt: 2 }} />
               {e && (
                 <Alert variant="outlined" severity="error">
                   {errorMessage}
@@ -174,7 +223,7 @@ export default function EditTeamComponent() {
                 fullWidth
                 variant="contained"
                 sx={{
-                  mt: 2,
+                  mt: 4,
                   mb: 4,
                   bgcolor: "#51087E",
                   "&:hover": {

@@ -7,23 +7,23 @@ const TeamSchema = new mongoose.Schema({
   },
   admin: {
     type: mongoose.Schema.Types.ObjectId,
-    required: false,
+    required: true,
     ref: "User",
     default: null,
   },
   wikiLink: {
     type: String,
-    required: false,
+    required: true,
     default: "",
   },
   manager: {
     type: String,
-    required: false,
-    default: null,
+    required: true,
+    default: "",
   },
   logoURL: {
     type: String,
-    required: false,
+    required: true,
     default: "",
   },
   seasonBudget: {
@@ -33,6 +33,16 @@ const TeamSchema = new mongoose.Schema({
   currentBudget: {
     type: Number,
     required: true,
+  },
+  lawyers: {
+    type: Array,
+    required: true,
+    default: [],
+  },
+  boardMembers: {
+    type: Array,
+    required: true,
+    default: [],
   },
 });
 
