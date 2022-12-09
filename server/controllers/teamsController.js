@@ -107,8 +107,14 @@ const createTeam = asyncHandler(async (req, res) => {
 // @access private
 const updateTeam = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  const { wikiLink, manager, logoURL } = req.body;
-  if (!wikiLink || !manager || logoURL === undefined) {
+  const { wikiLink, manager, logoURL, lawyers, boardMembers } = req.body;
+  if (
+    !wikiLink ||
+    !manager ||
+    logoURL === undefined ||
+    !lawyers ||
+    !boardMembers
+  ) {
     return res
       .status(400)
       .json({ error: "All fields are required to update a team!" });
@@ -117,7 +123,7 @@ const updateTeam = asyncHandler(async (req, res) => {
   if (!team) return res.status(400).json({ error: "No team was found!" });
   const updatedTeam = await Team.findOneAndUpdate(
     { _id: id },
-    { wikiLink, manager, logoURL },
+    { wikiLink, manager, logoURL, lawyers, boardMembers },
     { new: true }
   );
   if (updatedTeam) {

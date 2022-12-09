@@ -98,14 +98,14 @@ export default function EditUserComponent() {
           <CssBaseline />
           <Box
             sx={{
-              marginTop: 8,
+              mt: 2,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
             }}
           >
-            <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
-              Edit Your Information
+            <Typography component="h1" variant="h4" sx={{ mb: 2 }}>
+              Edit Account
             </Typography>
             <Box component="form" onSubmit={handleUpdate}>
               <Grid container spacing={2}>
