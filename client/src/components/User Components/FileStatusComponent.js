@@ -19,53 +19,56 @@ import { UserContext } from "../../contexts/userContext";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import FFP_API from "../../app/api";
+import CircularProgressComponent from "../Public Components/CircularProgressComponent";
 import { useEffect } from "react";
 
 export default function FileStatusComponent() {
-  const mockData = [
-    {
-      id: 1,
-      submitDate: "2021-10-01",
-      currentStatus: "In Review",
-      lastUpdated: "2021-10-01",
-    },
-    {
-      id: 2,
-      submitDate: "2021-10-01",
-      currentStatus: "Submitted",
-      lastUpdated: "2021-10-01",
-    },
-    {
-      id: 3,
-      submitDate: "2022-10-01",
-      currentStatus: "Review Complete - Approved",
-      lastUpdated: "20212-10-12",
-    },
-    {
-      id: 4,
-      submitDate: "2021-10-01",
-      currentStatus: "Review Complete - Rejected",
-      lastUpdated: "2021-10-01",
-    },
-  ];
+  const { user } = useContext(UserContext);
+  const [e, setE] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [fileStatus, setFileStatus] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStatusData = async () => {
+      if (user.role === "Team Admin") {
+        await FFP_API.get(`/files/team/${user.teamId}`).then((res) => {
+          console.log(res.data);
+          setFileStatus(res.data);
+        });
+      } else {
+        await FFP_API.get(`/files`).then((res) => {
+          setFileStatus(res.data);
+        });
+      }
+    };
+    fetchStatusData();
+    setLoading(false);
+  }, [user.role, user.teamId, setFileStatus]);
 
   function displayRows(row) {
+    console.log(row);
     return (
       <TableRow
-        key={row.name}
+        key={row._id}
         sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
       >
         <TableCell component="th" scope="row">
-          {row.id}
+          {row.teamName}
         </TableCell>
-        <TableCell align="right">{row.submitDate}</TableCell>
-        <TableCell align="right">{row.currentStatus}</TableCell>
-        <TableCell align="right">{row.lastUpdated}</TableCell>
+        <TableCell align="center">{row.submitDate}</TableCell>
+        <TableCell align="center">{row.currentStatus}</TableCell>
+        <TableCell align="center">{row.lastUpdated}</TableCell>
+        <TableCell align="center">
+          <Button href={row.url} target="_blank" variant="contained">
+            View
+          </Button>
+        </TableCell>
       </TableRow>
     );
   }
 
-  const content = (
+  const content = fileStatus ? (
     <>
       <CssBaseline />
       <Box
@@ -83,18 +86,23 @@ export default function FileStatusComponent() {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>ID</TableCell>
-                  <TableCell align="right">Submit Date</TableCell>
-                  <TableCell align="right">Current Status</TableCell>
-                  <TableCell align="right">Last Updated</TableCell>
+                  <TableCell>Name</TableCell>
+                  <TableCell align="center">Submit Date</TableCell>
+                  <TableCell align="center">Current Status</TableCell>
+                  <TableCell align="center">Last Updated</TableCell>
+                  <TableCell align="center">File</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>{mockData.map((row) => displayRows(row))}</TableBody>
+              <TableBody>
+                {fileStatus.map((file) => displayRows(file))}
+              </TableBody>
             </Table>
           </TableContainer>
         </Container>
       </Box>
     </>
+  ) : (
+    <CircularProgressComponent />
   );
   return content;
 }

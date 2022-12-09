@@ -174,17 +174,21 @@ export default function FileSubmitComponent() {
             <Box component="form" onSubmit={handleSubmit}>
               {selectedFile ? (
                 <>
-                  <Typography component="h2" variant="h5" sx={{ mb: 2 }}>
+                  <Typography component="h2" variant="h5" sx={{ mt: 2, mb: 2 }}>
                     Uploaded File:{" "}
-                    <a href={selectedFile} target="_blank" rel="noreferrer">
-                      Click here to view
-                    </a>
-                  </Typography>
-                  <Container maxWidth="sm">
-                    <Button sx={{ mb: 2 }} onClick={handleRemoveFile}>
+                    <Button href={selectedFile} target="_blank">
+                      Click here to view file
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      sx={{ ml: 2 }}
+                      onClick={handleRemoveFile}
+                    >
                       Remove File
                     </Button>
-                  </Container>
+                  </Typography>
+                  <Container maxWidth="sm"></Container>
                 </>
               ) : (
                 <Button
