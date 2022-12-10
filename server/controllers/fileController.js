@@ -54,9 +54,32 @@ const createSubmission = asyncHandler(async (req, res) => {
   return res.status(200).json(newFile);
 });
 
+// @desc Update a file
+// @route PATCH /files/:id
+// @access private
+const updateFile = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { process, lastUpdated } = req.body;
+  if (!process || !lastUpdated)
+    return res.status(400).json({ error: "Missing required fields" });
+  const file = await File.findOne({
+    _id: id,
+  }).lean();
+  if (!file) return res.status(404).json({ error: "File not found!" });
+  const updatedFile = await File.findOneAndUpdate(
+    { _id: id },
+    { currentStatus: process, lastUpdated },
+    { new: true }
+  );
+  if (!updatedFile)
+    return res.status(400).json({ error: "Error updating file" });
+  return res.status(200).json(updatedFile);
+});
+
 module.exports = {
   getAllFiles,
   getFileById,
   getFilesByTeamId,
   createSubmission,
+  updateFile,
 };

@@ -31,13 +31,7 @@ function ProfileAppBar() {
       </>
     );
   } else {
-    nav = (
-      <>
-        <Button color="inherit" component={Link} to="/review">
-          Review Files
-        </Button>
-      </>
-    );
+    nav = null;
   }
 
   return (
