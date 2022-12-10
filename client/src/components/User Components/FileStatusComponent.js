@@ -1,8 +1,6 @@
 import {
-  Alert,
   Button,
   CssBaseline,
-  TextField,
   Box,
   Container,
   Typography,
@@ -13,8 +11,11 @@ import {
   TableHead,
   TableRow,
   Paper,
+  IconButton,
+  Stack,
 } from "@mui/material";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import DoneIcon from "@mui/icons-material/Done";
+import BlockIcon from "@mui/icons-material/Block";
 import { UserContext } from "../../contexts/userContext";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
@@ -33,7 +34,6 @@ export default function FileStatusComponent() {
     const fetchStatusData = async () => {
       if (user.role === "Team Admin") {
         await FFP_API.get(`/files/team/${user.teamId}`).then((res) => {
-          console.log(res.data);
           setFileStatus(res.data);
         });
       } else {
@@ -46,8 +46,35 @@ export default function FileStatusComponent() {
     setLoading(false);
   }, [user.role, user.teamId, setFileStatus]);
 
+  const processDocument = async (process, doc_id) => {
+    try {
+      const options = {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      };
+      await FFP_API.patch(
+        `/files/${doc_id}`,
+        {
+          process: process,
+          lastUpdated: new Date().toISOString().slice(0, 10),
+        },
+        options
+      );
+      const newFileStatus = fileStatus.map((doc) => {
+        if (doc._id === doc_id) {
+          doc.currentStatus = process;
+          doc.lastUpdated = new Date().toISOString().slice(0, 10);
+        }
+        return doc;
+      });
+      setFileStatus(newFileStatus);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   function displayRows(row) {
-    console.log(row);
     return (
       <TableRow
         key={row._id}
@@ -56,13 +83,37 @@ export default function FileStatusComponent() {
         <TableCell component="th" scope="row">
           {row.teamName}
         </TableCell>
-        <TableCell align="center">{row.submitDate}</TableCell>
+        <TableCell align="center">{row.submitDate.substring(0, 10)}</TableCell>
         <TableCell align="center">{row.currentStatus}</TableCell>
-        <TableCell align="center">{row.lastUpdated}</TableCell>
+        <TableCell align="center">{row.lastUpdated.substring(0, 10)}</TableCell>
         <TableCell align="center">
           <Button href={row.url} target="_blank" variant="contained">
             View
           </Button>
+        </TableCell>
+        <TableCell align="center">
+          {user.role === "Lawyer" ? (
+            row.currentStatus === "Submitted" ? (
+              <Stack direction="row" spacing={1}>
+                <IconButton
+                  aria-label="approve"
+                  color="success"
+                  onClick={() => processDocument("Approved", row._id)}
+                >
+                  <DoneIcon />
+                </IconButton>
+                <IconButton
+                  aria-label="reject"
+                  color="error"
+                  onClick={() => processDocument("Rejected", row._id)}
+                >
+                  <BlockIcon />
+                </IconButton>
+              </Stack>
+            ) : (
+              <>Decision Done</>
+            )
+          ) : null}
         </TableCell>
       </TableRow>
     );
@@ -86,11 +137,14 @@ export default function FileStatusComponent() {
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
                 <TableRow>
-                  <TableCell>Name</TableCell>
+                  <TableCell>Team</TableCell>
                   <TableCell align="center">Submit Date</TableCell>
                   <TableCell align="center">Current Status</TableCell>
                   <TableCell align="center">Last Updated</TableCell>
                   <TableCell align="center">File</TableCell>
+                  {user.role === "Lawyer" ? (
+                    <TableCell align="center">Decision</TableCell>
+                  ) : null}
                 </TableRow>
               </TableHead>
               <TableBody>

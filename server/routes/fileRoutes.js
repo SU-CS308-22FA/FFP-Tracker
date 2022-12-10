@@ -9,6 +9,9 @@ router
   .get(fileController.getFilesByTeamId)
   .post(fileController.createSubmission);
 
-router.route("/:id").get(fileController.getFileById);
+router
+  .route("/:id")
+  .get(fileController.getFileById)
+  .patch(fileController.updateFile);
 
 module.exports = router;
