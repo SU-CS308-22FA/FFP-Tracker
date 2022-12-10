@@ -25,6 +25,7 @@
   "dependencies": {
     "crypto": "^1.0.1",
     "emailjs-com": "^3.2.0",
-    "filestack-react": "^4.0.1"
+    "filestack-react": "^4.0.1",
+    "ml-regression-simple-linear": "^2.0.3"
   }
 }
