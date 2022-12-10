@@ -14,6 +14,8 @@ import { useContext, useState } from "react";
 import FileUploadComponent from "./FileUploadComponent";
 import FFP_API from "../../app/api";
 import { useEffect } from "react";
+import emailjs from "@emailjs/browser";
+
 
 const theme = createTheme();
 
@@ -57,6 +59,18 @@ export default function FileSubmitComponent() {
   }, [setNotification, setUsers, setTeams]);
 
   const navigate = useNavigate();
+
+  
+  // send email
+  function sendEmail(parameters){
+    emailjs.send('gmail', 'template_46kzdyk', parameters, 'vHB_tCaBZcPIUtpPO')
+    .then(function(response) {
+       console.log('SUCCESS!', response.status, response.text);
+    }, function(error) {
+       console.log('FAILED...', error);
+    });
+  }
+
 
   // get list of all users with role of TFF Admin
   const getTFFAdmins = () => {
@@ -261,6 +275,32 @@ export default function FileSubmitComponent() {
       }
     }
 
+    // send email to team admins if net spend is positive
+    function sendEmailToTeamAdminsIfNetSpendIsPositive() {
+      if (NetSpend() > 0) {
+        try {
+          // send email to all team admins of users team
+          const teamAdmins = getTeamAdmins();
+          for (let i = 0; i < teamAdmins.length; i++) {
+            var parameters = {
+              to_email: teamAdmins[i].email,
+              to_name: teamAdmins[i].fullname,
+              from_email: "retsim75@gmail.com",
+              subject: "Net Spend is Positive",
+              message: "Your net spend is: " + NetSpend() + "Mil. TL. " + "Please check your expenses"
+            };
+            sendEmail(parameters);
+          }
+          console.log("succesfully sent positive net spend email to team admins");
+        } catch (error) {
+          console.log(error);
+          setE(true);
+          setErrorMessage("Error sending positive net spend email to team admins Error:" + error);
+        }
+      }
+    }
+
+
   
 
 
@@ -290,6 +330,7 @@ export default function FileSubmitComponent() {
         sendNotificationToLawyers();
         sendNotificationToUser();
         sendNotificationToUserIfNetSpendIsPositive();
+        sendEmailToTeamAdminsIfNetSpendIsPositive();
         navigate(`/my/profile/`);
       } catch (error) {
         setE(true);
