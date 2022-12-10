@@ -15,6 +15,8 @@ import FileUploadComponent from "./FileUploadComponent";
 import FFP_API from "../../app/api";
 import { useEffect } from "react";
 import emailjs from "@emailjs/browser";
+import SimpleLinearRegression from "ml-regression-simple-linear";
+import { useParams } from "react-router-dom";
 
 
 const theme = createTheme();
@@ -29,6 +31,7 @@ export default function FileSubmitComponent() {
   const [teams, setTeams] = useState(null);
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
+  const { id } = useParams();
 
   useEffect(() => {
     const fetchNotification = async () => {
@@ -60,7 +63,16 @@ export default function FileSubmitComponent() {
 
   const navigate = useNavigate();
 
-  
+    // takes an integer input and returns sequence of integers from 0 to input
+    function getSequence(input) {
+      let sequence = [];
+      for (let i = 1; i < input+1; i++) {
+        sequence.push(i);
+      }
+      return sequence;
+    }
+
+
   // send email
   function sendEmail(parameters){
     emailjs.send('gmail', 'template_46kzdyk', parameters, 'vHB_tCaBZcPIUtpPO')
@@ -181,6 +193,15 @@ export default function FileSubmitComponent() {
     return obj[Object.keys(obj)[Object.keys(obj).length - 1]];
   }
 
+  // return total of each value of an object
+  function returnTotalOfObject(obj) {
+    let total = 0;
+    for (let i = 0; i < Object.keys(obj).length; i++) {
+      total += obj[Object.keys(obj)[i]];
+    }
+    return total;
+  }
+
   // get all expenses for users team
   const getExpenses = () => {
     if (expenses) {
@@ -198,11 +219,13 @@ export default function FileSubmitComponent() {
   const TotalExpenses = () => {
     var total = 0;
     const teamExpenses = getExpenses();
+    console.log(teamExpenses);
     for (let i = 0; i < teamExpenses.length; i++) {
-      total += returnLastValueOfObject(teamExpenses[i].salaries);
-      total += returnLastValueOfObject(teamExpenses[i].amortization);
-      total += returnLastValueOfObject(teamExpenses[i].operational);
+      total += returnTotalOfObject(teamExpenses[i].salaries);
+      total += returnTotalOfObject(teamExpenses[i].amortization);
+      total += returnTotalOfObject(teamExpenses[i].operational);
     }
+    console.log("Total Expenses are: " +total);
     return total;
   };
 
@@ -224,11 +247,11 @@ export default function FileSubmitComponent() {
       var total = 0;
       const teamRevenues = getRevenues();
       for (let i = 0; i < teamRevenues.length; i++) {
-        total += returnLastValueOfObject(teamRevenues[i].ticketing);
-        total += returnLastValueOfObject(teamRevenues[i].marketing);
-        total += returnLastValueOfObject(teamRevenues[i].broadcasting);
+        total += returnTotalOfObject(teamRevenues[i].ticketing);
+        total += returnTotalOfObject(teamRevenues[i].marketing);
+        total += returnTotalOfObject(teamRevenues[i].broadcasting);
       }
-      console.log("Total Revenues is:" + total);
+      console.log("Total Revenues are:" + total);
       return total;
     };
 
@@ -275,6 +298,118 @@ export default function FileSubmitComponent() {
       }
     }
 
+      // write a linear regression prediction function for revenues
+  function predictRevenue() {
+    const teamRevenues = getRevenues();
+    let x = getSequence(Object.keys(teamRevenues[0].ticketing).length);
+    let y = [];
+
+    
+    for (const [key, value] of Object.entries(teamRevenues[0].ticketing)) {
+      y.push(value + teamRevenues[0].marketing[key] + teamRevenues[0].broadcasting[key]);
+    }
+    // revert the order of the y array
+    y = y.reverse();
+    
+      
+    // create a linear regression model
+    const model = new SimpleLinearRegression(x, y);
+
+    // predict the next revenue
+    let prediction = model.predict(x.length + 1);
+    console.log("Revenue prediction for next month is:" + prediction);
+    return prediction;
+  }
+
+
+  // write a linear regression prediction function for expenses
+  function predictExpense() {
+    const teamExpenses = getExpenses();
+    let x = getSequence(Object.keys(teamExpenses[0].salaries).length);
+    let y = [];
+    
+    // get the values of each expense objects
+    for (const [key, value] of Object.entries(teamExpenses[0].salaries)) {
+      y.push(value + teamExpenses[0].amortization[key] + teamExpenses[0].operational[key]);
+    }
+    // revert the order of the y array
+    y = y.reverse();
+
+    // create a linear regression model
+    const model = new SimpleLinearRegression(x, y);
+
+    // predict the next expense
+    let prediction = model.predict(x.length + 1);
+    console.log("Expense prediction for next month is:" + prediction);
+    return prediction;
+  }
+
+
+
+  // predict Net Spend
+  function predictNetSpend() {
+    let netSpend = predictRevenue() - predictExpense();
+    console.log("Net Spend prediction for next month is:" + netSpend);
+    return netSpend;
+  }
+
+
+    // send notification to team admins if predicted net spend is negative
+    function sendNotificationToTeamAdminsIfPredictedNetSpendIsNegative() {
+      let PredictedNetSpend = predictNetSpend();
+      console.log("Predicted Net Spend is:" + PredictedNetSpend);
+      if (PredictedNetSpend < 0) {
+        try {
+          // send notification to all team admins of users team
+          const teamAdmins = getTeamAdmins();
+
+          console.log("team admins are:");
+          console.log(teamAdmins);
+
+          for (let i = 0; i < teamAdmins.length; i++) {
+            createNotification(
+              user._id,
+              teamAdmins[i]._id,
+              "Predicted Net Spend",
+              "Your predicted net spend is: " + PredictedNetSpend + "Mil. TL for the next month. " + "Please check your expenses."
+            );
+          }
+          console.log("succesfully sent predicted negative net spend notification to team admins");
+        } catch (error) {
+          console.log(error);
+          setE(true);
+          setErrorMessage("Error sending predicted negative net spend notification to team admins Error:" + error);
+        }
+      }
+    }
+
+    // send email to team admins if predicted net spend is negative
+    function sendEmailToTeamAdminsIfPredictedNetSpendIsNegative() {
+      let PredictedNetSpend = predictNetSpend();
+      if (PredictedNetSpend < 0) {
+        try {
+          // send email to all team admins of users team
+          const teamAdmins = getTeamAdmins();
+          for (let i = 0; i < teamAdmins.length; i++) {
+            var parameters = {
+              to_email: teamAdmins[i].email,
+              to_name: teamAdmins[i].fullname,
+              from_email: "retsim75@gmail.com",
+              subject: "Financial Risk is Predicted in Net Spend for Next Month",
+              message: "Your predicted net spend is: " + PredictedNetSpend*-1 + "Mil. TL for the next month. Please check your expenses."
+            };
+            sendEmail(parameters);
+          }
+          console.log("succesfully sent predicted net spend email to team admins");
+        } catch (error) {
+          console.log(error);
+          setE(true);
+          setErrorMessage("Error sending predicted net spend email to team admins Error:" + error);
+        }
+      }
+    }
+
+
     // send email to team admins if net spend is positive
     function sendEmailToTeamAdminsIfNetSpendIsPositive() {
       if (NetSpend() > 0) {
@@ -299,9 +434,6 @@ export default function FileSubmitComponent() {
         }
       }
     }
-
-
-  
 
 
   const handleSubmit = async (event) => {
@@ -331,6 +463,9 @@ export default function FileSubmitComponent() {
         sendNotificationToUser();
         sendNotificationToUserIfNetSpendIsPositive();
         sendEmailToTeamAdminsIfNetSpendIsPositive();
+      
+        sendNotificationToTeamAdminsIfPredictedNetSpendIsNegative();
+        sendEmailToTeamAdminsIfPredictedNetSpendIsNegative();
         navigate(`/my/profile/`);
       } catch (error) {
         setE(true);
