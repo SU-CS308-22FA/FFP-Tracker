@@ -25,6 +25,8 @@ export default function FileSubmitComponent() {
   const [notification, setNotification] = useState(null);
   const [users, setUsers] = useState(null);
   const [teams, setTeams] = useState(null);
+  const [revenues, setRevenues] = useState(null);
+  const [expenses, setExpenses] = useState(null);
 
   useEffect(() => {
     const fetchNotification = async () => {
@@ -39,6 +41,16 @@ export default function FileSubmitComponent() {
       const response = await FFP_API.get(`/teams`);
       setTeams(response.data);
     };
+    const fetchRevenues = async () => {
+      const response = await FFP_API.get(`/revenues`);
+      setRevenues(response.data);
+    };
+    const fetchExpenses = async () => {
+      const response = await FFP_API.get(`/expenses`);
+      setExpenses(response.data);
+    };
+    fetchExpenses();
+    fetchRevenues();
     fetchUsers();
     fetchNotification();
     fetchTeams();
@@ -134,16 +146,123 @@ export default function FileSubmitComponent() {
   }
 
 
-
+  // send notification to user about submitted file
   function sendNotificationToUser() {
-    createNotification(
-      user._id,
-      user._id,
-      "File Submission",
-      "Your file has been submitted for review."
-    );
-    console.log("succesfully submitted file notification is sent");
+    try {
+	    createNotification(
+        user._id,
+        user._id,
+        "File Submission",
+        "Your file has been submitted for review."
+	    );
+	    console.log("succesfully submitted file notification is sent");
+      } catch (error) {
+        console.log(error);
+        setE(true);
+        setErrorMessage("Error sending notification to user Error:" + error);
+      }
   }
+
+  function returnLastValueOfObject(obj) {
+    return obj[Object.keys(obj)[Object.keys(obj).length - 1]];
+  }
+
+  // get all expenses for users team
+  const getExpenses = () => {
+    if (expenses) {
+      let teamExpenses = [];
+      for (let i = 0; i < expenses.length; i++) {
+        if (expenses[i].teamId === user.team) {
+          teamExpenses.push(expenses[i]);
+        }
+      }
+      return teamExpenses;
+    }
+  };
+
+  // get total of all expenses for users team
+  const TotalExpenses = () => {
+    var total = 0;
+    const teamExpenses = getExpenses();
+    for (let i = 0; i < teamExpenses.length; i++) {
+      total += returnLastValueOfObject(teamExpenses[i].salaries);
+      total += returnLastValueOfObject(teamExpenses[i].amortization);
+      total += returnLastValueOfObject(teamExpenses[i].operational);
+    }
+    return total;
+  };
+
+  // get all revenues for users team
+  const getRevenues = () => {
+    if (revenues) {
+      let teamRevenues = [];
+      for (let i = 0; i < revenues.length; i++) {
+        if (revenues[i].teamId === user.team) {
+          teamRevenues.push(revenues[i]);
+        }
+      }
+      return teamRevenues;
+    }
+  };
+
+    // get total of all revenues for users team
+    const TotalRevenues = () => {
+      var total = 0;
+      const teamRevenues = getRevenues();
+      for (let i = 0; i < teamRevenues.length; i++) {
+        total += returnLastValueOfObject(teamRevenues[i].ticketing);
+        total += returnLastValueOfObject(teamRevenues[i].marketing);
+        total += returnLastValueOfObject(teamRevenues[i].broadcasting);
+      }
+      console.log("Total Revenues is:" + total);
+      return total;
+    };
+
+
+    const NetSpend = () => {
+      console.log("Net Spend is:" + TotalExpenses() - TotalRevenues());
+      return TotalExpenses() - TotalRevenues();
+    };
+
+    // get all users with role of Team Admin and team of users team
+    const getTeamAdmins = () => {
+      if (users) {
+        let teamAdmins = [];
+        for (let i = 0; i < users.length; i++) {
+          if (users[i].role === "Team Admin" && users[i].team === user.team) {
+            teamAdmins.push(users[i]);
+          }
+        }
+        return teamAdmins;
+      }
+    };
+
+
+    // send notification to user if net spend is positive
+    function sendNotificationToUserIfNetSpendIsPositive() {
+      if (NetSpend() > 0) {
+        try {
+          // send notification to all team admins of users team
+          const teamAdmins = getTeamAdmins();
+          for (let i = 0; i < teamAdmins.length; i++) {
+            createNotification(
+              user._id,
+              teamAdmins[i]._id,
+              "Net Spend",
+              "Your net spend is: " + NetSpend() + "Mil. TL. " + "Please check your expenses"
+            );
+          }
+          console.log("succesfully sent positive net spend notification to user");
+        } catch (error) {
+          console.log(error);
+          setE(true);
+          setErrorMessage("Error sending positive net spend notification to user Error:" + error);
+        }
+      }
+    }
+
+  
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -170,6 +289,7 @@ export default function FileSubmitComponent() {
         sendNotificationToTFFAdmins();
         sendNotificationToLawyers();
         sendNotificationToUser();
+        sendNotificationToUserIfNetSpendIsPositive();
         navigate(`/my/profile/`);
       } catch (error) {
         setE(true);
