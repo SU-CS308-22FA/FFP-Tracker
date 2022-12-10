@@ -59,6 +59,20 @@ export default function FileSubmitComponent() {
     }
   };
 
+  // get list of all users with role of Lawyer
+  const getLawyers = () => {
+    if (users) {
+      let lawyers = [];
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].role === "Lawyer") {
+          lawyers.push(users[i]);
+        }
+      }
+      return lawyers;
+    }
+  };
+
+
   // create notification function
   async function createNotification(sender, receiver, subject, message) {
     await FFP_API.post(`/notifications`, {
@@ -77,18 +91,49 @@ export default function FileSubmitComponent() {
       });
   }
 
+  // send notification about submitted file, to all TFF Admins
   function sendNotificationToTFFAdmins() {
     const tffAdmins = getTFFAdmins();
-    for (let i = 0; i < tffAdmins.length; i++) {
-      createNotification(
-        user._id,
-        tffAdmins[i]._id,
-        "File Submission",
-        "A file has been submitted for review by " + user.fullname
-      );
+    try {
+      for (let i = 0; i < tffAdmins.length; i++) {
+        createNotification(
+          user._id,
+          tffAdmins[i]._id,
+          "File Submission",
+          "A file has been submitted for review by " + user.fullname
+        );
+      }
+      console.log("succesfully send Notification To TFFAdmins");
+    } 
+    catch (error) {
+      console.log(error);
+      setE(true);
+      setErrorMessage("Error sending notification to TFF Admins Error:" + error);
     }
-    console.log("succesfully send Notification To TFFAdmins");
   }
+
+  // send notification to all Lawyers
+  function sendNotificationToLawyers() {
+    const lawyers = getLawyers();
+    try{
+      for (let i = 0; i < lawyers.length; i++) {
+        createNotification(
+          user._id,
+          lawyers[i]._id,
+          "File Submission",
+          "A file has been submitted for review by " + user.fullname
+        );
+      }
+      console.log("succesfully send Notification To Lawyers");
+    } 
+    catch (error) {
+      console.log(error);
+      setE(true);
+      setErrorMessage("Error sending notification to lawyers Error:" + error);
+    }
+  }
+
+
 
   function sendNotificationToUser() {
     createNotification(
@@ -123,6 +168,7 @@ export default function FileSubmitComponent() {
 
         alert("Successfully submitted!");
         sendNotificationToTFFAdmins();
+        sendNotificationToLawyers();
         sendNotificationToUser();
         navigate(`/my/profile/`);
       } catch (error) {
