@@ -4,12 +4,52 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
-import { Avatar, Button } from "@mui/material";
+import { Avatar, Badge, Button } from "@mui/material";
 import { useContext } from "react";
 import { UserContext } from "../../contexts/userContext";
+import FFP_API from "../../app/api";
+import { useEffect } from "react";
+import { useState } from "react";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+
+
+
+
+
+
+
 
 function ProfileAppBar() {
   const { user, setUser, setToken, setLogin } = useContext(UserContext);
+  const [notifications, setNotifications] = useState(null);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      const response = await FFP_API.get(`/notifications`);
+      setNotifications(response.data);
+    };
+    fetchNotifications();
+  }, [setNotifications]);
+
+  
+
+  // find number of notifications
+  let countNotifications = 0;
+  if (notifications) {
+    for (let i = 0; i < notifications.length; i++) {
+      if (notifications[i].receiver === user._id ) {
+        countNotifications++;
+      }
+    }
+  }
+
+
+
+  
+
+
+
+
   let nav;
   if (user.role === "Team Admin") {
     nav = (
@@ -63,6 +103,10 @@ function ProfileAppBar() {
           </Button>
           <Button sx={{ color: "#FFFFFF" }}>
             <Link to="/my/profile/notifications">Notifications</Link>
+            <Badge badgeContent={countNotifications} color="error">
+              <NotificationsIcon />  
+            </Badge> 
+              
           </Button>
           <Button color="inherit" component={Link} to="/teams">
             Teams
