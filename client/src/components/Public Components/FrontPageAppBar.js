@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { UserContext } from "../../contexts/userContext";
 
 function FrontPageAppBar(navItems) {
-  const { user } = useContext(UserContext);
+  const { token } = useContext(UserContext);
   const navigationItems = navItems["navItems"];
   return (
     <Box sx={{ display: "flex" }}>
@@ -32,7 +32,7 @@ function FrontPageAppBar(navItems) {
                 </Link>
               </Button>
             ))}
-            {user ? (
+            {token ? (
               <Button sx={{ color: "#FFFFFF" }}>
                 <Link to={`/my/profile`}>Profile</Link>
               </Button>

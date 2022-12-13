@@ -4,9 +4,17 @@ import CircularProgressComponent from "./CircularProgressComponent";
 import { Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Button } from "@mui/material";
+
+import { Avatar, Button, Box } from "@mui/material";
+import { UserContext } from "../../contexts/userContext";
+import { useContext } from "react";
+import SimpleLinearRegression from "ml-regression-simple-linear";
+import emailjs from "@emailjs/browser";
+
 
 export default function DetailedTeamPageComponent() {
+  const { token } = useContext(UserContext);
+
   const [team, setTeam] = useState(null);
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
@@ -29,6 +37,87 @@ export default function DetailedTeamPageComponent() {
     fetchRevenues();
     fetchExpenses();
   }, [setTeam, setRevenues, setExpenses, id]);
+
+  // gets key of the revenue objects and returns a timestamp
+  function getTimestamp(key) {
+    let date = new Date(key);
+    console.log(date.getTime());
+    return date.getTime();
+  }
+
+  // takes an integer input and returns sequence of integers from 0 to input
+  function getSequence(input) {
+    let sequence = [];
+    for (let i = 1; i < input+1; i++) {
+      sequence.push(i);
+    }
+    return sequence;
+  }
+
+  // write a linear regression prediction function for revenues
+  function predictRevenue() {
+    let x = getSequence(Object.keys(revenues.ticketing).length);
+    let y = [];
+
+    // get the values of each revenue objects
+    for (const [key, value] of Object.entries(revenues.ticketing)) {
+      y.push(value + revenues.marketing[key] + revenues.broadcasting[key]);
+    }
+    // revert the order of the y array
+    y = y.reverse();
+
+    // create a linear regression model
+    const model = new SimpleLinearRegression(x, y);
+
+    // predict the next revenue
+    let prediction = model.predict(x.length + 1);
+    console.log("Revenue prediction for next month is:" + prediction);
+    return prediction;
+  }
+
+  // write a linear regression prediction function for expenses
+  function predictExpense() {
+    let x = getSequence(Object.keys(expenses.salaries).length);
+    let y = [];
+    // get the values of each expense objects
+    for (const [key, value] of Object.entries(expenses.salaries)) {
+      y.push(value + expenses.amortization[key] + expenses.operational[key]);
+    }
+    // revert the order of the y array
+    y = y.reverse();
+
+    // create a linear regression model
+    const model = new SimpleLinearRegression(x, y);
+
+    // predict the next expense
+    let prediction = model.predict(x.length + 1);
+    console.log("Expense prediction for next month is:" + prediction);
+    return prediction;
+  }
+
+  // predict Net Spend
+  function predictNetSpend() {
+    let netSpend = predictRevenue() - predictExpense();
+    console.log("Net Spend prediction for next month is:" + netSpend);
+    return netSpend;
+  }
+
+
+  /**
+   * This function takes an object as input and 
+   * returns the total of all the values in the object
+   * 
+   * @function returnTotalOfObject
+   * @param {Object} obj Object to be summed up 
+   * @returns {integer} total of all the values in the object
+   */
+  function returnTotalOfObject(obj) {
+    let total = 0;
+    for (let i = 0; i < Object.keys(obj).length; i++) {
+      total += obj[Object.keys(obj)[i]];
+    }
+    return total;
+  }
 
   function returnLastValueOfObject(obj) {
     return obj[Object.keys(obj)[Object.keys(obj).length - 1]];
@@ -118,7 +207,13 @@ export default function DetailedTeamPageComponent() {
   const content = (
     <>
       {team && revenues && expenses ? (
-        <Grid container spacing={1}>
+        <Grid
+          container
+          spacing={1}
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+        >
           <Grid item xs={5.5}>
             {plot(team, revenues, expenses)}
           </Grid>
@@ -126,29 +221,38 @@ export default function DetailedTeamPageComponent() {
             <Typography variant="h4" align="center" sx={{ mt: 4 }}>
               Information About
               <Typography variant="h5" color="#0000FF">
-                <a href={team.wikiLink}>{team.teamName}</a>
+                <a href={team.wikiLink} target="_blank" rel="noreferrer">
+                  {team.teamName}
+                </a>
               </Typography>
             </Typography>
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <Avatar sx={{ width: "auto", mt: 2, mb: 2 }} src={team.logoURL} />
+            </Box>
+            {token ? (
+              <Typography variant="body1" align="center">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  href="/sendnotification"
+                >
+                  Send Email
+                </Button>
+              </Typography>
+            ) : null}
             <Typography variant="body1" align="center" sx={{ mt: 2 }}>
-              <Button
-                variant="contained"
-                color="secondary"
-                href="/sendnotification"
-              >
-                {" "}
-                SEND NOTIFICATION{" "}
-              </Button>
+              Manager: {team.manager}
             </Typography>
-            <Grid container spacing={2} sx={{ mt: 6 }}>
+            <Grid container spacing={2} sx={{ mt: 2 }}>
               <Grid item xs={6}>
                 <Typography variant="body1" align="center">
                   Season Starting Budget: {team.seasonBudget} Mil. TL
                 </Typography>
                 <Typography variant="body1" align="center">
                   Total Revenues:{" "}
-                  {returnLastValueOfObject(revenues.ticketing) +
-                    returnLastValueOfObject(revenues.marketing) +
-                    returnLastValueOfObject(revenues.broadcasting)}{" "}
+                  {returnTotalOfObject(revenues.ticketing) +
+                    returnTotalOfObject(revenues.marketing) +
+                    returnTotalOfObject(revenues.broadcasting)}{" "}
                   Mil. TL
                 </Typography>
               </Grid>
@@ -158,9 +262,9 @@ export default function DetailedTeamPageComponent() {
                 </Typography>
                 <Typography variant="body1" align="center">
                   Total Expenses:{" "}
-                  {returnLastValueOfObject(expenses.salaries) +
-                    returnLastValueOfObject(expenses.amortization) +
-                    returnLastValueOfObject(expenses.operational)}{" "}
+                  {returnTotalOfObject(expenses.salaries) +
+                    returnTotalOfObject(expenses.amortization) +
+                    returnTotalOfObject(expenses.operational)}{" "}
                   Mil. TL
                 </Typography>
               </Grid>
@@ -168,15 +272,20 @@ export default function DetailedTeamPageComponent() {
 
             <Typography variant="body1" align="center" sx={{ mt: 2 }}>
               Net Spend:{" "}
-              {(returnLastValueOfObject(revenues.ticketing) +
-                returnLastValueOfObject(revenues.marketing) +
-                returnLastValueOfObject(revenues.broadcasting) +
+              {(returnTotalOfObject(revenues.ticketing) +
+                returnTotalOfObject(revenues.marketing) +
+                returnTotalOfObject(revenues.broadcasting) +
                 -(
-                  returnLastValueOfObject(expenses.salaries) +
-                  returnLastValueOfObject(expenses.amortization) +
-                  returnLastValueOfObject(expenses.operational)
+                  returnTotalOfObject(expenses.salaries) +
+                  returnTotalOfObject(expenses.amortization) +
+                  returnTotalOfObject(expenses.operational)
                 )) *
                 -1}{" "}
+              Mil. TL
+            </Typography>
+            <Typography variant="body1" align="center" sx={{ mt: 2 }}>
+              Net Spend Prediction for Next Month:{" "}
+              {(predictNetSpend()) * -1}{" "}
               Mil. TL
             </Typography>
             <Grid container spacing={1} sx={{ mt: 2 }}>
@@ -206,6 +315,24 @@ export default function DetailedTeamPageComponent() {
                 <Typography variant="body1" align="center">
                   Last Month Operational Expenses:
                   {" " + returnLastValueOfObject(expenses.operational)} Mil. TL
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container spacing={1} sx={{ mt: 2 }}>
+              <Grid item xs={6}>
+                <Typography variant="body1" align="center">
+                  Associated Lawyers:{" "}
+                  {team.lawyers.map((lawyer) => {
+                    return lawyer + ", ";
+                  })}{" "}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" align="center">
+                  Associated Board Members:{" "}
+                  {team.boardMembers.map((member) => {
+                    return member + ", ";
+                  })}{" "}
                 </Typography>
               </Grid>
             </Grid>
