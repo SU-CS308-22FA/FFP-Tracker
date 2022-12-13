@@ -40,6 +40,7 @@ export default function RegisterTeamComponent() {
       setErrorMessage(result);
     } else {
       try {
+
         const options = {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -53,6 +54,7 @@ export default function RegisterTeamComponent() {
           },
           options
         );
+
         alert("Team created successfully!");
         navigate(`/my/profile`);
       } catch (error) {
