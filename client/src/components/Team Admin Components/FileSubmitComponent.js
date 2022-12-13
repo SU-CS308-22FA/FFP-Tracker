@@ -73,7 +73,20 @@ export default function FileSubmitComponent() {
     }
 
 
-  // send email
+  /**
+   * This function takes in the parameters of the email 
+   * to be sent and sends the email to the receiver with 
+   * the provided mail template code on emailjs.com
+   * 
+   * 
+   * @function sendEmail
+   * @param {Object} parameters consists of the following:
+   * 1. to_name: name of the receiver
+   * 2. to_email: email of the receiver
+   * 3. from_email: email of the sender
+   * 4. message: message to be sent
+   * 5. subject: subject of the email 
+   */
   function sendEmail(parameters){
     emailjs.send('gmail', 'template_46kzdyk', parameters, 'vHB_tCaBZcPIUtpPO')
     .then(function(response) {
