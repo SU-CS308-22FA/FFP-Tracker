@@ -48,7 +48,7 @@ export default function FileStatusComponent() {
       }
     };
     fetchStatusData();
-  }, [user.role, user.teamId, setFileStatus]);
+  }, [user.role, user.team, setFileStatus]);
 
   const processDocument = async (process, doc_id) => {
     try {
@@ -140,7 +140,7 @@ export default function FileStatusComponent() {
         <Typography variant="h3" component="h1" gutterBottom sx={{ mt: 4 }}>
           File Status
         </Typography>
-        <Container component="main" maxWidth="lg">
+        <Container component="main" maxWidth="lg" sx={{ mb: 4 }}>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
