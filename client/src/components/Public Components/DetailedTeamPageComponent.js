@@ -101,6 +101,15 @@ export default function DetailedTeamPageComponent() {
     return netSpend;
   }
 
+
+  /**
+   * This function takes an object as input and 
+   * returns the total of all the values in the object
+   * 
+   * @function returnTotalOfObject
+   * @param {Object} obj Object to be summed up 
+   * @returns {integer} total of all the values in the object
+   */
   function returnTotalOfObject(obj) {
     let total = 0;
     for (let i = 0; i < Object.keys(obj).length; i++) {
