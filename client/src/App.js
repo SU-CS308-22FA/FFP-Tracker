@@ -10,6 +10,7 @@ import ProfilePage from "./pages/User Pages/ProfilePage";
 import NotificationPage from "./pages/User Pages/NotificationPage"; // user pages ekle
 import { UserContextProvider } from "./contexts/userContext";
 import RegisterTeamPage from "./pages/TFF Admin Pages/RegisterTeamPage";
+import DenyTransactionPage from "./pages/TFF Admin Pages/DenyTransactionPage";
 import RequireAuth from "./components/RequireAuth";
 import { ROLES } from "./app/roles";
 import PersistLogin from "./components/PersistLogin";
@@ -45,6 +46,7 @@ function App() {
             <Route path="edit/team/" element={<EditTeamPage />} />
           </Route>
           <Route element={<RequireAuth allowedRoles={[ROLES.TFF_ADMIN]} />}>
+            <Route path="/denytransaction" element={<DenyTransactionPage />} />
             <Route path="/newteam" element={<RegisterTeamPage />} />
             <Route path="register" element={<SendKeyPage />} />
           </Route>
