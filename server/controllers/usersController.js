@@ -73,7 +73,7 @@ const createUser = asyncHandler(async (req, res) => {
       team: userInfo.team,
     };
     const team = await Team.findOne({ _id: userInfo.team }).exec();
-    team.admin = user.email;
+    team.admin = email;
     await team.save();
   } else {
     userObject = {

@@ -248,7 +248,7 @@ export default function DenyTransactionComponent() {
                         src={team.logoURL}
                         sx={{ mt: 2, mb: 2, width: 56, height: 56 }}
                       />
-                      <Typography variant="h6">
+                      <Typography variant="h5" sx={{ mb: 2 }}>
                         Team is {team.teamName}{" "}
                       </Typography>
                       {lastDate ? (
@@ -273,7 +273,7 @@ export default function DenyTransactionComponent() {
                             Last amortizational expense is{" "}
                             {lastExpenseAmortization}{" "}
                           </Typography>
-                          <Typography variant="h6s">
+                          <Typography variant="h6">
                             Last operational expense is {lastExpenseOperational}{" "}
                           </Typography>
                         </>

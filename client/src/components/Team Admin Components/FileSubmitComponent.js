@@ -18,7 +18,6 @@ import emailjs from "@emailjs/browser";
 import SimpleLinearRegression from "ml-regression-simple-linear";
 import { useParams } from "react-router-dom";
 
-
 const theme = createTheme();
 
 export default function FileSubmitComponent() {
@@ -34,7 +33,6 @@ export default function FileSubmitComponent() {
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
   const { id } = useParams();
-
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -56,45 +54,46 @@ export default function FileSubmitComponent() {
     };
     fetchExpenses();
     fetchRevenues();
-
     fetchUsers();
   }, [setUsers]);
 
   const navigate = useNavigate();
 
-    // takes an integer input and returns sequence of integers from 0 to input
-    function getSequence(input) {
-      let sequence = [];
-      for (let i = 1; i < input+1; i++) {
-        sequence.push(i);
-      }
-      return sequence;
+  // takes an integer input and returns sequence of integers from 0 to input
+  function getSequence(input) {
+    let sequence = [];
+    for (let i = 1; i < input + 1; i++) {
+      sequence.push(i);
     }
-
+    return sequence;
+  }
 
   /**
-   * This function takes in the parameters of the email 
-   * to be sent and sends the email to the receiver with 
+   * This function takes in the parameters of the email
+   * to be sent and sends the email to the receiver with
    * the provided mail template code on emailjs.com
-   * 
-   * 
+   *
+   *
    * @function sendEmail
    * @param {Object} parameters consists of the following:
    * 1. to_name: name of the receiver
    * 2. to_email: email of the receiver
    * 3. from_email: email of the sender
    * 4. message: message to be sent
-   * 5. subject: subject of the email 
+   * 5. subject: subject of the email
    */
-  function sendEmail(parameters){
-    emailjs.send('gmail', 'template_46kzdyk', parameters, 'vHB_tCaBZcPIUtpPO')
-    .then(function(response) {
-       console.log('SUCCESS!', response.status, response.text);
-    }, function(error) {
-       console.log('FAILED...', error);
-    });
+  function sendEmail(parameters) {
+    emailjs
+      .send("gmail", "template_46kzdyk", parameters, "vHB_tCaBZcPIUtpPO")
+      .then(
+        function (response) {
+          console.log("SUCCESS!", response.status, response.text);
+        },
+        function (error) {
+          console.log("FAILED...", error);
+        }
+      );
   }
-
 
   // get list of all users with role of TFF Admin
   const getTFFAdmins = () => {
@@ -109,23 +108,17 @@ export default function FileSubmitComponent() {
     }
   };
 
-
   const getLawyers = () => {
     if (users) {
       let lawyers = [];
       for (let i = 0; i < users.length; i++) {
         if (users[i].role === "Lawyer") {
-
-          lawyers.push(users[i]._id);
-
-     
-
+          lawyers.push(users[i]);
         }
       }
       return lawyers;
     }
   };
-
 
   // create notification function
   async function createNotification(sender, receiver, subject, message) {
@@ -142,6 +135,7 @@ export default function FileSubmitComponent() {
 
   // send notification about submitted file, to all TFF Admins
   function sendNotificationToTFFAdmins() {
+    console.log("sendNotificationToTFFAdmins");
     const tffAdmins = getTFFAdmins();
     try {
       for (let i = 0; i < tffAdmins.length; i++) {
@@ -153,18 +147,19 @@ export default function FileSubmitComponent() {
         );
       }
       console.log("succesfully send Notification To TFFAdmins");
-    } 
-    catch (error) {
+    } catch (error) {
       console.log(error);
       setE(true);
-      setErrorMessage("Error sending notification to TFF Admins Error:" + error);
+      setErrorMessage(
+        "Error sending notification to TFF Admins Error:" + error
+      );
     }
   }
 
   // send notification to all Lawyers
   function sendNotificationToLawyers() {
     const lawyers = getLawyers();
-    try{
+    try {
       for (let i = 0; i < lawyers.length; i++) {
         createNotification(
           user._id,
@@ -174,30 +169,28 @@ export default function FileSubmitComponent() {
         );
       }
       console.log("succesfully send Notification To Lawyers");
-    } 
-    catch (error) {
+    } catch (error) {
       console.log(error);
       setE(true);
       setErrorMessage("Error sending notification to lawyers Error:" + error);
     }
   }
 
-
   // send notification to user about submitted file
   function sendNotificationToUser() {
     try {
-	    createNotification(
+      createNotification(
         user._id,
         user._id,
         "File Submission",
         "Your file has been submitted for review."
-	    );
-	    console.log("succesfully submitted file notification is sent");
-      } catch (error) {
-        console.log(error);
-        setE(true);
-        setErrorMessage("Error sending notification to user Error:" + error);
-      }
+      );
+      console.log("succesfully submitted file notification is sent");
+    } catch (error) {
+      console.log(error);
+      setE(true);
+      setErrorMessage("Error sending notification to user Error:" + error);
+    }
   }
 
   function returnLastValueOfObject(obj) {
@@ -237,7 +230,7 @@ export default function FileSubmitComponent() {
       total += returnTotalOfObject(teamExpenses[i].amortization);
       total += returnTotalOfObject(teamExpenses[i].operational);
     }
-    console.log("Total Expenses are: " +total);
+    console.log("Total Expenses are: " + total);
     return total;
   };
 
@@ -254,76 +247,81 @@ export default function FileSubmitComponent() {
     }
   };
 
-    // get total of all revenues for users team
-    const TotalRevenues = () => {
-      var total = 0;
-      const teamRevenues = getRevenues();
-      for (let i = 0; i < teamRevenues.length; i++) {
-        total += returnTotalOfObject(teamRevenues[i].ticketing);
-        total += returnTotalOfObject(teamRevenues[i].marketing);
-        total += returnTotalOfObject(teamRevenues[i].broadcasting);
-      }
-      console.log("Total Revenues are:" + total);
-      return total;
-    };
+  // get total of all revenues for users team
+  const TotalRevenues = () => {
+    var total = 0;
+    const teamRevenues = getRevenues();
+    for (let i = 0; i < teamRevenues.length; i++) {
+      total += returnTotalOfObject(teamRevenues[i].ticketing);
+      total += returnTotalOfObject(teamRevenues[i].marketing);
+      total += returnTotalOfObject(teamRevenues[i].broadcasting);
+    }
+    console.log("Total Revenues are:" + total);
+    return total;
+  };
 
+  const NetSpend = () => {
+    console.log("Net Spend is:" + TotalExpenses() - TotalRevenues());
+    return TotalExpenses() - TotalRevenues();
+  };
 
-    const NetSpend = () => {
-      console.log("Net Spend is:" + TotalExpenses() - TotalRevenues());
-      return TotalExpenses() - TotalRevenues();
-    };
-
-    // get all users with role of Team Admin and team of users team
-    const getTeamAdmins = () => {
-      if (users) {
-        let teamAdmins = [];
-        for (let i = 0; i < users.length; i++) {
-          if (users[i].role === "Team Admin" && users[i].team === user.team) {
-            teamAdmins.push(users[i]);
-          }
+  // get all users with role of Team Admin and team of users team
+  const getTeamAdmins = () => {
+    if (users) {
+      let teamAdmins = [];
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].role === "Team Admin" && users[i].team === user.team) {
+          teamAdmins.push(users[i]);
         }
-        return teamAdmins;
       }
-    };
+      return teamAdmins;
+    }
+  };
 
-
-    // send notification to user if net spend is positive
-    function sendNotificationToUserIfNetSpendIsPositive() {
-      if (NetSpend() > 0) {
-        try {
-          // send notification to all team admins of users team
-          const teamAdmins = getTeamAdmins();
-          for (let i = 0; i < teamAdmins.length; i++) {
-            createNotification(
-              user._id,
-              teamAdmins[i]._id,
-              "Net Spend",
-              "Your net spend is: " + NetSpend() + "Mil. TL. " + "Please check your expenses"
-            );
-          }
-          console.log("succesfully sent positive net spend notification to user");
-        } catch (error) {
-          console.log(error);
-          setE(true);
-          setErrorMessage("Error sending positive net spend notification to user Error:" + error);
+  // send notification to user if net spend is positive
+  function sendNotificationToUserIfNetSpendIsPositive() {
+    if (NetSpend() > 0) {
+      try {
+        // send notification to all team admins of users team
+        const teamAdmins = getTeamAdmins();
+        for (let i = 0; i < teamAdmins.length; i++) {
+          createNotification(
+            user._id,
+            teamAdmins[i]._id,
+            "Net Spend",
+            "Your net spend is: " +
+              NetSpend() +
+              "Mil. TL. " +
+              "Please check your expenses"
+          );
         }
+        console.log("succesfully sent positive net spend notification to user");
+      } catch (error) {
+        console.log(error);
+        setE(true);
+        setErrorMessage(
+          "Error sending positive net spend notification to user Error:" + error
+        );
       }
     }
+  }
 
-      // write a linear regression prediction function for revenues
+  // write a linear regression prediction function for revenues
   function predictRevenue() {
     const teamRevenues = getRevenues();
     let x = getSequence(Object.keys(teamRevenues[0].ticketing).length);
     let y = [];
 
-    
     for (const [key, value] of Object.entries(teamRevenues[0].ticketing)) {
-      y.push(value + teamRevenues[0].marketing[key] + teamRevenues[0].broadcasting[key]);
+      y.push(
+        value +
+          teamRevenues[0].marketing[key] +
+          teamRevenues[0].broadcasting[key]
+      );
     }
     // revert the order of the y array
     y = y.reverse();
-    
-      
+
     // create a linear regression model
     const model = new SimpleLinearRegression(x, y);
 
@@ -333,16 +331,19 @@ export default function FileSubmitComponent() {
     return prediction;
   }
 
-
   // write a linear regression prediction function for expenses
   function predictExpense() {
     const teamExpenses = getExpenses();
     let x = getSequence(Object.keys(teamExpenses[0].salaries).length);
     let y = [];
-    
+
     // get the values of each expense objects
     for (const [key, value] of Object.entries(teamExpenses[0].salaries)) {
-      y.push(value + teamExpenses[0].amortization[key] + teamExpenses[0].operational[key]);
+      y.push(
+        value +
+          teamExpenses[0].amortization[key] +
+          teamExpenses[0].operational[key]
+      );
     }
     // revert the order of the y array
     y = y.reverse();
@@ -354,10 +355,7 @@ export default function FileSubmitComponent() {
     let prediction = model.predict(x.length + 1);
     console.log("Expense prediction for next month is:" + prediction);
     return prediction;
-
   }
-
-
 
   // predict Net Spend
   function predictNetSpend() {
@@ -366,88 +364,107 @@ export default function FileSubmitComponent() {
     return netSpend;
   }
 
+  // send notification to team admins if predicted net spend is negative
+  function sendNotificationToTeamAdminsIfPredictedNetSpendIsNegative() {
+    let PredictedNetSpend = predictNetSpend();
+    console.log("Predicted Net Spend is:" + PredictedNetSpend);
+    if (PredictedNetSpend < 0) {
+      try {
+        // send notification to all team admins of users team
+        const teamAdmins = getTeamAdmins();
 
-    // send notification to team admins if predicted net spend is negative
-    function sendNotificationToTeamAdminsIfPredictedNetSpendIsNegative() {
-      let PredictedNetSpend = predictNetSpend();
-      console.log("Predicted Net Spend is:" + PredictedNetSpend);
-      if (PredictedNetSpend < 0) {
-        try {
-          // send notification to all team admins of users team
-          const teamAdmins = getTeamAdmins();
+        console.log("team admins are:");
+        console.log(teamAdmins);
 
-          console.log("team admins are:");
-          console.log(teamAdmins);
-
-          for (let i = 0; i < teamAdmins.length; i++) {
-            createNotification(
-              user._id,
-              teamAdmins[i]._id,
-              "Predicted Net Spend",
-              "Your predicted net spend is: " + PredictedNetSpend + "Mil. TL for the next month. " + "Please check your expenses."
-            );
-          }
-          console.log("succesfully sent predicted negative net spend notification to team admins");
-        } catch (error) {
-          console.log(error);
-          setE(true);
-          setErrorMessage("Error sending predicted negative net spend notification to team admins Error:" + error);
+        for (let i = 0; i < teamAdmins.length; i++) {
+          createNotification(
+            user._id,
+            teamAdmins[i]._id,
+            "Predicted Net Spend",
+            "Your predicted net spend is: " +
+              PredictedNetSpend +
+              "Mil. TL for the next month. " +
+              "Please check your expenses."
+          );
         }
+        console.log(
+          "succesfully sent predicted negative net spend notification to team admins"
+        );
+      } catch (error) {
+        console.log(error);
+        setE(true);
+        setErrorMessage(
+          "Error sending predicted negative net spend notification to team admins Error:" +
+            error
+        );
       }
     }
+  }
 
-    // send email to team admins if predicted net spend is negative
-    function sendEmailToTeamAdminsIfPredictedNetSpendIsNegative() {
-      let PredictedNetSpend = predictNetSpend();
-      if (PredictedNetSpend < 0) {
-        try {
-          // send email to all team admins of users team
-          const teamAdmins = getTeamAdmins();
-          for (let i = 0; i < teamAdmins.length; i++) {
-            var parameters = {
-              to_email: teamAdmins[i].email,
-              to_name: teamAdmins[i].fullname,
-              from_email: "retsim75@gmail.com",
-              subject: "Financial Risk is Predicted in Net Spend for Next Month",
-              message: "Your predicted net spend is: " + PredictedNetSpend*-1 + "Mil. TL for the next month. Please check your expenses."
-            };
-            sendEmail(parameters);
-          }
-          console.log("succesfully sent predicted net spend email to team admins");
-        } catch (error) {
-          console.log(error);
-          setE(true);
-          setErrorMessage("Error sending predicted net spend email to team admins Error:" + error);
+  // send email to team admins if predicted net spend is negative
+  function sendEmailToTeamAdminsIfPredictedNetSpendIsNegative() {
+    let PredictedNetSpend = predictNetSpend();
+    if (PredictedNetSpend < 0) {
+      try {
+        // send email to all team admins of users team
+        const teamAdmins = getTeamAdmins();
+        for (let i = 0; i < teamAdmins.length; i++) {
+          var parameters = {
+            to_email: teamAdmins[i].email,
+            to_name: teamAdmins[i].fullname,
+            from_email: "retsim75@gmail.com",
+            subject: "Financial Risk is Predicted in Net Spend for Next Month",
+            message:
+              "Your predicted net spend is: " +
+              PredictedNetSpend * -1 +
+              "Mil. TL for the next month. Please check your expenses.",
+          };
+          sendEmail(parameters);
         }
+        console.log(
+          "succesfully sent predicted net spend email to team admins"
+        );
+      } catch (error) {
+        console.log(error);
+        setE(true);
+        setErrorMessage(
+          "Error sending predicted net spend email to team admins Error:" +
+            error
+        );
       }
     }
+  }
 
-
-    // send email to team admins if net spend is positive
-    function sendEmailToTeamAdminsIfNetSpendIsPositive() {
-      if (NetSpend() > 0) {
-        try {
-          // send email to all team admins of users team
-          const teamAdmins = getTeamAdmins();
-          for (let i = 0; i < teamAdmins.length; i++) {
-            var parameters = {
-              to_email: teamAdmins[i].email,
-              to_name: teamAdmins[i].fullname,
-              from_email: "retsim75@gmail.com",
-              subject: "Net Spend is Positive",
-              message: "Your net spend is: " + NetSpend() + "Mil. TL. " + "Please check your expenses"
-            };
-            sendEmail(parameters);
-          }
-          console.log("succesfully sent positive net spend email to team admins");
-        } catch (error) {
-          console.log(error);
-          setE(true);
-          setErrorMessage("Error sending positive net spend email to team admins Error:" + error);
+  // send email to team admins if net spend is positive
+  function sendEmailToTeamAdminsIfNetSpendIsPositive() {
+    if (NetSpend() > 0) {
+      try {
+        // send email to all team admins of users team
+        const teamAdmins = getTeamAdmins();
+        for (let i = 0; i < teamAdmins.length; i++) {
+          var parameters = {
+            to_email: teamAdmins[i].email,
+            to_name: teamAdmins[i].fullname,
+            from_email: "retsim75@gmail.com",
+            subject: "Net Spend is Positive",
+            message:
+              "Your net spend is: " +
+              NetSpend() +
+              "Mil. TL. " +
+              "Please check your expenses",
+          };
+          sendEmail(parameters);
         }
+        console.log("succesfully sent positive net spend email to team admins");
+      } catch (error) {
+        console.log(error);
+        setE(true);
+        setErrorMessage(
+          "Error sending positive net spend email to team admins Error:" + error
+        );
       }
     }
-
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -465,7 +482,6 @@ export default function FileSubmitComponent() {
       setErrorMessage("Date cannot be in the future!");
     } else {
       try {
-
         const options = {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -491,18 +507,18 @@ export default function FileSubmitComponent() {
           },
           options
         );
-
+        await FFP_API.post(`/files/team/${user.team}`, {
+          file: selectedFile,
+          submitDate: date,
+        });
         alert("Successfully submitted!");
         sendNotificationToTFFAdmins();
         sendNotificationToLawyers();
         sendNotificationToUser();
-
         sendNotificationToUserIfNetSpendIsPositive();
         sendEmailToTeamAdminsIfNetSpendIsPositive();
-      
         sendNotificationToTeamAdminsIfPredictedNetSpendIsNegative();
         sendEmailToTeamAdminsIfPredictedNetSpendIsNegative();
-
         navigate(`/my/profile/`);
       } catch (error) {
         console.log(error);

@@ -133,7 +133,7 @@ export default function RegisterTeamComponent() {
             alignItems: "center",
           }}
         >
-          <Typography component="h1" variant="h3" sx={{}}>
+          <Typography component="h1" variant="h3" sx={{ mt: 2 }}>
             DELETE TEAM
           </Typography>
         </Box>
@@ -150,7 +150,7 @@ export default function RegisterTeamComponent() {
                   <Container maxWidth="md">
                     <Box
                       sx={{
-                        m: 6,
+                        mb: 2,
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
