@@ -68,6 +68,7 @@ function ProfileAppBar() {
 
         <Button color="inherit" component={Link} to="/deleteteam">
           Delete Team
+          </Button>
 
         <Button color="inherit" component={Link} to="/denytransaction">
           Deny Transaction
