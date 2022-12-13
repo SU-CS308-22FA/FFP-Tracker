@@ -9,6 +9,7 @@ router
   .route("/:id")
   .get(expensesController.getExpenseById)
   .post(verifyJWT, expensesController.createExpenseById)
+  .delete(verifyJWT, expensesController.deleteExpense)
   .patch(verifyJWT, expensesController.updateExpenseById);
 
 module.exports = router;
