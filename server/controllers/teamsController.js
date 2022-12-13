@@ -127,6 +127,16 @@ const updateTeam = asyncHandler(async (req, res) => {
   }
 });
 
+const deleteTeam = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  if (!id) return res.status(400).json({ error: "Team ID is required!" });
+  const user = await Team.findOne({ _id: id }).exec();
+  if (!user) return res.status(400).json({ error: "Team does not exist!" });
+  const result = await Team.deleteOne({ _id: id });
+  const reply = `${result.teamName} succesfully deleted.`;
+  res.json(reply);
+});
+
 module.exports = {
   getAllTeams,
   getAllGraphData,
@@ -136,4 +146,5 @@ module.exports = {
   updateTeam,
   getTeamAdmin,
   getTeamGraphDataById,
+  deleteTeam,
 };
