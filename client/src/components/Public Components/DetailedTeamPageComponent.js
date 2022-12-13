@@ -7,6 +7,9 @@ import { useState, useEffect } from "react";
 import { Avatar, Button, Box } from "@mui/material";
 import { UserContext } from "../../contexts/userContext";
 import { useContext } from "react";
+import SimpleLinearRegression from "ml-regression-simple-linear";
+import emailjs from "@emailjs/browser";
+
 
 export default function DetailedTeamPageComponent() {
   const { token } = useContext(UserContext);
@@ -32,6 +35,87 @@ export default function DetailedTeamPageComponent() {
     fetchRevenues();
     fetchExpenses();
   }, [setTeam, setRevenues, setExpenses, id]);
+
+  // gets key of the revenue objects and returns a timestamp
+  function getTimestamp(key) {
+    let date = new Date(key);
+    console.log(date.getTime());
+    return date.getTime();
+  }
+
+  // takes an integer input and returns sequence of integers from 0 to input
+  function getSequence(input) {
+    let sequence = [];
+    for (let i = 1; i < input+1; i++) {
+      sequence.push(i);
+    }
+    return sequence;
+  }
+
+  // write a linear regression prediction function for revenues
+  function predictRevenue() {
+    let x = getSequence(Object.keys(revenues.ticketing).length);
+    let y = [];
+
+    // get the values of each revenue objects
+    for (const [key, value] of Object.entries(revenues.ticketing)) {
+      y.push(value + revenues.marketing[key] + revenues.broadcasting[key]);
+    }
+    // revert the order of the y array
+    y = y.reverse();
+
+    // create a linear regression model
+    const model = new SimpleLinearRegression(x, y);
+
+    // predict the next revenue
+    let prediction = model.predict(x.length + 1);
+    console.log("Revenue prediction for next month is:" + prediction);
+    return prediction;
+  }
+
+  // write a linear regression prediction function for expenses
+  function predictExpense() {
+    let x = getSequence(Object.keys(expenses.salaries).length);
+    let y = [];
+    // get the values of each expense objects
+    for (const [key, value] of Object.entries(expenses.salaries)) {
+      y.push(value + expenses.amortization[key] + expenses.operational[key]);
+    }
+    // revert the order of the y array
+    y = y.reverse();
+
+    // create a linear regression model
+    const model = new SimpleLinearRegression(x, y);
+
+    // predict the next expense
+    let prediction = model.predict(x.length + 1);
+    console.log("Expense prediction for next month is:" + prediction);
+    return prediction;
+  }
+
+  // predict Net Spend
+  function predictNetSpend() {
+    let netSpend = predictRevenue() - predictExpense();
+    console.log("Net Spend prediction for next month is:" + netSpend);
+    return netSpend;
+  }
+
+
+  /**
+   * This function takes an object as input and 
+   * returns the total of all the values in the object
+   * 
+   * @function returnTotalOfObject
+   * @param {Object} obj Object to be summed up 
+   * @returns {integer} total of all the values in the object
+   */
+  function returnTotalOfObject(obj) {
+    let total = 0;
+    for (let i = 0; i < Object.keys(obj).length; i++) {
+      total += obj[Object.keys(obj)[i]];
+    }
+    return total;
+  }
 
   function returnLastValueOfObject(obj) {
     return obj[Object.keys(obj)[Object.keys(obj).length - 1]];
@@ -164,9 +248,9 @@ export default function DetailedTeamPageComponent() {
                 </Typography>
                 <Typography variant="body1" align="center">
                   Total Revenues:{" "}
-                  {returnLastValueOfObject(revenues.ticketing) +
-                    returnLastValueOfObject(revenues.marketing) +
-                    returnLastValueOfObject(revenues.broadcasting)}{" "}
+                  {returnTotalOfObject(revenues.ticketing) +
+                    returnTotalOfObject(revenues.marketing) +
+                    returnTotalOfObject(revenues.broadcasting)}{" "}
                   Mil. TL
                 </Typography>
               </Grid>
@@ -176,9 +260,9 @@ export default function DetailedTeamPageComponent() {
                 </Typography>
                 <Typography variant="body1" align="center">
                   Total Expenses:{" "}
-                  {returnLastValueOfObject(expenses.salaries) +
-                    returnLastValueOfObject(expenses.amortization) +
-                    returnLastValueOfObject(expenses.operational)}{" "}
+                  {returnTotalOfObject(expenses.salaries) +
+                    returnTotalOfObject(expenses.amortization) +
+                    returnTotalOfObject(expenses.operational)}{" "}
                   Mil. TL
                 </Typography>
               </Grid>
@@ -186,15 +270,20 @@ export default function DetailedTeamPageComponent() {
 
             <Typography variant="body1" align="center" sx={{ mt: 2 }}>
               Net Spend:{" "}
-              {(returnLastValueOfObject(revenues.ticketing) +
-                returnLastValueOfObject(revenues.marketing) +
-                returnLastValueOfObject(revenues.broadcasting) +
+              {(returnTotalOfObject(revenues.ticketing) +
+                returnTotalOfObject(revenues.marketing) +
+                returnTotalOfObject(revenues.broadcasting) +
                 -(
-                  returnLastValueOfObject(expenses.salaries) +
-                  returnLastValueOfObject(expenses.amortization) +
-                  returnLastValueOfObject(expenses.operational)
+                  returnTotalOfObject(expenses.salaries) +
+                  returnTotalOfObject(expenses.amortization) +
+                  returnTotalOfObject(expenses.operational)
                 )) *
                 -1}{" "}
+              Mil. TL
+            </Typography>
+            <Typography variant="body1" align="center" sx={{ mt: 2 }}>
+              Net Spend Prediction for Next Month:{" "}
+              {(predictNetSpend()) * -1}{" "}
               Mil. TL
             </Typography>
             <Grid container spacing={1} sx={{ mt: 2 }}>
