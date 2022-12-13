@@ -184,7 +184,7 @@ export default function DenyTransactionComponent() {
   const submit = (teamName, admin, id) => {
     confirmAlert({
       title: "CONFIRM TO DENY",
-      message: "Are you sure to do deny " + teamName + " last transaction.",
+      message: "Are you sure to do deny " + teamName + "'s last transaction?",
       buttons: [
         {
           label: "Yes",

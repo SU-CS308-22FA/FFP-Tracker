@@ -108,7 +108,7 @@ export default function RegisterTeamComponent() {
   const submit = (teamName, admin, id) => {
     confirmAlert({
       title: "CONFIRM TO DELETE",
-      message: "Are you sure to do delete " + teamName + ".",
+      message: "Are you sure to do delete " + teamName + "?",
       buttons: [
         {
           label: "Yes",
