@@ -29,8 +29,9 @@ export default function FileStatusComponent() {
   useEffect(() => {
     const fetchStatusData = async () => {
       if (user.role === "Team Admin") {
-        await FFP_API.get(`/files/team/${user.teamId}`).then((res) => {
+        await FFP_API.get(`/files/team/${user.team}`).then((res) => {
           const files = res.data;
+          console.log(files);
           files.sort(function (a, b) {
             return new Date(b.submitDate) - new Date(a.submitDate);
           });

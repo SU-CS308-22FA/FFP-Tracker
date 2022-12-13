@@ -26,7 +26,10 @@ const getFileById = asyncHandler(async (req, res) => {
 // @access private
 const getFilesByTeamId = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const files = await File.find({ teamId: id }).lean();
+  const team = await Team.findOne({ _id: id }).lean();
+  if (!team) return res.status(404).json({ error: "Team not found!" });
+
+  const files = await File.find({ teamName: team.teamName }).lean();
   if (!files) return res.status(404).json({ error: "No file found" });
   return res.status(200).json(files);
 });
