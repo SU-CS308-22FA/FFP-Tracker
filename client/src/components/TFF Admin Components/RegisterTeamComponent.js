@@ -40,20 +40,21 @@ export default function RegisterTeamComponent() {
       setErrorMessage(result);
     } else {
       try {
-        const tname = data.get(`teamName`);
-        const sbudget = data.get(`seasonBudget`);
-        console.log(tname, sbudget);
+
         const options = {
-          method: "POST",
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
           },
-          body: {
+        };
+        await FFP_API.post(
+          `/teams`,
+          {
             teamName: data.get("teamName"),
             seasonBudget: data.get("seasonBudget"),
           },
-        };
-        await FFP_API.request(`/teams`, options);
+          options
+        );
+
         alert("Team created successfully!");
         navigate(`/my/profile`);
       } catch (error) {

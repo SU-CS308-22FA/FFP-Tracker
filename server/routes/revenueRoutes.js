@@ -9,6 +9,7 @@ router
   .route("/:id")
   .get(revenueController.getRevenueById)
   .post(verifyJWT, revenueController.createRevenueById)
+  .delete(verifyJWT, revenueController.deleteRevenue)
   .patch(verifyJWT, revenueController.updateRevenueById);
 
 module.exports = router;
