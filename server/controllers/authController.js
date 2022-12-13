@@ -4,15 +4,15 @@ const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 
 /**
- * @desc Login to the system
- * @route POST /auth/login
- * @access Public
+ * Login to the system
+ * @async
+ * @function
  * @param {string} email - Email of the user
  * @param {string} password - Password of the user
  * @returns {object} accessToken - JWT token
- * @throws {400} - Bad Request - All fields are required
- * @throws {404} - User not found - Wrong Credentials
- * @throws {401} - Unauhtorized - Wrong Credentials
+ * @throws 400 Bad Request - All fields are required
+ * @throws 404 User not found - Wrong Credentials
+ * @throws 401 Unauhtorized - Wrong Credentials
  */
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;

@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cd server && npm install && node server.js",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "heroku-postbuild": "cd client && npm install && npm run build",
+    "doc": "jsdoc -c jsdoc.json"
   },
   "repository": {
     "type": "git",
@@ -24,7 +25,8 @@
   "homepage": "https://github.com/SU-CS308-22FA/CS-308-Team-19-202201#readme",
   "dependencies": {
     "crypto": "^1.0.1",
-    "emailjs-com": "^3.2.0"
+    "emailjs-com": "^3.2.0",
+    "jsdoc": "^4.0.0"
   },
   "devDependencies": {
     "esdoc": "^1.1.0",

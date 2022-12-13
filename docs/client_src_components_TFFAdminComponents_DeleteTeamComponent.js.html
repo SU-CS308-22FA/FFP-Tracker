@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: client/src/components/TFFAdminComponents/DeleteTeamComponent.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: client/src/components/TFFAdminComponents/DeleteTeamComponent.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import {
+  Alert,
+  Avatar,
+  Button,
+  CssBaseline,
+  TextField,
+  Box,
+  Container,
+  Typography,
+  Grid,
+} from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useState, useEffect } from "react";
+import CircularProgressComponent from "../Public Components/CircularProgressComponent";
+import FFP_API from "../../app/api";
+import { useNavigate } from "react-router-dom";
+import emailjs from "@emailjs/browser";
+import DeleteConfirmation from "../Public Components/DeleteConfirmation";
+import { confirmAlert } from "react-confirm-alert"; // Import
+import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
+
+const theme = createTheme();
+
+export default function RegisterTeamComponent() {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const [teams, setTeams] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [e, setE] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+
+  /**
+   * This function will accept details about a team
+   * delete the team from the database
+   * and notify the admin of the team via email.
+   *
+   * @async
+   * @function handleDeleteTeam
+   * @param {string} teamName The team's full name
+   * @param {string} teamAdmin The team admin's email
+   * @param {string} teamID The team's id in the database
+   * @throws Will throw an error if team deletion was not successful.
+   * @throws Will throw an error if email sending was not successful.
+   */
+  const handleDeleteTeam = async (teamName, teamAdmin, teamID) => {
+    if (teamAdmin) {
+      var templateParams = {
+        email: teamAdmin,
+        teamName: teamName,
+      };
+      await emailjs
+        .send(
+          "service_6wdin2n",
+          "delete_form",
+          templateParams,
+          "dJFhrGo-1Kr0IaXKq"
+        )
+        .then(
+          (result) => {
+            console.log(result.text);
+          },
+          (error) => {
+            console.log(error.text);
+          }
+        );
+    }
+
+    try {
+      const options = {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      };
+      await FFP_API.request(`/teams/${teamID}`, options);
+      alert("You have successfully deleted the team! Page will be refreshed.");
+      window.location.reload();
+    } catch (error) {
+      setE(true);
+      setErrorMessage(error.response.data);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      await FFP_API.get("/teams/data").then((res) => {
+        setTeams(res.data.teams);
+      });
+      setLoading(false);
+    };
+    if (loading) fetchData();
+  });
+
+  /**
+   *
+   * This function will accept details about a team
+   * and display delete confirmation message.
+   * Prompts the user one last time before deleting the team
+   * and deletes or does not delete the team based on the user's response.
+   *
+   * @function submit
+   * @param {string} teamName The team's full name
+   * @param {string} admin The team admin's email
+   * @param {string} id The team's id in the database
+   */
+  const submit = (teamName, admin, id) => {
+    confirmAlert({
+      title: "CONFIRM TO DELETE",
+      message: "Are you sure to do delete " + teamName + ".",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => handleDeleteTeam(teamName, admin, id),
+        },
+        {
+          label: "No",
+          //onClick: () => alert("Team has not been deleted!"),
+        },
+      ],
+    });
+  };
+
+  return (
+    &lt;>
+      &lt;Container maxWidth="md">
+        &lt;Box
+          sx={{
+            m: 2,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          &lt;Typography component="h1" variant="h3" sx={{}}>
+            DELETE TEAM
+          &lt;/Typography>
+        &lt;/Box>
+      &lt;/Container>
+      {!loading ? (
+        teams.map((team) => {
+          return !team ? (
+            &lt;CircularProgressComponent />
+          ) : (
+            &lt;>
+              &lt;li key={team.teamName}>
+                &lt;ThemeProvider theme={theme}>
+                  &lt;CssBaseline />
+                  &lt;Container maxWidth="md">
+                    &lt;Box
+                      sx={{
+                        m: 6,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
+                      &lt;Typography variant="h6">{team.teamName} &lt;/Typography>
+                      &lt;Avatar
+                        src={team.logoURL}
+                        sx={{ mt: 2, width: 56, height: 56 }}
+                      />
+                      {e &amp;&amp; (
+                        &lt;Alert variant="outlined" severity="error">
+                          {errorMessage}
+                        &lt;/Alert>
+                      )}
+                      &lt;Button
+                        onClick={() =>
+                          submit(team.teamName, team.admin, team._id)
+                        }
+                        variant="contained"
+                        sx={{
+                          mt: 2,
+                          mb: 4,
+                          bgcolor: "#51087E",
+                          "&amp;:hover": {
+                            backgroundColor: "#51087E",
+                          },
+                        }}
+                      >
+                        DELETE
+                      &lt;/Button>
+                    &lt;/Box>
+                  &lt;/Container>
+                &lt;/ThemeProvider>
+              &lt;/li>
+            &lt;/>
+          );
+        })
+      ) : (
+        &lt;CircularProgressComponent />
+      )}
+    &lt;/>
+  );
+}
+
+/*
+
+  const deleteByValue = (teamName, teamAdmin, value) => {
+    // DeleteConfirmation()
+    handleDeleteTeam(teamName, teamAdmin, value);
+    if (!setE) {
+      setTeams((oldValues) => {
+        return oldValues.filter((team) => team._id !== value);
+      });
+    }
+
+    //console.log(value);
+  };
+  
+*/
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#handleDeleteRevenueExpense">handleDeleteRevenueExpense</a></li><li><a href="global.html#handleDeleteTeam">handleDeleteTeam</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#returnTotalOfObject">returnTotalOfObject</a></li><li><a href="global.html#revenueExpenseFinder">revenueExpenseFinder</a></li><li><a href="global.html#sendEmail">sendEmail</a></li><li><a href="global.html#submit">submit</a></li><li><a href="global.html#updateExpenseById">updateExpenseById</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.0</a> on Wed Dec 14 2022 00:02:17 GMT+0300 (GMT+03:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
