@@ -19,7 +19,7 @@ const TeamSchema = new mongoose.Schema({
   manager: {
     type: String,
     required: false,
-    default: null,
+    default: "",
   },
   logoURL: {
     type: String,
@@ -33,6 +33,16 @@ const TeamSchema = new mongoose.Schema({
   currentBudget: {
     type: Number,
     required: true,
+  },
+  lawyers: {
+    type: Array,
+    required: true,
+    default: [],
+  },
+  boardMembers: {
+    type: Array,
+    required: true,
+    default: [],
   },
 });
 

@@ -27,6 +27,8 @@ export default function EditTeamComponent() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [wikiLink, setWikiLink] = useState("");
   const [manager, setManager] = useState("");
+  const [lawyers, setLawyers] = useState([]);
+  const [boardMembers, setBoardMembers] = useState([]);
 
   const navigate = useNavigate();
 
@@ -36,16 +38,34 @@ export default function EditTeamComponent() {
     if (
       team.wikiLink !== wikiLink ||
       team.manager !== manager ||
-      selectedFile
+      selectedFile ||
+      lawyers !== team.lawyers ||
+      boardMembers !== team.boardMembers
     ) {
-      await FFP_API.patch(`/teams/${team._id}`, {
-        wikiLink: data.get("wikiLink"),
-        manager: data.get("manager"),
-        logoURL: selectedFile ? selectedFile : team.logoURL,
-      }).then((res) => {
-        alert("Team updated successfully!");
-        navigate("/my/profile");
-      });
+      const options = {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      };
+      await FFP_API.patch(
+        `/teams/${team._id}`,
+        {
+          wikiLink: data.get("wikiLink") ?? "",
+          manager: data.get("manager") ?? "",
+          logoURL: selectedFile ? selectedFile : team.logoURL,
+          lawyers: lawyers,
+          boardMembers: boardMembers,
+        },
+        options
+      )
+        .then((res) => {
+          alert("Team updated successfully!");
+          window.location.reload();
+        })
+        .catch((err) => {
+          setE(true);
+          setErrorMessage(err.message);
+        });
     }
   };
 
@@ -62,6 +82,18 @@ export default function EditTeamComponent() {
     picker.open();
   };
 
+  const handleAddLawyer = (e) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    setLawyers([...lawyers, data.get("lname")]);
+  };
+
+  const handleAddBoardMember = (e) => {
+    e.preventDefault();
+    const data = new FormData(e.currentTarget);
+    setBoardMembers([...boardMembers, data.get("bname")]);
+  };
+
   useEffect(() => {
     const fetchTeamInfo = async () => {
       await FFP_API.get(`/teams/${user.team}`)
@@ -69,6 +101,8 @@ export default function EditTeamComponent() {
           setTeam(res.data);
           setWikiLink(res.data.wikiLink);
           setManager(res.data.manager);
+          setLawyers(res.data.lawyers);
+          setBoardMembers(res.data.boardMembers);
         })
         .catch((err) => {
           setE(true);
@@ -84,23 +118,69 @@ export default function EditTeamComponent() {
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Container maxWidth="md">
-          <Box
-            sx={{
-              m: 6,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Typography component="h1" variant="h4" sx={{ mb: 4 }}>
-              Update Your Team's Information
-            </Typography>
-            <Typography variant="h6">Your Team is {team.teamName} </Typography>
-            <Avatar src={team.logoURL} sx={{ mt: 2, width: 56, height: 56 }} />
-            {selectedFile && (
-              <>
+        <Typography
+          component="h1"
+          variant="h4"
+          align="center"
+          sx={{ mt: 2, mb: 4 }}
+        >
+          Update Your Team's Information
+        </Typography>
+        <Grid container>
+          <Grid item xs={7}>
+            <Container maxWidth="sm">
+              <Box
+                sx={{
+                  mt: 2,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Typography variant="h6">
+                  Your Team is {team.teamName}{" "}
+                </Typography>
+                <Avatar
+                  src={team.logoURL}
+                  sx={{ mt: 2, mb: 2, width: "auto" }}
+                />
+                {selectedFile ? (
+                  <>
+                    <Box
+                      sx={{
+                        mt: 2,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography variant="h7" sx={{ mb: 1 }}>
+                        This will be your new team logo:
+                      </Typography>
+                      <Avatar
+                        variant="square"
+                        src={selectedFile}
+                        sx={{ width: "15%", height: "15%" }}
+                      />
+                    </Box>
+                  </>
+                ) : (
+                  <Button
+                    onClick={handleFilePicker}
+                    variant="contained"
+                    sx={{
+                      bgcolor: "#51087E",
+                      "&:hover": {
+                        backgroundColor: "#51087E",
+                      },
+                    }}
+                  >
+                    Change Team Logo
+                  </Button>
+                )}
                 <Box
+                  component="form"
+                  onSubmit={handleSubmit}
                   sx={{
                     mt: 2,
                     display: "flex",
@@ -108,85 +188,219 @@ export default function EditTeamComponent() {
                     alignItems: "center",
                   }}
                 >
-                  <Typography variant="h7" sx={{ mb: 1 }}>
-                    This will be your new team logo:
-                  </Typography>
-                  <Avatar src={selectedFile} sx={{ width: 56, height: 56 }} />
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        value={wikiLink}
+                        onChange={(e) => setWikiLink(e.target.value)}
+                        id="wikiLink"
+                        label="Wikipedia Link"
+                        name="wikiLink"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        value={manager}
+                        onChange={(e) => setManager(e.target.value)}
+                        id="manager"
+                        label="Manager Name"
+                        name="manager"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant="h5" align="center" sx={{ mb: 2 }}>
+                        Your Lawyers:
+                      </Typography>
+                      {lawyers.length !== 0 ? (
+                        lawyers.map((lawyer) => {
+                          return (
+                            <>
+                              <Typography
+                                key={lawyer}
+                                variant="h6"
+                                sx={{ mb: 1 }}
+                              >
+                                {lawyer}
+                                <Button
+                                  key={lawyer}
+                                  variant="contained"
+                                  sx={{ ml: 2, bgcolor: "#51087E" }}
+                                  onClick={() => {
+                                    const newLawyers = lawyers.filter(
+                                      (l) => l !== lawyer
+                                    );
+                                    setLawyers(newLawyers);
+                                  }}
+                                >
+                                  Remove Lawyer
+                                </Button>
+                              </Typography>
+                            </>
+                          );
+                        })
+                      ) : (
+                        <Typography variant="h7" sx={{ mb: 1 }}>
+                          You have no lawyers!
+                        </Typography>
+                      )}
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant="h5" align="center" sx={{ mb: 2 }}>
+                        Your Board:
+                      </Typography>
+                      {boardMembers.length !== 0 ? (
+                        boardMembers.map((boardMember) => {
+                          return (
+                            <>
+                              <Typography
+                                key={boardMember}
+                                variant="h6"
+                                sx={{ mb: 1 }}
+                              >
+                                {boardMember}
+                                <Button
+                                  key={boardMember}
+                                  variant="contained"
+                                  sx={{ ml: 2, bgcolor: "#51087E" }}
+                                  onClick={() => {
+                                    const newBoard = boardMembers.filter(
+                                      (b) => b !== boardMember
+                                    );
+                                    setBoardMembers(newBoard);
+                                  }}
+                                >
+                                  Remove Board Member
+                                </Button>
+                              </Typography>
+                            </>
+                          );
+                        })
+                      ) : (
+                        <Typography variant="h7" sx={{ mb: 1 }}>
+                          You have no board members!
+                        </Typography>
+                      )}
+                    </Grid>
+                  </Grid>
+                  {e && (
+                    <Alert variant="outlined" severity="error">
+                      {errorMessage}
+                    </Alert>
+                  )}
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    sx={{
+                      mt: 4,
+                      mb: 4,
+                      bgcolor: "#51087E",
+                      "&:hover": {
+                        backgroundColor: "#51087E",
+                      },
+                    }}
+                  >
+                    Update Team
+                  </Button>
                 </Box>
-              </>
-            )}
+              </Box>
+            </Container>
+          </Grid>
+          <Grid item xs={5}>
             <Box
-              component="form"
-              onSubmit={handleSubmit}
-              alignItems="center"
-              sx={{ mt: 4 }}
+              sx={{
+                mt: 2,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                alignItems: "center",
+                alignContent: "center",
+              }}
             >
-              <Container maxWidth="sm">
-                <Button
-                  onClick={handleFilePicker}
-                  fullWidth
-                  variant="contained"
+              <Box>
+                <Typography variant="h4" align="center" sx={{ mt: 2 }}>
+                  Add a Lawyer
+                </Typography>
+                <Box
+                  onSubmit={handleAddLawyer}
+                  component="form"
                   sx={{
-                    mt: -2,
-                    mb: 4,
-                    bgcolor: "#51087E",
-                    "&:hover": {
-                      backgroundColor: "#51087E",
-                    },
+                    mt: 2,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
                   }}
                 >
-                  Pick an Image to Upload
-                </Button>
-              </Container>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    autoFocus
-                    fullWidth
-                    value={wikiLink}
-                    onChange={(e) => setWikiLink(e.target.value)}
-                    id="wikiLink"
-                    label="Wikipedia Link"
-                    name="wikiLink"
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    required
-                    fullWidth
-                    value={manager}
-                    onChange={(e) => setManager(e.target.value)}
-                    id="manager"
-                    label="Manager Name"
-                    name="manager"
-                  />
-                </Grid>
-              </Grid>
-              <Box sx={{ mt: 2 }} />
-              {e && (
-                <Alert variant="outlined" severity="error">
-                  {errorMessage}
-                </Alert>
-              )}
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{
-                  mt: 2,
-                  mb: 4,
-                  bgcolor: "#51087E",
-                  "&:hover": {
-                    backgroundColor: "#51087E",
-                  },
-                }}
-              >
-                Update Team
-              </Button>
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        id="lname"
+                        label="Lawyer Name"
+                        name="lname"
+                      />
+                    </Grid>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      sx={{
+                        mt: 2,
+                        mb: 4,
+                        bgcolor: "#51087E",
+                        "&:hover": {
+                          backgroundColor: "#51087E",
+                        },
+                      }}
+                    >
+                      Add Lawyer
+                    </Button>
+                  </Grid>
+                </Box>
+              </Box>
+              <Box>
+                <Typography variant="h4" align="center" sx={{ mt: 2 }}>
+                  Add a Board Member
+                </Typography>
+                <Box
+                  onSubmit={handleAddBoardMember}
+                  component="form"
+                  sx={{
+                    mt: 2,
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                      <TextField
+                        required
+                        id="bname"
+                        label="Board Member Name"
+                        name="bname"
+                      />
+                    </Grid>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      sx={{
+                        mt: 2,
+                        mb: 4,
+                        bgcolor: "#51087E",
+                        "&:hover": {
+                          backgroundColor: "#51087E",
+                        },
+                      }}
+                    >
+                      Add Board Member
+                    </Button>
+                  </Grid>
+                </Box>
+              </Box>
             </Box>
-          </Box>
-        </Container>
+          </Grid>
+        </Grid>
       </ThemeProvider>
     </>
   );
