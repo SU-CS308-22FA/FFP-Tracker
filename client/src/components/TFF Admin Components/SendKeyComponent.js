@@ -69,14 +69,9 @@ export default function SendKeyComponent() {
           form.current,
           "TC_tgAG2yFIFr2Izm"
         )
-        .then(
-          (result) => {
-            console.log(result.text);
-          },
-          (error) => {
-            console.log(error.text);
-          }
-        );
+        .catch((error) => {
+          console.log(error);
+        });
       navigate(`/my/profile/`);
     } catch (error) {
       setE(true);

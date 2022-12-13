@@ -21,7 +21,11 @@ import PersistLogin from "./components/PersistLogin";
 import SendKeyPage from "./pages/TFF Admin Pages/SendKeyPage";
 import FileSubmitPage from "./pages/Team Admin Pages/FileSubmitPage";
 import SendNotificationPage from "./pages/User Pages/SendNotificationPage";
+
+import FileStatusPage from "./pages/User Pages/FileStatusPage";
+
 import EditTeamPage from "./pages/Team Admin Pages/EditTeamPage";
+
 
 function App() {
   return (
@@ -37,6 +41,7 @@ function App() {
         </Route>
         {/*Protected Routes*/}
         <Route element={<PersistLogin />}>
+          <Route path="/status" element={<FileStatusPage />} />
           <Route path="/my/profile">
             <Route index element={<ProfilePage />} />
             <Route path="edit" element={<EditUserPage />} />

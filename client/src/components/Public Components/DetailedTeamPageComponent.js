@@ -4,6 +4,7 @@ import CircularProgressComponent from "./CircularProgressComponent";
 import { Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+
 import { Avatar, Button, Box } from "@mui/material";
 import { UserContext } from "../../contexts/userContext";
 import { useContext } from "react";
@@ -13,6 +14,7 @@ import emailjs from "@emailjs/browser";
 
 export default function DetailedTeamPageComponent() {
   const { token } = useContext(UserContext);
+
   const [team, setTeam] = useState(null);
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);

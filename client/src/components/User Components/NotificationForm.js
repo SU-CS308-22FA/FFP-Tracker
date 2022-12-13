@@ -3,19 +3,8 @@ import emailjs from "@emailjs/browser";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
-import FFP_API from "../../app/api";
 
 export default function ContactUs() {
-  async function createNotification(senderid, recieverid, subject, message) {
-    const response = await FFP_API.post(`/notifications/`, {
-      sender: senderid,
-      reciever: recieverid,
-      subject: subject,
-      message: message,
-    });
-    console.log(response.data);
-  }
-
   async function sendEmail(e) {
     e.preventDefault();
     console.log(e.target.message.value);

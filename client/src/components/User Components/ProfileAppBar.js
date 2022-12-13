@@ -83,13 +83,7 @@ function ProfileAppBar() {
       </>
     );
   } else {
-    nav = (
-      <>
-        <Button color="inherit" component={Link} to="/review">
-          Review Files
-        </Button>
-      </>
-    );
+    nav = null;
   }
 
   return (
@@ -110,6 +104,9 @@ function ProfileAppBar() {
             <Link to={`/my/profile`}>FFP Tracker for TFF</Link>
           </Typography>
           {nav}
+          <Button sx={{ color: "#FFFFFF" }}>
+            <Link to="/status">File Status</Link>
+          </Button>
           <Button sx={{ color: "#FFFFFF" }}>
             <Link to="/my/profile/edit">Edit Profile</Link>
           </Button>

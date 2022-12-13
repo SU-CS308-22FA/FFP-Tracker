@@ -3,9 +3,17 @@ const bcrypt = require("bcrypt");
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 
-// @desc Login
-// @route POST /auth
-// @access Public
+/**
+ * @desc Login to the system
+ * @route POST /auth/login
+ * @access Public
+ * @param {string} email - Email of the user
+ * @param {string} password - Password of the user
+ * @returns {object} accessToken - JWT token
+ * @throws {400} - Bad Request - All fields are required
+ * @throws {404} - User not found - Wrong Credentials
+ * @throws {401} - Unauhtorized - Wrong Credentials
+ */
 const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {

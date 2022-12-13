@@ -72,6 +72,9 @@ const createUser = asyncHandler(async (req, res) => {
       role: userInfo.role,
       team: userInfo.team,
     };
+    const team = await Team.findOne({ _id: userInfo.team }).exec();
+    team.admin = user.email;
+    await team.save();
   } else {
     userObject = {
       fullname,

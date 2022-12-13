@@ -11,7 +11,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { UserContext } from "../../contexts/userContext";
 import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
-import FileUploadComponent from "./FileUploadComponent";
+import { client } from "filestack-react";
 import FFP_API from "../../app/api";
 import { useEffect } from "react";
 import emailjs from "@emailjs/browser";
@@ -26,22 +26,22 @@ export default function FileSubmitComponent() {
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [date, setDate] = useState("");
-  const [notification, setNotification] = useState(null);
   const [users, setUsers] = useState(null);
+
+  const [selectedFile, setSelectedFile] = useState(null);
+
   const [teams, setTeams] = useState(null);
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
   const { id } = useParams();
 
+
   useEffect(() => {
-    const fetchNotification = async () => {
-      const response = await FFP_API.get(`/notifications`);
-      setNotification(response.data);
-    };
     const fetchUsers = async () => {
       const response = await FFP_API.get(`/users`);
       setUsers(response.data);
     };
+
     const fetchTeams = async () => {
       const response = await FFP_API.get(`/teams`);
       setTeams(response.data);
@@ -56,10 +56,9 @@ export default function FileSubmitComponent() {
     };
     fetchExpenses();
     fetchRevenues();
+
     fetchUsers();
-    fetchNotification();
-    fetchTeams();
-  }, [setNotification, setUsers, setTeams]);
+  }, [setUsers]);
 
   const navigate = useNavigate();
 
@@ -110,13 +109,17 @@ export default function FileSubmitComponent() {
     }
   };
 
-  // get list of all users with role of Lawyer
+
   const getLawyers = () => {
     if (users) {
       let lawyers = [];
       for (let i = 0; i < users.length; i++) {
         if (users[i].role === "Lawyer") {
-          lawyers.push(users[i]);
+
+          lawyers.push(users[i]._id);
+
+     
+
         }
       }
       return lawyers;
@@ -131,15 +134,10 @@ export default function FileSubmitComponent() {
       receiver: receiver,
       subject: subject,
       message: message,
-    })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-        setE(true);
-        setErrorMessage("Error creating notification Error:" + error);
-      });
+    }).catch((error) => {
+      setE(true);
+      setErrorMessage("Error creating notification Error:" + error);
+    });
   }
 
   // send notification about submitted file, to all TFF Admins
@@ -212,6 +210,7 @@ export default function FileSubmitComponent() {
     for (let i = 0; i < Object.keys(obj).length; i++) {
       total += obj[Object.keys(obj)[i]];
     }
+
     return total;
   }
 
@@ -355,6 +354,7 @@ export default function FileSubmitComponent() {
     let prediction = model.predict(x.length + 1);
     console.log("Expense prediction for next month is:" + prediction);
     return prediction;
+
   }
 
 
@@ -451,12 +451,21 @@ export default function FileSubmitComponent() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setE(false);
+    setErrorMessage("");
     const data = new FormData(event.currentTarget);
     if (!user?.team) {
       setE(true);
       setErrorMessage("You are not part of a team");
+    } else if (selectedFile === null) {
+      setE(true);
+      setErrorMessage("You have to upload a file!");
+    } else if (date > new Date().toISOString().substring(0, 10)) {
+      setE(true);
+      setErrorMessage("Date cannot be in the future!");
     } else {
       try {
+
         const options = {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -482,15 +491,18 @@ export default function FileSubmitComponent() {
           },
           options
         );
+
         alert("Successfully submitted!");
         sendNotificationToTFFAdmins();
         sendNotificationToLawyers();
         sendNotificationToUser();
+
         sendNotificationToUserIfNetSpendIsPositive();
         sendEmailToTeamAdminsIfNetSpendIsPositive();
       
         sendNotificationToTeamAdminsIfPredictedNetSpendIsNegative();
         sendEmailToTeamAdminsIfPredictedNetSpendIsNegative();
+
         navigate(`/my/profile/`);
       } catch (error) {
         console.log(error);
@@ -500,22 +512,69 @@ export default function FileSubmitComponent() {
     }
   };
 
+  const handleFilePicker = () => {
+    const filestackApikey = "AJ72c4DJLSPqnTctAvQ0wz"; //insert here with your own api key
+    const filestack = client.init(filestackApikey);
+    const options = {
+      onFileUploadFinished(file) {
+        setSelectedFile(file.url);
+      },
+    };
+    const picker = filestack.picker(options);
+    picker.open();
+  };
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+  };
+
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="sm">
           <CssBaseline />
           <Box
             sx={{
-              marginTop: 8,
+              mt: 4,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
             }}
           >
+            <Typography component="h1" variant="h3" sx={{}}>
+              File Submission
+            </Typography>
             <Box component="form" onSubmit={handleSubmit}>
-              <FileUploadComponent />
-              <Typography component="h1" variant="h5">
+              {selectedFile ? (
+                <>
+                  <Typography component="h2" variant="h5" sx={{ mt: 2, mb: 2 }}>
+                    Uploaded File:{" "}
+                    <Button href={selectedFile} target="_blank">
+                      Click here to view file
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      color="error"
+                      sx={{ ml: 2 }}
+                      onClick={handleRemoveFile}
+                    >
+                      Remove File
+                    </Button>
+                  </Typography>
+                  <Container maxWidth="sm"></Container>
+                </>
+              ) : (
+                <Button
+                  onClick={handleFilePicker}
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 2, mb: 2 }}
+                >
+                  Pick a file to Upload
+                </Button>
+              )}
+
+              <Typography component="h2" variant="h5">
                 Revenues
               </Typography>
               <TextField
@@ -554,7 +613,7 @@ export default function FileSubmitComponent() {
                 }}
               ></Box>
               <Typography component="h1" variant="h5">
-                EXPENSES
+                Expenses
               </Typography>
               <TextField
                 inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
@@ -592,7 +651,7 @@ export default function FileSubmitComponent() {
                 }}
               ></Box>
               <Typography component="h1" variant="h5">
-                DATE
+                Date of Submission
               </Typography>
               <TextField
                 margin="normal"
@@ -606,7 +665,7 @@ export default function FileSubmitComponent() {
                 type="date"
               />
               {e && (
-                <Alert variant="outlined" severity="error">
+                <Alert variant="outlined" severity="error" sx={{ mt: 2 }}>
                   {errorMessage}
                 </Alert>
               )}

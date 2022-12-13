@@ -53,6 +53,11 @@ const updateRevenueById = asyncHandler(async (req, res) => {
   const rev = await Revenue.findOne({ teamId: id });
   if (!rev)
     return res.status(404).json({ error: "No revenue found for this team!" });
+  if (rev.ticketing.get(month) !== undefined) {
+    return res
+      .status(400)
+      .json({ error: "Revenue already exists for this month!" });
+  }
   rev.ticketing.set(month, ticketing);
   rev.marketing.set(month, marketing);
   rev.broadcasting.set(month, broadcasting);
