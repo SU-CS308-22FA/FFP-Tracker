@@ -50,8 +50,8 @@ export default function EditTeamComponent() {
       await FFP_API.patch(
         `/teams/${team._id}`,
         {
-          wikiLink: data.get("wikiLink"),
-          manager: data.get("manager"),
+          wikiLink: data.get("wikiLink") ?? "",
+          manager: data.get("manager") ?? "",
           logoURL: selectedFile ? selectedFile : team.logoURL,
           lawyers: lawyers,
           boardMembers: boardMembers,
@@ -60,7 +60,7 @@ export default function EditTeamComponent() {
       )
         .then((res) => {
           alert("Team updated successfully!");
-          navigate("/my/profile");
+          window.location.reload();
         })
         .catch((err) => {
           setE(true);
@@ -118,6 +118,14 @@ export default function EditTeamComponent() {
     <>
       <ThemeProvider theme={theme}>
         <CssBaseline />
+        <Typography
+          component="h1"
+          variant="h4"
+          align="center"
+          sx={{ mt: 2, mb: 4 }}
+        >
+          Update Your Team's Information
+        </Typography>
         <Grid container>
           <Grid item xs={7}>
             <Container maxWidth="sm">
@@ -129,15 +137,12 @@ export default function EditTeamComponent() {
                   alignItems: "center",
                 }}
               >
-                <Typography component="h1" variant="h4" sx={{ mb: 4 }}>
-                  Update Your Team's Information
-                </Typography>
                 <Typography variant="h6">
                   Your Team is {team.teamName}{" "}
                 </Typography>
                 <Avatar
                   src={team.logoURL}
-                  sx={{ mt: 2, mb: 2, width: 56, height: 56 }}
+                  sx={{ mt: 2, mb: 2, width: "auto" }}
                 />
                 {selectedFile ? (
                   <>
@@ -153,8 +158,9 @@ export default function EditTeamComponent() {
                         This will be your new team logo:
                       </Typography>
                       <Avatar
+                        variant="square"
                         src={selectedFile}
-                        sx={{ width: 56, height: 56 }}
+                        sx={{ width: "15%", height: "15%" }}
                       />
                     </Box>
                   </>
@@ -185,8 +191,6 @@ export default function EditTeamComponent() {
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       <TextField
-                        required
-                        autoFocus
                         fullWidth
                         value={wikiLink}
                         onChange={(e) => setWikiLink(e.target.value)}
@@ -197,7 +201,6 @@ export default function EditTeamComponent() {
                     </Grid>
                     <Grid item xs={12}>
                       <TextField
-                        required
                         fullWidth
                         value={manager}
                         onChange={(e) => setManager(e.target.value)}

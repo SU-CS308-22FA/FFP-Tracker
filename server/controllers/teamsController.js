@@ -81,6 +81,8 @@ const createTeam = asyncHandler(async (req, res) => {
     teamName,
     seasonBudget,
     currentBudget: seasonBudget,
+    lawyers: [],
+    boardMembers: [],
   };
   const team = await Team.create(teamObject);
   if (team) {
@@ -109,8 +111,8 @@ const updateTeam = asyncHandler(async (req, res) => {
   const id = req.params.id;
   const { wikiLink, manager, logoURL, lawyers, boardMembers } = req.body;
   if (
-    !wikiLink ||
-    !manager ||
+    wikiLink === undefined ||
+    manager === undefined ||
     logoURL === undefined ||
     !lawyers ||
     !boardMembers

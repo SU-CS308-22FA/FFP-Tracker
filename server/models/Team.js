@@ -7,23 +7,23 @@ const TeamSchema = new mongoose.Schema({
   },
   admin: {
     type: mongoose.Schema.Types.ObjectId,
-    required: true,
+    required: false,
     ref: "User",
     default: null,
   },
   wikiLink: {
     type: String,
-    required: true,
+    required: false,
     default: "",
   },
   manager: {
     type: String,
-    required: true,
+    required: false,
     default: "",
   },
   logoURL: {
     type: String,
-    required: true,
+    required: false,
     default: "",
   },
   seasonBudget: {
