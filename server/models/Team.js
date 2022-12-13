@@ -14,7 +14,17 @@ const TeamSchema = new mongoose.Schema({
   wikiLink: {
     type: String,
     required: false,
-    default: null,
+    default: "",
+  },
+  manager: {
+    type: String,
+    required: false,
+    default: "",
+  },
+  logoURL: {
+    type: String,
+    required: false,
+    default: "",
   },
   seasonBudget: {
     type: Number,
@@ -23,6 +33,16 @@ const TeamSchema = new mongoose.Schema({
   currentBudget: {
     type: Number,
     required: true,
+  },
+  lawyers: {
+    type: Array,
+    required: true,
+    default: [],
+  },
+  boardMembers: {
+    type: Array,
+    required: true,
+    default: [],
   },
 });
 

@@ -60,9 +60,53 @@ const updateRevenueById = asyncHandler(async (req, res) => {
   return res.status(200).json(rev);
 });
 
+const deleteRevenue = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const revs = await Revenue.findOne({ teamId: id });
+  if (!revs)
+    return res.status(404).json({ error: "No revenue found for this team!" });
+  let lastDate = "";
+  const { ticketing, marketing, broadcasting, month } = revs;
+
+  for (const [key, value] of ticketing) {
+    if (String(key) > lastDate) {
+      lastDate = String(key);
+    }
+  }
+
+  let newTicketing = {};
+  for (const [key, value] of ticketing) {
+    if (String(key) != lastDate) {
+      newTicketing[key] = value;
+    }
+  }
+
+  let newMarketing = {};
+  for (const [key, value] of marketing) {
+    if (String(key) != lastDate) {
+      newMarketing[key] = value;
+    }
+  }
+
+  let newBroadcasting = {};
+  for (const [key, value] of broadcasting) {
+    if (String(key) != lastDate) {
+      newBroadcasting[key] = value;
+    }
+  }
+
+  revs.ticketing = newTicketing;
+  revs.marketing = newMarketing;
+  revs.broadcasting = newBroadcasting;
+
+  const result = await revs.save();
+  return res.status(200).json(revs);
+});
+
 module.exports = {
   getAllRevenues,
   getRevenueById,
   createRevenueById,
   updateRevenueById,
+  deleteRevenue,
 };

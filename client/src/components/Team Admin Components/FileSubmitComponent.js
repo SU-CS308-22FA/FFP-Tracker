@@ -457,19 +457,31 @@ export default function FileSubmitComponent() {
       setErrorMessage("You are not part of a team");
     } else {
       try {
-        await FFP_API.patch(`/revenues/${user.team}`, {
-          ticketing: data.get("Ticketing"),
-          marketing: data.get("Marketing"),
-          broadcasting: data.get("Broadcasting"),
-          month: date.substring(0, 7),
-        });
-        await FFP_API.patch(`/expenses/${user.team}`, {
-          salaries: data.get("Salaries"),
-          amortization: data.get("Amortization"),
-          operational: data.get("Operational"),
-          month: date.substring(0, 7),
-        });
-
+        const options = {
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        };
+        await FFP_API.patch(
+          `/revenues/${user.team}`,
+          {
+            ticketing: data.get("Ticketing"),
+            marketing: data.get("Marketing"),
+            broadcasting: data.get("Broadcasting"),
+            month: date.substring(0, 7),
+          },
+          options
+        );
+        await FFP_API.patch(
+          `/expenses/${user.team}`,
+          {
+            salaries: data.get("Salaries"),
+            amortization: data.get("Amortization"),
+            operational: data.get("Operational"),
+            month: date.substring(0, 7),
+          },
+          options
+        );
         alert("Successfully submitted!");
         sendNotificationToTFFAdmins();
         sendNotificationToLawyers();
@@ -481,8 +493,9 @@ export default function FileSubmitComponent() {
         sendEmailToTeamAdminsIfPredictedNetSpendIsNegative();
         navigate(`/my/profile/`);
       } catch (error) {
+        console.log(error);
         setE(true);
-        setErrorMessage(error.response.data);
+        setErrorMessage(error.response.data.error);
       }
     }
   };

@@ -57,11 +57,22 @@ function ProfileAppBar() {
         <Button color="inherit" component={Link} to="/submit">
           Submit
         </Button>
+        <Button color="inherit" component={Link} to="/edit/team">
+          Edit Team
+        </Button>
       </>
     );
   } else if (user.role === "TFF Admin") {
     nav = (
       <>
+
+        <Button color="inherit" component={Link} to="/deleteteam">
+          Delete Team
+
+        <Button color="inherit" component={Link} to="/denytransaction">
+          Deny Transaction
+
+        </Button>
         <Button color="inherit" component={Link} to="/newteam">
           Add Team
         </Button>

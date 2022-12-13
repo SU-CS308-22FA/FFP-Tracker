@@ -4,8 +4,7 @@ import CircularProgressComponent from "./CircularProgressComponent";
 import { Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Avatar, Button } from "@mui/material";
-import { Box } from "@mui/system";
+import { Avatar, Button, Box } from "@mui/material";
 import { UserContext } from "../../contexts/userContext";
 import { useContext } from "react";
 import SimpleLinearRegression from "ml-regression-simple-linear";
@@ -13,7 +12,7 @@ import emailjs from "@emailjs/browser";
 
 
 export default function DetailedTeamPageComponent() {
-  const { user } = useContext(UserContext);
+  const { token } = useContext(UserContext);
   const [team, setTeam] = useState(null);
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
@@ -206,7 +205,13 @@ export default function DetailedTeamPageComponent() {
   const content = (
     <>
       {team && revenues && expenses ? (
-        <Grid container spacing={1}>
+        <Grid
+          container
+          spacing={1}
+          direction="row"
+          alignItems="center"
+          justifyContent="center"
+        >
           <Grid item xs={5.5}>
             {plot(team, revenues, expenses)}
           </Grid>
@@ -214,20 +219,29 @@ export default function DetailedTeamPageComponent() {
             <Typography variant="h4" align="center" sx={{ mt: 4 }}>
               Information About
               <Typography variant="h5" color="#0000FF">
-                <a href={team.wikiLink}>{team.teamName}</a>
+                <a href={team.wikiLink} target="_blank" rel="noreferrer">
+                  {team.teamName}
+                </a>
               </Typography>
             </Typography>
+            <Box display="flex" justifyContent="center" alignItems="center">
+              <Avatar sx={{ width: "auto", mt: 2, mb: 2 }} src={team.logoURL} />
+            </Box>
+            {token ? (
+              <Typography variant="body1" align="center">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  href="/sendnotification"
+                >
+                  Send Email
+                </Button>
+              </Typography>
+            ) : null}
             <Typography variant="body1" align="center" sx={{ mt: 2 }}>
-              <Button
-                variant="contained"
-                color="secondary"
-                href="/sendnotification"
-              >
-                {" "}
-                SEND NOTIFICATION{" "}
-              </Button>
+              Manager: {team.manager}
             </Typography>
-            <Grid container spacing={2} sx={{ mt: 6 }}>
+            <Grid container spacing={2} sx={{ mt: 2 }}>
               <Grid item xs={6}>
                 <Typography variant="body1" align="center">
                   Season Starting Budget: {team.seasonBudget} Mil. TL
@@ -299,6 +313,24 @@ export default function DetailedTeamPageComponent() {
                 <Typography variant="body1" align="center">
                   Last Month Operational Expenses:
                   {" " + returnLastValueOfObject(expenses.operational)} Mil. TL
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container spacing={1} sx={{ mt: 2 }}>
+              <Grid item xs={6}>
+                <Typography variant="body1" align="center">
+                  Associated Lawyers:{" "}
+                  {team.lawyers.map((lawyer) => {
+                    return lawyer + ", ";
+                  })}{" "}
+                </Typography>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography variant="body1" align="center">
+                  Associated Board Members:{" "}
+                  {team.boardMembers.map((member) => {
+                    return member + ", ";
+                  })}{" "}
                 </Typography>
               </Grid>
             </Grid>

@@ -34,19 +34,32 @@ export default function SendKeyComponent() {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     try {
+      const options = {
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+        },
+      };
       if (role === "Team Admin") {
-        await FFP_API.post("/register", {
-          email: data.get("email"),
-          key: data.get("key"),
-          role: role,
-          team: data.get("team"),
-        });
+        await FFP_API.post(
+          "/register",
+          {
+            email: data.get("email"),
+            key: data.get("key"),
+            role: role,
+            team: data.get("team"),
+          },
+          options
+        );
       } else {
-        await FFP_API.post("/register", {
-          email: data.get("email"),
-          key: data.get("key"),
-          role: role,
-        });
+        await FFP_API.post(
+          "/register",
+          {
+            email: data.get("email"),
+            key: data.get("key"),
+            role: role,
+          },
+          options
+        );
       }
       alert("Successfully key registered!");
       await emailjs

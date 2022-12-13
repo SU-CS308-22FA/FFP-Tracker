@@ -1,7 +1,10 @@
 import Container from "@mui/material/Container";
 import { Typography } from "@mui/material";
+import { useContext } from "react";
+import { UserContext } from "../../contexts/userContext";
 
-export default function ProfilePageComponent({ user }) {
+export default function ProfilePageComponent() {
+  const { user } = useContext(UserContext);
   let roleBasedContent = null;
   if (user.role === "Team Admin") {
     roleBasedContent = (
