@@ -22,28 +22,16 @@ export default function FileSubmitComponent() {
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [date, setDate] = useState("");
-  const [notification, setNotification] = useState(null);
   const [users, setUsers] = useState(null);
-  const [teams, setTeams] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
-    const fetchNotification = async () => {
-      const response = await FFP_API.get(`/notifications`);
-      setNotification(response.data);
-    };
     const fetchUsers = async () => {
       const response = await FFP_API.get(`/users`);
       setUsers(response.data);
     };
-    const fetchTeams = async () => {
-      const response = await FFP_API.get(`/teams`);
-      setTeams(response.data);
-    };
     fetchUsers();
-    fetchNotification();
-    fetchTeams();
-  }, [setNotification, setUsers, setTeams]);
+  }, [setUsers]);
 
   const navigate = useNavigate();
 
@@ -60,6 +48,18 @@ export default function FileSubmitComponent() {
     }
   };
 
+  const getLawyers = () => {
+    if (users) {
+      let lawyers = [];
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].role === "Lawyer") {
+          lawyers.push(users[i]._id);
+        }
+      }
+      return lawyers;
+    }
+  };
+
   // create notification function
   async function createNotification(sender, receiver, subject, message) {
     await FFP_API.post(`/notifications`, {
@@ -67,15 +67,10 @@ export default function FileSubmitComponent() {
       receiver: receiver,
       subject: subject,
       message: message,
-    })
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.log(error);
-        setE(true);
-        setErrorMessage("Error creating notification Error:" + error);
-      });
+    }).catch((error) => {
+      setE(true);
+      setErrorMessage("Error creating notification Error:" + error);
+    });
   }
 
   function sendNotificationToTFFAdmins() {
@@ -84,6 +79,18 @@ export default function FileSubmitComponent() {
       createNotification(
         user._id,
         tffAdmins[i]._id,
+        "File Submission",
+        "A file has been submitted for review by " + user.fullname
+      );
+    }
+  }
+
+  function sendNotificationToLawyers() {
+    const lawyers = getLawyers();
+    for (let i = 0; i < lawyers.length; i++) {
+      createNotification(
+        user._id,
+        lawyers[i],
         "File Submission",
         "A file has been submitted for review by " + user.fullname
       );
@@ -110,12 +117,11 @@ export default function FileSubmitComponent() {
     } else if (selectedFile === null) {
       setE(true);
       setErrorMessage("You have to upload a file!");
+    } else if (date > new Date().toISOString().substring(0, 10)) {
+      setE(true);
+      setErrorMessage("Date cannot be in the future!");
     } else {
       try {
-        await FFP_API.post(`/files/team/${user.team}`, {
-          file: selectedFile,
-          submitDate: date,
-        });
         await FFP_API.patch(`/revenues/${user.team}`, {
           ticketing: data.get("Ticketing"),
           marketing: data.get("Marketing"),
@@ -128,13 +134,18 @@ export default function FileSubmitComponent() {
           operational: data.get("Operational"),
           month: date.substring(0, 7),
         });
+        await FFP_API.post(`/files/team/${user.team}`, {
+          file: selectedFile,
+          submitDate: date,
+        });
         alert("Successfully submitted!");
         sendNotificationToTFFAdmins();
         sendNotificationToUser();
+        sendNotificationToLawyers();
         navigate(`/my/profile/`);
       } catch (error) {
         setE(true);
-        setErrorMessage(error.response.data);
+        setErrorMessage(error.response.data.error);
       }
     }
   };

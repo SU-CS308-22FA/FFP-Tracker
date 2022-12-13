@@ -17,7 +17,6 @@ import {
 import DoneIcon from "@mui/icons-material/Done";
 import BlockIcon from "@mui/icons-material/Block";
 import { UserContext } from "../../contexts/userContext";
-import { useNavigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import FFP_API from "../../app/api";
 import CircularProgressComponent from "../Public Components/CircularProgressComponent";
@@ -25,25 +24,29 @@ import { useEffect } from "react";
 
 export default function FileStatusComponent() {
   const { user } = useContext(UserContext);
-  const [e, setE] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const [fileStatus, setFileStatus] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStatusData = async () => {
       if (user.role === "Team Admin") {
         await FFP_API.get(`/files/team/${user.teamId}`).then((res) => {
-          setFileStatus(res.data);
+          const files = res.data;
+          files.sort(function (a, b) {
+            return new Date(b.submitDate) - new Date(a.submitDate);
+          });
+          setFileStatus(files);
         });
       } else {
         await FFP_API.get(`/files`).then((res) => {
-          setFileStatus(res.data);
+          const files = res.data;
+          files.sort(function (a, b) {
+            return new Date(b.submitDate) - new Date(a.submitDate);
+          });
+          setFileStatus(files);
         });
       }
     };
     fetchStatusData();
-    setLoading(false);
   }, [user.role, user.teamId, setFileStatus]);
 
   const processDocument = async (process, doc_id) => {
@@ -91,21 +94,25 @@ export default function FileStatusComponent() {
             View
           </Button>
         </TableCell>
-        <TableCell align="center">
+        <TableCell align="right">
           {user.role === "Lawyer" ? (
             row.currentStatus === "Submitted" ? (
               <Stack direction="row" spacing={1}>
                 <IconButton
                   aria-label="approve"
                   color="success"
-                  onClick={() => processDocument("Approved", row._id)}
+                  onClick={() =>
+                    processDocument(`Approved by ${user.fullname}`, row._id)
+                  }
                 >
                   <DoneIcon />
                 </IconButton>
                 <IconButton
                   aria-label="reject"
                   color="error"
-                  onClick={() => processDocument("Rejected", row._id)}
+                  onClick={() =>
+                    processDocument(`Disapproved by ${user.fullname}`, row._id)
+                  }
                 >
                   <BlockIcon />
                 </IconButton>

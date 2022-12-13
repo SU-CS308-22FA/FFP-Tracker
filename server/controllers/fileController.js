@@ -31,9 +31,18 @@ const getFilesByTeamId = asyncHandler(async (req, res) => {
   return res.status(200).json(files);
 });
 
-// @desc Create a file submission
-// @route POST /files/team/:id
-// @access private
+/**
+ * @desc Create a new file submission in the database
+ * @route POST /files/:id
+ * @access private
+ * @param {string} id - Team ID in the database
+ * @param {string} file - File url of the submitted file
+ * @param {string} submitDate - Date of submission
+ * @throws {400} - Bad Request - Missing required fields
+ * @throws {404} - Not Found - Team not found
+ * @throws {500} - Server Error - Error creating file
+ * @returns {object} newFile - New file object
+ */
 const createSubmission = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { file, submitDate } = req.body;
@@ -50,7 +59,7 @@ const createSubmission = asyncHandler(async (req, res) => {
     currentStatus: "Submitted",
     lastUpdated: submitDate,
   });
-  if (!newFile) return res.status(400).json({ error: "Error creating file" });
+  if (!newFile) return res.status(500).json({ error: "Error creating file" });
   return res.status(200).json(newFile);
 });
 

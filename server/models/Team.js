@@ -6,10 +6,9 @@ const TeamSchema = new mongoose.Schema({
     required: true,
   },
   admin: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     required: false,
-    ref: "User",
-    default: null,
+    default: "",
   },
   wikiLink: {
     type: String,

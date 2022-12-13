@@ -1,9 +1,8 @@
 import React from "react";
-import FrontPageAppBar from "../../components/Public Components/FrontPageAppBar";
 import { Button } from "@mui/material";
 import NotificationPageComponent from "../../components/User Components/NotificationPageComponent";
 import { UserContext } from "../../contexts/userContext";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import ProfileAppBar from "../../components/User Components/ProfileAppBar";
 
 export default function NotificationPage() {

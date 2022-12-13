@@ -37,9 +37,20 @@ const createExpenseById = asyncHandler(async (req, res) => {
   return res.status(201).json(exp);
 });
 
-// @desc Update a revenues of team by id
-// @route PATCH /revenues/:id
-// @access private
+/**
+ * @desc Update a team's revenues by adding a new month to the revenues and
+ * expenses
+ * @route PATCH /revenues/:id
+ * @access private
+ * @param {string} id - Team ID
+ * @param {string} month - Month to be added
+ * @param {number} salaries - Salaries for the month
+ * @param {number} amortization - Amortization for the month
+ * @param {number} operational - Operational expenses for the month
+ * @throws {400} - Bad Request If any of the parameters are missing
+ * @throws {404} - Not Found - If no revenues are found for the team
+ * @returns {object} - Updated revenues object
+ */
 const updateExpenseById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { month, salaries, amortization, operational } = req.body;
