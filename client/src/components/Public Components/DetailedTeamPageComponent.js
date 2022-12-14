@@ -64,7 +64,10 @@ export default function DetailedTeamPageComponent() {
       y.push(value + revenues.marketing[key] + revenues.broadcasting[key]);
     }
     // revert the order of the y array
-    y = y.reverse();
+    //y = y.reverse();
+    
+    console.log(x);
+    console.log(y);
 
     // create a linear regression model
     const model = new SimpleLinearRegression(x, y);
@@ -84,7 +87,7 @@ export default function DetailedTeamPageComponent() {
       y.push(value + expenses.amortization[key] + expenses.operational[key]);
     }
     // revert the order of the y array
-    y = y.reverse();
+    //y = y.reverse();
 
     // create a linear regression model
     const model = new SimpleLinearRegression(x, y);

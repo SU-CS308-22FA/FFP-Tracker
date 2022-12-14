@@ -319,8 +319,10 @@ export default function FileSubmitComponent() {
           teamRevenues[0].broadcasting[key]
       );
     }
+    console.log(x);
+    console.log(y);
     // revert the order of the y array
-    y = y.reverse();
+    //y = y.reverse();
 
     // create a linear regression model
     const model = new SimpleLinearRegression(x, y);
@@ -346,7 +348,7 @@ export default function FileSubmitComponent() {
       );
     }
     // revert the order of the y array
-    y = y.reverse();
+    //y = y.reverse();
 
     // create a linear regression model
     const model = new SimpleLinearRegression(x, y);
