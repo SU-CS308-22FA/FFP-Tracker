@@ -136,7 +136,7 @@ export default function TeamsComponent() {
   }
   const content = (
     <>
-      <Typography variant="h4" align="center" sx={{ mt: 4 }}>
+      <Typography variant="h3" align="center" sx={{ mt: 4 }}>
         All Teams in Super League
       </Typography>
       <Box

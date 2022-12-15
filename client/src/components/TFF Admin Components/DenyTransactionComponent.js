@@ -3,17 +3,14 @@ import {
   Avatar,
   Button,
   CssBaseline,
-  TextField,
   Box,
   Container,
   Typography,
-  Grid,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import CircularProgressComponent from "../Public Components/CircularProgressComponent";
 import FFP_API from "../../app/api";
-import { useNavigate } from "react-router-dom";
 import emailjs from "@emailjs/browser";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
@@ -27,7 +24,7 @@ export default function DenyTransactionComponent() {
   const [loading, setLoading] = useState(true);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
+
   let lastDate = "";
   let lastRevenueTicketing = 0.0;
   let lastRevenueMarketing = 0.0;
@@ -324,16 +321,3 @@ export default function DenyTransactionComponent() {
     </>
   );
 }
-
-/*
-  const deleteByValue = (value) => {
-    handleDeleteTeam(value);
-    if (!setE) {
-      setTeams((oldValues) => {
-        return oldValues.filter((team) => team._id !== value);
-      });
-    }
-
-    //console.log(value);
-  };
-  */

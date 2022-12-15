@@ -1,23 +1,17 @@
-import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
+import {
+  Avatar,
+  Badge,
+  Button,
+  AppBar,
+  Box,
+  Toolbar,
+  Typography,
+} from "@mui/material";
 import { Link } from "react-router-dom";
-import { Avatar, Badge, Button } from "@mui/material";
-import { useContext } from "react";
 import { UserContext } from "../../contexts/userContext";
 import FFP_API from "../../app/api";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-
-
-
-
-
-
-
 
 function ProfileAppBar() {
   const { user, setUser, setToken, setLogin } = useContext(UserContext);
@@ -31,24 +25,15 @@ function ProfileAppBar() {
     fetchNotifications();
   }, [setNotifications]);
 
-  
-
   // find number of notifications
   let countNotifications = 0;
   if (notifications) {
     for (let i = 0; i < notifications.length; i++) {
-      if (notifications[i].receiver === user._id ) {
+      if (notifications[i].receiver === user._id) {
         countNotifications++;
       }
     }
   }
-
-
-
-  
-
-
-
 
   let nav;
   if (user.role === "Team Admin") {
@@ -65,14 +50,12 @@ function ProfileAppBar() {
   } else if (user.role === "TFF Admin") {
     nav = (
       <>
-
         <Button color="inherit" component={Link} to="/deleteteam">
           Delete Team
-          </Button>
+        </Button>
 
         <Button color="inherit" component={Link} to="/denytransaction">
           Deny Transaction
-
         </Button>
         <Button color="inherit" component={Link} to="/newteam">
           Add Team
@@ -113,9 +96,8 @@ function ProfileAppBar() {
           <Button sx={{ color: "#FFFFFF" }}>
             <Link to="/my/profile/notifications">Notifications</Link>
             <Badge badgeContent={countNotifications} color="error">
-              <NotificationsIcon />  
-            </Badge> 
-              
+              <NotificationsIcon />
+            </Badge>
           </Button>
           <Button color="inherit" component={Link} to="/teams">
             Teams

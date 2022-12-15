@@ -72,34 +72,29 @@ const deleteRevenue = asyncHandler(async (req, res) => {
     return res.status(404).json({ error: "No revenue found for this team!" });
   let lastDate = "";
   const { ticketing, marketing, broadcasting, month } = revs;
-
   for (const [key, value] of ticketing) {
     if (String(key) > lastDate) {
       lastDate = String(key);
     }
   }
-
   let newTicketing = {};
   for (const [key, value] of ticketing) {
     if (String(key) != lastDate) {
       newTicketing[key] = value;
     }
   }
-
   let newMarketing = {};
   for (const [key, value] of marketing) {
     if (String(key) != lastDate) {
       newMarketing[key] = value;
     }
   }
-
   let newBroadcasting = {};
   for (const [key, value] of broadcasting) {
     if (String(key) != lastDate) {
       newBroadcasting[key] = value;
     }
   }
-
   revs.ticketing = newTicketing;
   revs.marketing = newMarketing;
   revs.broadcasting = newBroadcasting;

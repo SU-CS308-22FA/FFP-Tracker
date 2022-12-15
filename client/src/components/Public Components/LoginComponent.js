@@ -10,10 +10,9 @@ import {
   Container,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../contexts/userContext";
-import { useContext } from "react";
 import FFP_API from "../../app/api";
 
 const theme = createTheme();
@@ -22,7 +21,6 @@ export default function LoginComponent() {
   const { setToken, setLogin } = useContext(UserContext);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {

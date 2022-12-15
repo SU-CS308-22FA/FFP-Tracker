@@ -1,5 +1,6 @@
 import {
   Alert,
+  Avatar,
   Button,
   CssBaseline,
   TextField,
@@ -13,7 +14,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import FFP_API from "../../app/api";
-import Avatar from "@mui/material/Avatar";
 
 const theme = createTheme();
 
@@ -24,7 +24,6 @@ const EMAIL_REGEX = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 export default function SignUpComponent() {
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   const navigate = useNavigate();
 
   const validate = (data) => {

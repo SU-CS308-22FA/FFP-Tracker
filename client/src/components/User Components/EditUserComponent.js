@@ -6,12 +6,11 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Alert from "@mui/material/Alert";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState } from "react";
-import { Alert } from "@mui/material";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import FFP_API from "../../app/api";
-import { useContext } from "react";
 import { UserContext } from "../../contexts/userContext";
 
 const theme = createTheme();
@@ -98,13 +97,13 @@ export default function EditUserComponent() {
           <CssBaseline />
           <Box
             sx={{
-              mt: 2,
+              mt: 4,
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
             }}
           >
-            <Typography component="h1" variant="h4" sx={{ mb: 2 }}>
+            <Typography component="h1" variant="h3" sx={{ mb: 2 }}>
               Edit Account
             </Typography>
             <Box component="form" onSubmit={handleUpdate}>

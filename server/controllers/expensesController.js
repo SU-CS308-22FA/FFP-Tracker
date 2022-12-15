@@ -73,41 +73,34 @@ const deleteExpense = asyncHandler(async (req, res) => {
   const revs = await Expense.findOne({ teamId: id });
   if (!revs)
     return res.status(404).json({ error: "No expense found for this team!" });
-
   let lastDate = "";
   const { month, salaries, amortization, operational } = revs;
-
   for (const [key, value] of salaries) {
     if (String(key) > lastDate) {
       lastDate = String(key);
     }
   }
-
   let newSalaries = {};
   for (const [key, value] of salaries) {
     if (String(key) != lastDate) {
       newSalaries[key] = value;
     }
   }
-
   let newAmortization = {};
   for (const [key, value] of amortization) {
     if (String(key) != lastDate) {
       newAmortization[key] = value;
     }
   }
-
   let newOperational = {};
   for (const [key, value] of operational) {
     if (String(key) != lastDate) {
       newOperational[key] = value;
     }
   }
-
   revs.salaries = newSalaries;
   revs.amortization = newAmortization;
   revs.operational = newOperational;
-
   const result = await revs.save();
   return res.status(200).json(revs);
 });

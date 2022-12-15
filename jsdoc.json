@@ -1,6 +1,6 @@
 {
   "source": {
-    "include": ["./client/src", "./server"],
+    "include": ["./client/src", "./server", "./README.md"],
     "includePattern": ".js$",
     "excludePattern": "node_modules"
   },

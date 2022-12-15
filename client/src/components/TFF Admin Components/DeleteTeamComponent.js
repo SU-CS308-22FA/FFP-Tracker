@@ -3,34 +3,25 @@ import {
   Avatar,
   Button,
   CssBaseline,
-  TextField,
   Box,
   Container,
   Typography,
-  Grid,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import CircularProgressComponent from "../Public Components/CircularProgressComponent";
 import FFP_API from "../../app/api";
-import { useNavigate } from "react-router-dom";
 import emailjs from "@emailjs/browser";
-import DeleteConfirmation from "../Public Components/DeleteConfirmation";
 import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 
 const theme = createTheme();
 
 export default function RegisterTeamComponent() {
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
   const [teams, setTeams] = useState(null);
   const [loading, setLoading] = useState(true);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const navigate = useNavigate();
-
   /**
    * This function will accept details about a team
    * delete the team from the database
@@ -195,19 +186,3 @@ export default function RegisterTeamComponent() {
     </>
   );
 }
-
-/*
-
-  const deleteByValue = (teamName, teamAdmin, value) => {
-    // DeleteConfirmation()
-    handleDeleteTeam(teamName, teamAdmin, value);
-    if (!setE) {
-      setTeams((oldValues) => {
-        return oldValues.filter((team) => team._id !== value);
-      });
-    }
-
-    //console.log(value);
-  };
-  
-*/

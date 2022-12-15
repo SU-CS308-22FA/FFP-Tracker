@@ -10,10 +10,8 @@ import {
   Grid,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import FFP_API from "../../app/api";
-import { useContext } from "react";
 import { UserContext } from "../../contexts/userContext";
 import CircularProgressComponent from "../Public Components/CircularProgressComponent";
 import { client } from "filestack-react";
@@ -29,8 +27,6 @@ export default function EditTeamComponent() {
   const [manager, setManager] = useState("");
   const [lawyers, setLawyers] = useState([]);
   const [boardMembers, setBoardMembers] = useState([]);
-
-  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -120,9 +116,9 @@ export default function EditTeamComponent() {
         <CssBaseline />
         <Typography
           component="h1"
-          variant="h4"
+          variant="h3"
           align="center"
-          sx={{ mt: 2, mb: 4 }}
+          sx={{ mt: 4, mb: 4 }}
         >
           Update Your Team's Information
         </Typography>

@@ -1,48 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <title>JSDoc: Source: client/src/components/Public Components/DetailedTeamPageComponent.js</title>
+  <head>
+    <meta charset="utf-8" />
+    <title>
+      JSDoc: Source: client/src/components/Public
+      Components/DetailedTeamPageComponent.js
+    </title>
 
-    <script src="scripts/prettify/prettify.js"> </script>
-    <script src="scripts/prettify/lang-css.js"> </script>
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
-    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
-</head>
-
-<body>
-
-<div id="main">
-
-    <h1 class="page-title">Source: client/src/components/Public Components/DetailedTeamPageComponent.js</h1>
-
-    
-
-
-
-    
-    <section>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="styles/prettify-tomorrow.css"
+    />
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css" />
+  </head>
+  <body>
+    <div id="main">
+      <h1 class="page-title">
+        Source: client/src/components/Public
+        Components/DetailedTeamPageComponent.js
+      </h1>
+      <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import Plot from "react-plotly.js";
+          <pre
+            class="prettyprint source linenums"
+          ><code>import Plot from "react-plotly.js";
 import FFP_API from "../../app/api";
 import CircularProgressComponent from "./CircularProgressComponent";
-import { Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-
-import { Avatar, Button, Box } from "@mui/material";
+import { useState, useEffect, useContext } from "react";
+import { Avatar, Button, Box, Grid, Typography } from "@mui/material";
 import { UserContext } from "../../contexts/userContext";
-import { useContext } from "react";
 import SimpleLinearRegression from "ml-regression-simple-linear";
-import emailjs from "@emailjs/browser";
-
 
 export default function DetailedTeamPageComponent() {
   const { token } = useContext(UserContext);
-
   const [team, setTeam] = useState(null);
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
@@ -66,17 +63,10 @@ export default function DetailedTeamPageComponent() {
     fetchExpenses();
   }, [setTeam, setRevenues, setExpenses, id]);
 
-  // gets key of the revenue objects and returns a timestamp
-  function getTimestamp(key) {
-    let date = new Date(key);
-    console.log(date.getTime());
-    return date.getTime();
-  }
-
   // takes an integer input and returns sequence of integers from 0 to input
   function getSequence(input) {
     let sequence = [];
-    for (let i = 1; i &lt; input+1; i++) {
+    for (let i = 1; i &lt; input + 1; i++) {
       sequence.push(i);
     }
     return sequence;
@@ -92,7 +82,10 @@ export default function DetailedTeamPageComponent() {
       y.push(value + revenues.marketing[key] + revenues.broadcasting[key]);
     }
     // revert the order of the y array
-    y = y.reverse();
+    //y = y.reverse();
+
+    console.log(x);
+    console.log(y);
 
     // create a linear regression model
     const model = new SimpleLinearRegression(x, y);
@@ -112,7 +105,7 @@ export default function DetailedTeamPageComponent() {
       y.push(value + expenses.amortization[key] + expenses.operational[key]);
     }
     // revert the order of the y array
-    y = y.reverse();
+    //y = y.reverse();
 
     // create a linear regression model
     const model = new SimpleLinearRegression(x, y);
@@ -130,13 +123,12 @@ export default function DetailedTeamPageComponent() {
     return netSpend;
   }
 
-
   /**
-   * This function takes an object as input and 
+   * This function takes an object as input and
    * returns the total of all the values in the object
-   * 
+   *
    * @function returnTotalOfObject
-   * @param {Object} obj Object to be summed up 
+   * @param {Object} obj Object to be summed up
    * @returns {integer} total of all the values in the object
    */
   function returnTotalOfObject(obj) {
@@ -248,11 +240,16 @@ export default function DetailedTeamPageComponent() {
           &lt;Grid item xs={6.5}>
             &lt;Typography variant="h4" align="center" sx={{ mt: 4 }}>
               Information About
-              &lt;Typography variant="h5" color="#0000FF">
-                &lt;a href={team.wikiLink} target="_blank" rel="noreferrer">
-                  {team.teamName}
-                &lt;/a>
-              &lt;/Typography>
+            &lt;/Typography>
+            &lt;Typography
+              variant="h5"
+              component="h5"
+              align="center"
+              color="#0000FF"
+            >
+              &lt;a href={team.wikiLink} target="_blank" rel="noreferrer">
+                {team.teamName}
+              &lt;/a>
             &lt;/Typography>
             &lt;Box display="flex" justifyContent="center" alignItems="center">
               &lt;Avatar sx={{ width: "auto", mt: 2, mb: 2 }} src={team.logoURL} />
@@ -312,9 +309,8 @@ export default function DetailedTeamPageComponent() {
               Mil. TL
             &lt;/Typography>
             &lt;Typography variant="body1" align="center" sx={{ mt: 2 }}>
-              Net Spend Prediction for Next Month:{" "}
-              {(predictNetSpend()) * -1}{" "}
-              Mil. TL
+              Net Spend Prediction for Next Month: {predictNetSpend() * -1} Mil.
+              TL
             &lt;/Typography>
             &lt;Grid container spacing={1} sx={{ mt: 2 }}>
               &lt;Grid item xs={6}>
@@ -375,24 +371,39 @@ export default function DetailedTeamPageComponent() {
 }
 </code></pre>
         </article>
-    </section>
-
-
-
-
-</div>
-
-<nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#handleDeleteRevenueExpense">handleDeleteRevenueExpense</a></li><li><a href="global.html#handleDeleteTeam">handleDeleteTeam</a></li><li><a href="global.html#login">login</a></li><li><a href="global.html#returnTotalOfObject">returnTotalOfObject</a></li><li><a href="global.html#revenueExpenseFinder">revenueExpenseFinder</a></li><li><a href="global.html#sendEmail">sendEmail</a></li><li><a href="global.html#submit">submit</a></li><li><a href="global.html#updateExpenseById">updateExpenseById</a></li></ul>
-</nav>
-
-<br class="clear">
-
-<footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.0</a> on Wed Dec 14 2022 00:02:17 GMT+0300 (GMT+03:00)
-</footer>
-
-<script> prettyPrint(); </script>
-<script src="scripts/linenumber.js"> </script>
-</body>
+      </section>
+    </div>
+    <nav>
+      <h2><a href="index.html">Home</a></h2>
+      <h3>Global</h3>
+      <ul>
+        <li>
+          <a href="global.html#handleDeleteRevenueExpense"
+            >handleDeleteRevenueExpense</a
+          >
+        </li>
+        <li><a href="global.html#handleDeleteTeam">handleDeleteTeam</a></li>
+        <li><a href="global.html#login">login</a></li>
+        <li>
+          <a href="global.html#returnTotalOfObject">returnTotalOfObject</a>
+        </li>
+        <li>
+          <a href="global.html#revenueExpenseFinder">revenueExpenseFinder</a>
+        </li>
+        <li><a href="global.html#sendEmail">sendEmail</a></li>
+        <li><a href="global.html#submit">submit</a></li>
+        <li><a href="global.html#updateExpenseById">updateExpenseById</a></li>
+      </ul>
+    </nav>
+    <br class="clear" />
+    <footer>
+      Documentation generated by
+      <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.0</a> on Fri Dec 16
+      2022 01:27:16 GMT+0300 (GMT+03:00)
+    </footer>
+    <script>
+      prettyPrint();
+    </script>
+    <script src="scripts/linenumber.js"></script>
+  </body>
 </html>

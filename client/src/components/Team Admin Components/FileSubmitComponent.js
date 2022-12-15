@@ -10,13 +10,11 @@ import {
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { UserContext } from "../../contexts/userContext";
 import { useNavigate } from "react-router-dom";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { client } from "filestack-react";
 import FFP_API from "../../app/api";
-import { useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import SimpleLinearRegression from "ml-regression-simple-linear";
-import { useParams } from "react-router-dom";
 
 const theme = createTheme();
 
@@ -26,23 +24,14 @@ export default function FileSubmitComponent() {
   const [errorMessage, setErrorMessage] = useState("");
   const [date, setDate] = useState("");
   const [users, setUsers] = useState(null);
-
   const [selectedFile, setSelectedFile] = useState(null);
-
-  const [teams, setTeams] = useState(null);
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
-  const { id } = useParams();
 
   useEffect(() => {
     const fetchUsers = async () => {
       const response = await FFP_API.get(`/users`);
       setUsers(response.data);
-    };
-
-    const fetchTeams = async () => {
-      const response = await FFP_API.get(`/teams`);
-      setTeams(response.data);
     };
     const fetchRevenues = async () => {
       const response = await FFP_API.get(`/revenues`);
@@ -191,10 +180,6 @@ export default function FileSubmitComponent() {
       setE(true);
       setErrorMessage("Error sending notification to user Error:" + error);
     }
-  }
-
-  function returnLastValueOfObject(obj) {
-    return obj[Object.keys(obj)[Object.keys(obj).length - 1]];
   }
 
   // return total of each value of an object

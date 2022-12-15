@@ -1,6 +1,5 @@
-import { Box, Typography, Container } from "@mui/material";
 import FrontPageAppBar from "../../components/Public Components/FrontPageAppBar";
-import { Avatar } from "@mui/material";
+import { Avatar, Box, Typography, Container } from "@mui/material";
 
 export default function HomePage() {
   const content = (

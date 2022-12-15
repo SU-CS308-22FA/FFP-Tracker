@@ -1,20 +1,14 @@
 import Plot from "react-plotly.js";
 import FFP_API from "../../app/api";
 import CircularProgressComponent from "./CircularProgressComponent";
-import { Grid, Typography } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-
-import { Avatar, Button, Box } from "@mui/material";
+import { useState, useEffect, useContext } from "react";
+import { Avatar, Button, Box, Grid, Typography } from "@mui/material";
 import { UserContext } from "../../contexts/userContext";
-import { useContext } from "react";
 import SimpleLinearRegression from "ml-regression-simple-linear";
-import emailjs from "@emailjs/browser";
-
 
 export default function DetailedTeamPageComponent() {
   const { token } = useContext(UserContext);
-
   const [team, setTeam] = useState(null);
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
@@ -38,17 +32,10 @@ export default function DetailedTeamPageComponent() {
     fetchExpenses();
   }, [setTeam, setRevenues, setExpenses, id]);
 
-  // gets key of the revenue objects and returns a timestamp
-  function getTimestamp(key) {
-    let date = new Date(key);
-    console.log(date.getTime());
-    return date.getTime();
-  }
-
   // takes an integer input and returns sequence of integers from 0 to input
   function getSequence(input) {
     let sequence = [];
-    for (let i = 1; i < input+1; i++) {
+    for (let i = 1; i < input + 1; i++) {
       sequence.push(i);
     }
     return sequence;
@@ -65,7 +52,7 @@ export default function DetailedTeamPageComponent() {
     }
     // revert the order of the y array
     //y = y.reverse();
-    
+
     console.log(x);
     console.log(y);
 
@@ -105,13 +92,12 @@ export default function DetailedTeamPageComponent() {
     return netSpend;
   }
 
-
   /**
-   * This function takes an object as input and 
+   * This function takes an object as input and
    * returns the total of all the values in the object
-   * 
+   *
    * @function returnTotalOfObject
-   * @param {Object} obj Object to be summed up 
+   * @param {Object} obj Object to be summed up
    * @returns {integer} total of all the values in the object
    */
   function returnTotalOfObject(obj) {
@@ -223,11 +209,16 @@ export default function DetailedTeamPageComponent() {
           <Grid item xs={6.5}>
             <Typography variant="h4" align="center" sx={{ mt: 4 }}>
               Information About
-              <Typography variant="h5" color="#0000FF">
-                <a href={team.wikiLink} target="_blank" rel="noreferrer">
-                  {team.teamName}
-                </a>
-              </Typography>
+            </Typography>
+            <Typography
+              variant="h5"
+              component="h5"
+              align="center"
+              color="#0000FF"
+            >
+              <a href={team.wikiLink} target="_blank" rel="noreferrer">
+                {team.teamName}
+              </a>
             </Typography>
             <Box display="flex" justifyContent="center" alignItems="center">
               <Avatar sx={{ width: "auto", mt: 2, mb: 2 }} src={team.logoURL} />
@@ -287,9 +278,8 @@ export default function DetailedTeamPageComponent() {
               Mil. TL
             </Typography>
             <Typography variant="body1" align="center" sx={{ mt: 2 }}>
-              Net Spend Prediction for Next Month:{" "}
-              {(predictNetSpend()) * -1}{" "}
-              Mil. TL
+              Net Spend Prediction for Next Month: {predictNetSpend() * -1} Mil.
+              TL
             </Typography>
             <Grid container spacing={1} sx={{ mt: 2 }}>
               <Grid item xs={6}>

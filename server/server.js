@@ -5,7 +5,6 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const cors = require("cors");
-const corsOptions = require("./config/corsOptions");
 const connectDB = require("./config/dbConn");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
@@ -14,7 +13,7 @@ const PORT = process.env.PORT || 3500;
 connectDB();
 
 // To enable Cross Origin Resource Sharing
-app.use(cors(corsOptions));
+app.use(cors(require("./config/corsOptions")));
 
 // For the app to parse and send JSON data
 app.use(express.json());

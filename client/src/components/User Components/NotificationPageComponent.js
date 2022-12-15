@@ -1,18 +1,18 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { useState, useEffect } from "react";
-import FFP_API from "../../app/api";
-import { UserContext } from "../../contexts/userContext";
-import { useContext } from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
 import ListItemText from "@mui/material/ListItemText";
 import SendIcon from "@mui/icons-material/Send";
+import Alert from "@mui/material/Alert";
+import { Fragment, useState, useEffect, useContext } from "react";
+import FFP_API from "../../app/api";
+import { UserContext } from "../../contexts/userContext";
+import { Container } from "@mui/system";
 
 export default function NotificationPageComponent() {
   const [e, setE] = useState(false);
@@ -70,14 +70,16 @@ export default function NotificationPageComponent() {
   // Button to delete notification size is small
   const DeleteButton = (props) => {
     return (
-      <Button
-        variant="contained"
-        color="error"
-        onClick={() => deleteNotification(props._id)}
-        size="small"
-      >
-        Delete
-      </Button>
+      <Container align="center" sx={{ mt: 0.5 }}>
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => deleteNotification(props._id)}
+          size="small"
+        >
+          Delete
+        </Button>
+      </Container>
     );
   };
 
@@ -86,21 +88,23 @@ export default function NotificationPageComponent() {
     return (
       <ListItem alignItems="flex-start">
         <ListItemText
+          primaryTypographyProps={{ align: "center" }}
           primary={notification.subject}
           secondary={
-            <React.Fragment>
+            <Fragment>
               <Typography
                 sx={{ display: "inline" }}
                 component="span"
                 variant="body2"
                 color="text.primary"
+                align="center"
               >
                 {getUserFullName(notification.sender)}
               </Typography>
               {" — " + notification.message}
               <br></br>
               {DeleteButton(notification)}
-            </React.Fragment>
+            </Fragment>
           }
         />
       </ListItem>
@@ -114,20 +118,29 @@ export default function NotificationPageComponent() {
         if (notification.receiver === userid) {
           return (
             <Box
-              sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+              key={notification._id}
+              sx={{
+                width: "100%",
+                maxWidth: 360,
+                bgcolor: "background.paper",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
             >
               {notificationTemplate(notification)}
               <Divider variant="inset" component="li" />
             </Box>
           );
         }
+        return null;
       });
     }
   };
 
   //create notification function
-  function createNotification(sender, receiver, subject, message) {
-    FFP_API.post("/notifications", {
+  async function createNotification(sender, receiver, subject, message) {
+    await FFP_API.post("/notifications", {
       sender: sender,
       receiver: receiver,
       subject: subject,
@@ -151,7 +164,8 @@ export default function NotificationPageComponent() {
       const sender = user._id;
       const subject = data.get("subject");
       const message = data.get("message");
-      createNotification(sender, receiver, subject, message);
+      await createNotification(sender, receiver, subject, message);
+      if (!e) alert("Notification sent!");
     } catch (error) {
       setE(true);
       setErrorMessage(error.response.data.message);
@@ -161,16 +175,20 @@ export default function NotificationPageComponent() {
   // form to send a notification
   const sendNotificationForm = () => {
     return (
-      <Box
-        component="form"
-        onSubmit={handleSendNotification}
-        sx={{
-          "& .MuiTextField-root": { m: 1, width: "25ch" },
-        }}
-        noValidate
-        autoComplete="off"
-      >
-        <div>
+      <>
+        <Box
+          component="form"
+          onSubmit={handleSendNotification}
+          sx={{
+            "& .MuiTextField-root": { m: 1, width: "25ch" },
+            alignItems: "center",
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+          noValidate
+          autoComplete="off"
+        >
           <TextField
             required
             id="receiver_username"
@@ -195,19 +213,39 @@ export default function NotificationPageComponent() {
             defaultValue=""
             variant="filled"
           />
-        </div>
-        <Button type="submit" variant="contained" endIcon={<SendIcon />}>
-          Send App Notification
-        </Button>
-      </Box>
+          <Button type="submit" variant="contained" endIcon={<SendIcon />}>
+            Send In-App Notification
+          </Button>
+        </Box>
+      </>
     );
   };
 
   return (
     <>
       <CssBaseline />
-      <Typography variant="h4" component="div" gutterBottom>
+      <Typography
+        variant="h3"
+        component="div"
+        align="center"
+        gutterBottom
+        sx={{ mt: 4 }}
+      >
         Notifications
+      </Typography>
+      <Container align="center">
+        <Button variant="contained" color="primary" href="/sendnotification">
+          Send Email
+        </Button>
+      </Container>
+      <Typography
+        variant="h5"
+        component="div"
+        align="center"
+        gutterBottom
+        sx={{ mt: 2 }}
+      >
+        Your In-App Notifications
       </Typography>
       <List
         sx={{
@@ -220,6 +258,11 @@ export default function NotificationPageComponent() {
         {displayNotifications(user._id)}
       </List>
       {sendNotificationForm()}
+      {e && (
+        <Alert severity="error" sx={{ mt: 2, mb: 2 }}>
+          {errorMessage}
+        </Alert>
+      )}
     </>
   );
 }

@@ -1,4 +1,3 @@
-import React from "react";
 import { useContext, useState, useEffect, useRef } from "react";
 import { UserContext } from "../contexts/userContext";
 import FFP_API from "../app/api";

@@ -1,5 +1,5 @@
 import Container from "@mui/material/Container";
-import { Typography } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import { useContext } from "react";
 import { UserContext } from "../../contexts/userContext";
 

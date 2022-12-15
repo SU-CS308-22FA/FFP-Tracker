@@ -2,7 +2,7 @@
 
 <p align="center"><img src="https://user-images.githubusercontent.com/72891015/207389557-750f16f7-fbdb-4610-bb2e-4da0ec5f6810.png" /></p>
 
-#### URL of the server: https://ffp-tracker.herokuapp.com
+#### URL of the server: https://ffp-tracker.herokuapp.com/api
 
 ### Description
 
@@ -24,46 +24,50 @@ If you came across a bug, you can create a new issue by clicking on 'Bug Report'
 
 ### Known bugs
 
+Some known bugs are represented as open issues in the 'Issues' tab in our project.
+
 ## Developer Documentation
 
 ### Obtaining the source code
 
 You can clone this GitHub repository to obtain the source code. All of the code for the application is in this repository. Once you have cloned the repository into your local machine, you should do the following:
+
 1. Open the code editor of choice (VSCode is preffered as it has integrated terminals)
 2. Run the following command in a terminal at the root of your project: `npm i`
 3. Create an .env file at the root of your project. Your environment variables such as your `DB_URI`, `ACCESS_TOKEN_SECRET` will be in this file. Put your environment variables here
 4. On both the client and server folders, run the following command: `npm i`
 5. After installing the necessary modules, run the following commands:
-    - In the server folder run: `npm run dev`
-    - In the client folder run: `npm start`
+   - In the server folder run: `npm run dev`
+   - In the client folder run: `npm start`
 6. Code as you wish!
 
 ### Directory Structure
 
 The directory structure is as follows:
-* Server → Server side of the application
-  * Config → Here are the configuration files for the application
-  * Controllers → Here are the controllers of the application that handle requests coming to the server
-  * Middleware → Here are the middleware
-  * Models → Here are the data models of the application
-  * Public → Here are the public files
-  * Routes → Here are the routes of the application where we route certain requests using the controllers
-  * package.json → Dependencies of the application are listed here
-  * Server.js → The actual server file. Everything comes together around here
-* Client → Client side of the application
-  * Public → Here are some of the public facing files like the index.html and the application icon
-  * Src → All of the pages, routing, context files, components
-    * App → Here are some configuration files for the client application
-    * Components → Here are the components, we have separated components and pages so that we can manage all of them more easily
-    * Contexts → Here we can manage the status of different contexts like users.
-    * Pages → Here are the pages that are made of components
-    * App.css → Basic css (default)
-    * App.js → All the front end routes reside here
-    * Index.css → Basic css (default)
-    * Index.js → The parent file of the application
-  * package.json → Dependencies of the client application
-  * Postcss.config.js → Config files
-  * Tailwind.config.js → Config Files
+
+- Server → Server side of the application
+  - Config → Here are the configuration files for the application
+  - Controllers → Here are the controllers of the application that handle requests coming to the server
+  - Middleware → Here are the middleware
+  - Models → Here are the data models of the application
+  - Public → Here are the public files
+  - Routes → Here are the routes of the application where we route certain requests using the controllers
+  - package.json → Dependencies of the application are listed here
+  - Server.js → The actual server file. Everything comes together around here
+- Client → Client side of the application
+  - Public → Here are some of the public facing files like the index.html and the application icon
+  - Src → All of the pages, routing, context files, components
+    - App → Here are some configuration files for the client application
+    - Components → Here are the components, we have separated components and pages so that we can manage all of them more easily
+    - Contexts → Here we can manage the status of different contexts like users.
+    - Pages → Here are the pages that are made of components
+    - App.css → Basic css (default)
+    - App.js → All the front end routes reside here
+    - Index.css → Basic css (default)
+    - Index.js → The parent file of the application
+  - package.json → Dependencies of the client application
+  - Postcss.config.js → Config files
+  - Tailwind.config.js → Config Files
 
 There are no test files.
 
@@ -72,6 +76,7 @@ There are no test files.
 #### Heroku Deployment
 
 To deploy your application to Heroku, you can follow these steps:
+
 1. Open an Heroku account
 2. Create a new application on Heroku
 3. Subscribe to the Heroku Student Developer to receive credits or pay to get credits
@@ -80,10 +85,10 @@ To deploy your application to Heroku, you can follow these steps:
 6. Select automatic deploy or manually deploy to the main branch.
 7. Once you are done with the development, merge your code to the main branch. This will automatically build and host the new version of your application.
 8. To add the environment variables in you .env file, follow these steps:
-    * The first step is to log into your account and go to the Heroku dashboard.
-    * Choose the application for which you want to set the environment variables. Once you select the application, it takes you to the overview page of that project.
-    * The next step is to go to the "Settings" page.
-    * Once you are on the "Settings" page, scroll until you see the "Config Vars" section. To add config vars (environment variables) or modify the existing ones, click on "Reveal Config Vars".
-      * If you do not have any config vars, you should see a warning message.
-    * The last step is to set the config vars. In the KEY field, you specify the name of your environment variable, whereas in the VALUE field, you specify its actual value. An example would be storing the database URL as an environment variable.
-    * After entering both the key and the value, press "Add" and you are done.
+   - The first step is to log into your account and go to the Heroku dashboard.
+   - Choose the application for which you want to set the environment variables. Once you select the application, it takes you to the overview page of that project.
+   - The next step is to go to the "Settings" page.
+   - Once you are on the "Settings" page, scroll until you see the "Config Vars" section. To add config vars (environment variables) or modify the existing ones, click on "Reveal Config Vars".
+     - If you do not have any config vars, you should see a warning message.
+   - The last step is to set the config vars. In the KEY field, you specify the name of your environment variable, whereas in the VALUE field, you specify its actual value. An example would be storing the database URL as an environment variable.
+   - After entering both the key and the value, press "Add" and you are done.

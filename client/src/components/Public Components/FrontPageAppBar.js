@@ -32,15 +32,15 @@ function FrontPageAppBar(navItems) {
                 </Link>
               </Button>
             ))}
-            {token ? (
+            {token !== null ? (
               <Button sx={{ color: "#FFFFFF" }}>
                 <Link to={`/my/profile`}>Profile</Link>
               </Button>
-            ) : (
+            ) : window.location.pathname !== "/login" ? (
               <Button sx={{ color: "#FFFFFF" }}>
                 <Link to={`/login`}>Login</Link>
               </Button>
-            )}
+            ) : null}
           </Box>
         </Toolbar>
       </AppBar>
