@@ -8,8 +8,8 @@ const cors = require("cors");
 const corsOptions = require("./config/corsOptions");
 const connectDB = require("./config/dbConn");
 const mongoose = require("mongoose");
+const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 3500;
-const { fileURLToPath } = require("url");
 
 connectDB();
 
@@ -18,6 +18,9 @@ app.use(cors(corsOptions));
 
 // For the app to parse and send JSON data
 app.use(express.json());
+
+// Middleware to parse cookies
+app.use(cookieParser());
 
 // Built-in Middleware: Static Files --> .css, .png, .img files
 app.use(express.static(path.join(__dirname + "/../client/build")));
