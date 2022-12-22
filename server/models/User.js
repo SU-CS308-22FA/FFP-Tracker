@@ -32,11 +32,6 @@ const UserSchema = new mongoose.Schema({
     default: [],
     required: false,
   },
-  isSupporting: {
-    type: Boolean,
-    default: false,
-    required: true,
-  },
 });
 
 module.exports = mongoose.model("User", UserSchema);
