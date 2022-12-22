@@ -6,6 +6,7 @@ import {
   Box,
   Container,
   Typography,
+  TextField,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState, useEffect } from "react";
@@ -54,25 +55,48 @@ export default function SupportTeamComponent() {
   const [loading, setLoading] = useState(true);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  //const [budget, setBudget] = useState(["", ""]);
+  const [budget, setBudget] = useState("");
 
-  const handleSupportTeam = async (team) => {
-    console.log(team);
-    console.log(user.role);
-    try {
-      await FFP_API.patch(
-        `/users/${user._id}`,
-        {
-          team: team,
-        }
-        // options
-      );
-      alert(
-        "You have successfully requested supporting the team! The page will be refreshed."
-      );
-      window.location.reload();
-    } catch (error) {
+  const handleUpdateTeam = async (team, amount) => {
+    //e.preventDefault();
+    const options = {
+      headers: {
+        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+      },
+    };
+    await FFP_API.patch(
+      `/teams/${team._id}`,
+      {
+        sponsorBudget: amount,
+      },
+      options
+    )
+    .catch((err) => {
       setE(true);
-      setErrorMessage(error.response.data);
+      setErrorMessage(err.message);
+    });
+  };
+
+  const handleSupportTeam = async (team, amount) => {
+    if (amount === undefined || amount <= 0) {
+      alert(
+        "The season budget must be a positive number and cannot be left blank!"
+      );
+    } else {
+      handleUpdateTeam(team, amount);
+      try {
+        await FFP_API.patch(`/users/${user._id}`, {
+          team: team,
+        });
+        alert(
+          "You have successfully requested supporting the team! The page will be refreshed."
+        );
+        window.location.reload();
+      } catch (error) {
+        setE(true);
+        setErrorMessage(error.response.data);
+      }
     }
 
     /*
@@ -171,13 +195,16 @@ export default function SupportTeamComponent() {
                         Team Name
                       </StyledTableCell>
                       <StyledTableCell align="center">Logo</StyledTableCell>
+                      <StyledTableCell align="center">
+                        Season Budget
+                      </StyledTableCell>
 
                       <StyledTableCell align="center">Support</StyledTableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {teams !== null ? (
-                      teams.map((team) => (
+                      teams.map((team, index) => (
                         <StyledTableRow key={team.teamName}>
                           <StyledTableCell align="center">
                             {team.teamName}
@@ -187,9 +214,31 @@ export default function SupportTeamComponent() {
                           </StyledTableCell>
 
                           <StyledTableCell align="center">
+                            <TextField
+                              inputProps={{
+                                inputMode: "numeric",
+                                pattern: "[0-9]*",
+                              }}
+                              margin="normal"
+                              fullWidth
+                              id={team.teamName}
+                              onChange={(e) => {
+                                let newArr = [...budget];
+                                newArr[index] = e.target.value;
+                                setBudget(newArr);
+                              }}
+                              value={budget[index]}
+                              label="budget"
+                              name="budget"
+                              required
+                            />
+                          </StyledTableCell>
+                          <StyledTableCell align="center">
                             {" "}
                             <Button
-                              onClick={() => handleSupportTeam(team)}
+                              onClick={() =>
+                                handleSupportTeam(team, budget[index])
+                              }
                               variant="contained"
                               color="success"
                             >
@@ -199,7 +248,7 @@ export default function SupportTeamComponent() {
                         </StyledTableRow>
                       ))
                     ) : (
-                      <Container sx={{ ml: 10 }}>
+                      <Container sx={{ ml: 15 }}>
                         <CircularProgressComponent></CircularProgressComponent>
                       </Container>
                     )}

@@ -105,26 +105,32 @@ const createUser = asyncHandler(async (req, res) => {
 // @access private
 const updateUser = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  const { fullname, username, password } = req.body;
-  // Confirm data
-  if (!id || !username) {
-    return res.status(400).json({ error: "All of the fields are required!" });
-  }
+  const { fullname, username, password, team } = req.body;
   const user = await User.findById(id).exec();
   if (!user) return res.status(400).json({ error: "User not found!" });
-  // Check for duplicates in the DB
-  const duplicate = await User.findOne({ username }).lean().exec();
-  // Allow updates only to the original user
-  if (duplicate && duplicate?._id.toString() !== id) {
-    return res.status(400).json({ error: "Username is already in use!" });
+  if (user.role !== "Supporter") {
+    // Confirm data
+    if (!id || !username) {
+      return res.status(400).json({ error: "All of the fields are required!" });
+    }
+
+    // Check for duplicates in the DB
+    const duplicate = await User.findOne({ username }).lean().exec();
+    // Allow updates only to the original user
+    if (duplicate && duplicate?._id.toString() !== id) {
+      return res.status(400).json({ error: "Username is already in use!" });
+    }
+    user.username = username;
+    user.fullname = fullname;
+    // If the request also has a password, update that as well
+    if (password) {
+      // Hash the password
+      user.password = await bcrypt.hash(password, 10);
+    }
+  } else {
+    user.team = team;
   }
-  user.username = username;
-  user.fullname = fullname;
-  // If the request also has a password, update that as well
-  if (password) {
-    // Hash the password
-    user.password = await bcrypt.hash(password, 10);
-  }
+
   const updatedUser = await user.save();
   console.log(updatedUser);
   if (updatedUser) {

@@ -23,11 +23,17 @@ export default function ProfilePageComponent() {
         to team admins.
       </Typography>
     );
-  } else {
+  } else if (user.role === "Lawyer") {
     roleBasedContent = (
       <Typography variant="h6" gutterBottom>
         As a lawyer, you can view your notifications, edit your profile, review
         the submitted expenses and revenues, ratify them.
+      </Typography>
+    );
+  } else {
+    roleBasedContent = (
+      <Typography variant="h6" gutterBottom>
+        As a Supporter, you can support teams, view all teams and their budgets.
       </Typography>
     );
   }

@@ -43,6 +43,11 @@ const TeamSchema = new mongoose.Schema({
     required: true,
     default: [],
   },
+  sponsorBudget: {
+    type: Number,
+    required: true,
+    default: 0,
+  },
 });
 
 module.exports = mongoose.model("Team", TeamSchema);
