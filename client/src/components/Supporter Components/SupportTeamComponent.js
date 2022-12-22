@@ -71,8 +71,7 @@ export default function SupportTeamComponent() {
         sponsorBudget: amount,
       },
       options
-    )
-    .catch((err) => {
+    ).catch((err) => {
       setE(true);
       setErrorMessage(err.message);
     });

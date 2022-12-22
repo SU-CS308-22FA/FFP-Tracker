@@ -97,7 +97,7 @@ export default function MultiActionAreaCard() {
               component="img"
               height="140"
               image={team.logoURL}
-              alt="green iguana"
+              //alt="green iguana"s
               sx={{ ml: 8, maxWidth: 200 }}
             />
             <CardContent>
