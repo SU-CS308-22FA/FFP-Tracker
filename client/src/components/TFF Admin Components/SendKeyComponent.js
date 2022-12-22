@@ -125,6 +125,7 @@ export default function SendKeyComponent() {
                 <MenuItem value={"Team Admin"}>Team Admin</MenuItem>
                 <MenuItem value={"TFF Admin"}>TFF Admin</MenuItem>
                 <MenuItem value={"Lawyer"}>Lawyer</MenuItem>
+                <MenuItem value={"Supporter"}>Supporter</MenuItem>
               </Select>
             </FormControl>
             {role === "Team Admin" ? (
