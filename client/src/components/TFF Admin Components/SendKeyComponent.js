@@ -61,7 +61,6 @@ export default function SendKeyComponent() {
           options
         );
       }
-      alert("Successfully key registered!");
       await emailjs
         .sendForm(
           "service_rqfjoti",
@@ -72,6 +71,7 @@ export default function SendKeyComponent() {
         .catch((error) => {
           console.log(error);
         });
+      alert("Key sent successfully!");
       navigate(`/my/profile/`);
     } catch (error) {
       setE(true);
