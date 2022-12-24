@@ -114,37 +114,60 @@ export default function DetailedTeamPageComponent() {
 
   function plot(team, revenues, expenses) {
     let months = [];
-    let rev = [];
-    let cumRev = [];
     for (const [key, value] of Object.entries(revenues.ticketing)) {
       months.push(String(key));
-      rev.push(value + revenues.marketing[key] + revenues.broadcasting[key]);
+    }
+    months.sort((a, b) => {
+      const aYear = Number(a.slice(0, 4));
+      const bYear = Number(b.slice(0, 4));
+      const aMonth = Number(a.slice(5, 7));
+      const bMonth = Number(b.slice(5, 7));
+      if (aYear > bYear) return 1;
+      else if (aYear < bYear) return -1;
+      else return aMonth - bMonth;
+    });
+    let rev = [];
+    let cumRev = [];
+    for (let i = 0; i < months.length; i++) {
+      rev.push(
+        revenues.ticketing[months[i]] +
+          revenues.marketing[months[i]] +
+          revenues.broadcasting[months[i]]
+      );
       if (cumRev.length === 0) {
         cumRev.push(
-          value + revenues.marketing[key] + revenues.broadcasting[key]
+          revenues.ticketing[months[i]] +
+            revenues.marketing[months[i]] +
+            revenues.broadcasting[months[i]]
         );
       } else {
         cumRev.push(
-          value +
-            revenues.marketing[key] +
-            revenues.broadcasting[key] +
+          revenues.ticketing[months[i]] +
+            revenues.marketing[months[i]] +
+            revenues.broadcasting[months[i]] +
             cumRev[cumRev.length - 1]
         );
       }
     }
     let exp = [];
     let cumExp = [];
-    for (const [key, value] of Object.entries(expenses.salaries)) {
-      exp.push(value + expenses.amortization[key] + expenses.operational[key]);
+    for (let i = 0; i < months.length; i++) {
+      exp.push(
+        expenses.salaries[months[i]] +
+          expenses.amortization[months[i]] +
+          expenses.operational[months[i]]
+      );
       if (cumExp.length === 0) {
         cumExp.push(
-          value + expenses.amortization[key] + expenses.operational[key]
+          expenses.salaries[months[i]] +
+            expenses.amortization[months[i]] +
+            expenses.operational[months[i]]
         );
       } else {
         cumExp.push(
-          value +
-            expenses.amortization[key] +
-            expenses.operational[key] +
+          expenses.salaries[months[i]] +
+            expenses.amortization[months[i]] +
+            expenses.operational[months[i]] +
             cumExp[cumExp.length - 1]
         );
       }

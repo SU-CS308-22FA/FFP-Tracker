@@ -23,59 +23,61 @@ export default function TeamsComponent() {
   });
 
   function plot(team, revenues, expenses) {
-    let index1 = -1;
-    for (let i = 0; i < revenues.length; i++) {
-      if (revenues[i].teamId === team._id) {
-        index1 = i;
-        break;
-      }
-    }
-    const revs = revenues[index1];
-    let index2 = -1;
-    for (let i = 0; i < expenses.length; i++) {
-      if (expenses[i].teamId === team._id) {
-        index2 = i;
-        break;
-      }
-    }
-    const exps = expenses[index2];
-    if (index1 === -1 || index2 === -1) {
-      return (
-        <Box
-          sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
-        >
-          <Typography>No data available for {team.teamName}.</Typography>
-        </Box>
-      );
-    }
     let months = [];
+    for (const [key, value] of Object.entries(revenues.ticketing)) {
+      months.push(String(key));
+    }
+    months.sort((a, b) => {
+      const aYear = Number(a.slice(0, 4));
+      const bYear = Number(b.slice(0, 4));
+      const aMonth = Number(a.slice(5, 7));
+      const bMonth = Number(b.slice(5, 7));
+      if (aYear > bYear) return 1;
+      else if (aYear < bYear) return -1;
+      else return aMonth - bMonth;
+    });
     let rev = [];
     let cumRev = [];
-    for (const [key, value] of Object.entries(revs.ticketing)) {
-      months.push(String(key));
-      rev.push(value + revs.marketing[key] + revs.broadcasting[key]);
+    for (let i = 0; i < months.length; i++) {
+      rev.push(
+        revenues.ticketing[months[i]] +
+          revenues.marketing[months[i]] +
+          revenues.broadcasting[months[i]]
+      );
       if (cumRev.length === 0) {
-        cumRev.push(value + revs.marketing[key] + revs.broadcasting[key]);
+        cumRev.push(
+          revenues.ticketing[months[i]] +
+            revenues.marketing[months[i]] +
+            revenues.broadcasting[months[i]]
+        );
       } else {
         cumRev.push(
-          value +
-            revs.marketing[key] +
-            revs.broadcasting[key] +
+          revenues.ticketing[months[i]] +
+            revenues.marketing[months[i]] +
+            revenues.broadcasting[months[i]] +
             cumRev[cumRev.length - 1]
         );
       }
     }
     let exp = [];
     let cumExp = [];
-    for (const [key, value] of Object.entries(exps.salaries)) {
-      exp.push(value + exps.amortization[key] + exps.operational[key]);
+    for (let i = 0; i < months.length; i++) {
+      exp.push(
+        expenses.salaries[months[i]] +
+          expenses.amortization[months[i]] +
+          expenses.operational[months[i]]
+      );
       if (cumExp.length === 0) {
-        cumExp.push(value + exps.amortization[key] + exps.operational[key]);
+        cumExp.push(
+          expenses.salaries[months[i]] +
+            expenses.amortization[months[i]] +
+            expenses.operational[months[i]]
+        );
       } else {
         cumExp.push(
-          value +
-            exps.amortization[key] +
-            exps.operational[key] +
+          expenses.salaries[months[i]] +
+            expenses.amortization[months[i]] +
+            expenses.operational[months[i]] +
             cumExp[cumExp.length - 1]
         );
       }
@@ -83,9 +85,17 @@ export default function TeamsComponent() {
     if (months.length === 0) {
       return (
         <Box
-          sx={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            alignContent: "center",
+          }}
         >
-          <Typography>There are no records for {team.teamName}.</Typography>
+          <Typography align="center">
+            There are no records for <br /> {team.teamName} in the database.
+          </Typography>
         </Box>
       );
     } else {
@@ -131,13 +141,26 @@ export default function TeamsComponent() {
           }}
         />
       );
-      return plotContent;
+      return (
+        <>
+          <Box
+            sx={{
+              alignContent: "center",
+              justifyContent: "center",
+              alignItems: "center",
+              m: 2,
+            }}
+          >
+            {plotContent}
+          </Box>
+        </>
+      );
     }
   }
   const content = (
     <>
       <Typography variant="h3" align="center" sx={{ mt: 4 }}>
-        All Teams in Super League
+        All Teams in the League
       </Typography>
       <Box
         sx={{
@@ -148,7 +171,28 @@ export default function TeamsComponent() {
       >
         {!loading ? (
           teams.map((team) => {
-            return plot(team, revenues, expenses);
+            let tempRev = revenues.filter(
+              (revenue) => revenue.teamId === team._id
+            );
+            let tempExp = expenses.filter(
+              (expense) => expense.teamId === team._id
+            );
+            if (tempRev.length === 0 || tempExp.length === 0) {
+              return (
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Typography align="center">
+                    No data available for {team.teamName}.
+                  </Typography>
+                </Box>
+              );
+            }
+            return plot(team, tempRev[0], tempExp[0]);
           })
         ) : (
           <CircularProgressComponent />

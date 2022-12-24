@@ -32,7 +32,7 @@ function FrontPageAppBar(navItems) {
                 </Link>
               </Button>
             ))}
-            {token !== null ? (
+            {token !== null && token !== "null" ? (
               <Button sx={{ color: "#FFFFFF" }}>
                 <Link to={`/my/profile`}>Profile</Link>
               </Button>
