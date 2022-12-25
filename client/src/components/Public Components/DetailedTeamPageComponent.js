@@ -3,16 +3,85 @@ import FFP_API from "../../app/api";
 import CircularProgressComponent from "./CircularProgressComponent";
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
-import { Avatar, Button, Box, Grid, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Box,
+  Grid,
+  Typography,
+  Card,
+  Container,
+  CardContent,
+  CardMedia,
+  CardActionArea,
+  CardActions,
+} from "@mui/material";
 import { UserContext } from "../../contexts/userContext";
 import SimpleLinearRegression from "ml-regression-simple-linear";
 
 export default function DetailedTeamPageComponent() {
-  const { token } = useContext(UserContext);
+  const { token, user } = useContext(UserContext);
   const [team, setTeam] = useState(null);
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
   const { id } = useParams();
+
+  function CustomCard(props) {
+    console.log(props.content);
+    return (
+      <>
+        <Card
+          style={{
+            backgroundColor: "#f5f5f5",
+          }}
+          sx={{ width: 330 }}
+        >
+          <CardContent>
+            <Typography
+              gutterBottom
+              variant="h6"
+              component="div"
+              align="center"
+              fontWeight="bold"
+            >
+              {props.title}
+            </Typography>
+            {typeof props.content === "object" ? (
+              props.content.map((item) => {
+                if (props.title.indexOf("Associated") !== -1) {
+                  const person = JSON.parse(item);
+                  return (
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      align="center"
+                      key={person}
+                    >
+                      <a href={`mailto:${person.email}`}>{person.name}</a>
+                    </Typography>
+                  );
+                }
+                return (
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    align="center"
+                    key={item}
+                  >
+                    {item}
+                  </Typography>
+                );
+              })
+            ) : (
+              <Typography variant="body2" color="text.secondary" align="center">
+                {props.content}
+              </Typography>
+            )}
+          </CardContent>
+        </Card>
+      </>
+    );
+  }
 
   useEffect(() => {
     const fetchTeam = async () => {
@@ -202,8 +271,8 @@ export default function DetailedTeamPageComponent() {
           },
         ]}
         layout={{
-          width: 600,
-          height: 500,
+          width: 500,
+          height: 400,
           title: team.teamName,
           yaxis: {
             title: "Amount in Million TLs",
@@ -226,10 +295,10 @@ export default function DetailedTeamPageComponent() {
           alignItems="center"
           justifyContent="center"
         >
-          <Grid item xs={5.5}>
+          <Grid item xs={5} justifyContent="center" alignItems="center">
             {plot(team, revenues, expenses)}
           </Grid>
-          <Grid item xs={6.5}>
+          <Grid item xs={7}>
             <Typography variant="h4" align="center" sx={{ mt: 4 }}>
               Information About
             </Typography>
@@ -244,10 +313,10 @@ export default function DetailedTeamPageComponent() {
               </a>
             </Typography>
             <Box display="flex" justifyContent="center" alignItems="center">
-              <Avatar sx={{ width: "auto", mt: 2, mb: 2 }} src={team.logoURL} />
+              <Avatar sx={{ width: "auto", mt: 2 }} src={team.logoURL} />
             </Box>
             {token ? (
-              <Typography variant="body1" align="center">
+              <Typography variant="body1" align="center" sx={{ mt: 2 }}>
                 <Button
                   variant="contained"
                   color="secondary"
@@ -257,99 +326,117 @@ export default function DetailedTeamPageComponent() {
                 </Button>
               </Typography>
             ) : null}
-            <Typography variant="body1" align="center" sx={{ mt: 2 }}>
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              sx={{ mt: 2 }}
+            >
+              {CustomCard({ title: "Manager", content: team.manager })}
+            </Box>
+            {/* <Typography variant="body1" align="center" sx={{ mt: 2 }}>
               Manager: {team.manager}
-            </Typography>
-            <Grid container spacing={2} sx={{ mt: 2 }}>
+            </Typography> */}
+            <Grid container spacing={1} sx={{ mt: 0.5 }}>
               <Grid item xs={6}>
-                <Typography variant="body1" align="center">
-                  Season Starting Budget: {team.seasonBudget} Mil. TL
-                </Typography>
-                <Typography variant="body1" align="center">
-                  Total Revenues:{" "}
-                  {returnTotalOfObject(revenues.ticketing) +
-                    returnTotalOfObject(revenues.marketing) +
-                    returnTotalOfObject(revenues.broadcasting)}{" "}
-                  Mil. TL
-                </Typography>
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  {CustomCard({
+                    title: "Budget",
+                    content: [
+                      `Season Starting Budget: ${team.seasonBudget} Mil TL`,
+                      `Current Budget: ${team.currentBudget} Mil TL`,
+                    ],
+                  })}
+                </Box>
               </Grid>
               <Grid item xs={6}>
-                <Typography variant="body1" align="center">
-                  Current Budget: {team.currentBudget} Mil. TL
-                </Typography>
-                <Typography variant="body1" align="center">
-                  Total Expenses:{" "}
-                  {returnTotalOfObject(expenses.salaries) +
-                    returnTotalOfObject(expenses.amortization) +
-                    returnTotalOfObject(expenses.operational)}{" "}
-                  Mil. TL
-                </Typography>
-              </Grid>
-            </Grid>
-
-            <Typography variant="body1" align="center" sx={{ mt: 2 }}>
-              Net Spend:{" "}
-              {(returnTotalOfObject(revenues.ticketing) +
-                returnTotalOfObject(revenues.marketing) +
-                returnTotalOfObject(revenues.broadcasting) +
-                -(
-                  returnTotalOfObject(expenses.salaries) +
-                  returnTotalOfObject(expenses.amortization) +
-                  returnTotalOfObject(expenses.operational)
-                )) *
-                -1}{" "}
-              Mil. TL
-            </Typography>
-            <Typography variant="body1" align="center" sx={{ mt: 2 }}>
-              Net Spend Prediction for Next Month: {predictNetSpend() * -1} Mil.
-              TL
-            </Typography>
-            <Grid container spacing={1} sx={{ mt: 2 }}>
-              <Grid item xs={6}>
-                <Typography variant="body1" align="center">
-                  Last Month Ticketing Revenue:
-                  {" " + returnLastValueOfObject(revenues.ticketing)} Mil. TL
-                </Typography>
-                <Typography variant="body1" align="center">
-                  Last Month Marketing Revenue:
-                  {" " + returnLastValueOfObject(revenues.marketing)} Mil. TL
-                </Typography>
-                <Typography variant="body1" align="center">
-                  Last Month Broadcasting Revenue:
-                  {" " + returnLastValueOfObject(revenues.broadcasting)} Mil. TL
-                </Typography>
-              </Grid>
-              <Grid item xs={6}>
-                <Typography variant="body1" align="center">
-                  Last Month Salary Expenses:
-                  {" " + returnLastValueOfObject(expenses.salaries)} Mil. TL
-                </Typography>
-                <Typography variant="body1" align="center">
-                  Last Month Amortization Expenses:
-                  {" " + returnLastValueOfObject(expenses.amortization)} Mil. TL
-                </Typography>
-                <Typography variant="body1" align="center">
-                  Last Month Operational Expenses:
-                  {" " + returnLastValueOfObject(expenses.operational)} Mil. TL
-                </Typography>
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  {CustomCard({
+                    title: "Spendings",
+                    content: [
+                      `Total Net Spend: ${
+                        (returnTotalOfObject(revenues.ticketing) +
+                          returnTotalOfObject(revenues.marketing) +
+                          returnTotalOfObject(revenues.broadcasting) +
+                          -(
+                            returnTotalOfObject(expenses.salaries) +
+                            returnTotalOfObject(expenses.amortization) +
+                            returnTotalOfObject(expenses.operational)
+                          )) *
+                        -1
+                      } Mil TL`,
+                      `Net Spend Prediction for Next Month: ${
+                        predictNetSpend() * -1
+                      } Mil TL`,
+                    ],
+                  })}
+                </Box>
               </Grid>
             </Grid>
-            <Grid container spacing={1} sx={{ mt: 2 }}>
+            <Grid container spacing={1} sx={{ mt: 0.5 }}>
               <Grid item xs={6}>
-                <Typography variant="body1" align="center">
-                  Associated Lawyers:{" "}
-                  {team.lawyers.map((lawyer) => {
-                    return lawyer + ", ";
-                  })}{" "}
-                </Typography>
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  {CustomCard({
+                    title: "Revenues",
+                    content: [
+                      `Total Revenues: ${
+                        returnTotalOfObject(revenues.ticketing) +
+                        returnTotalOfObject(revenues.marketing) +
+                        returnTotalOfObject(revenues.broadcasting)
+                      } Mil TL`,
+                      `Last Month Ticketing: ${returnLastValueOfObject(
+                        revenues.ticketing
+                      )} Mil TL`,
+                      `Last Month Marketing: ${returnLastValueOfObject(
+                        revenues.marketing
+                      )} Mil TL`,
+                      `Last Month Broadcasting: ${returnLastValueOfObject(
+                        revenues.broadcasting
+                      )} Mil TL`,
+                    ],
+                  })}
+                </Box>
               </Grid>
               <Grid item xs={6}>
-                <Typography variant="body1" align="center">
-                  Associated Board Members:{" "}
-                  {team.boardMembers.map((member) => {
-                    return member + ", ";
-                  })}{" "}
-                </Typography>
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  {CustomCard({
+                    title: "Expenses",
+                    content: [
+                      `Total Expenses: ${
+                        returnTotalOfObject(expenses.salaries) +
+                        returnTotalOfObject(expenses.amortization) +
+                        returnTotalOfObject(expenses.operational)
+                      } Mil TL`,
+                      `Last Month Salaries: ${returnLastValueOfObject(
+                        expenses.salaries
+                      )} Mil TL`,
+                      `Last Month Amortization: ${returnLastValueOfObject(
+                        expenses.amortization
+                      )} Mil TL`,
+                      `Last Month Operational: ${returnLastValueOfObject(
+                        expenses.operational
+                      )} Mil TL`,
+                    ],
+                  })}
+                </Box>
+              </Grid>
+            </Grid>
+            <Grid container spacing={1} sx={{ mt: 0.5 }}>
+              <Grid item xs={6}>
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  {CustomCard({
+                    title: "Associated Lawyers",
+                    content: team.lawyers,
+                  })}
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Box display="flex" justifyContent="center" alignItems="center">
+                  {CustomCard({
+                    title: "Associated Board Members",
+                    content: team.boardMembers,
+                  })}
+                </Box>
               </Grid>
             </Grid>
           </Grid>
