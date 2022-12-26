@@ -18,7 +18,7 @@ import FFP_API from "../../app/api";
 const theme = createTheme();
 
 const USER_REGEX = /^[A-z0-9]{3,20}$/;
-const PWD_REGEX = /^[A-z0-9!@#$%]{4,20}$/;
+const PWD_REGEX = /^[A-z0-9!@#$%]{6,20}$/;
 const EMAIL_REGEX = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 export default function SignUpComponent() {
@@ -35,7 +35,7 @@ export default function SignUpComponent() {
         "Username must be 3-20 characters long and contain only letters and numbers.";
     } else if (!PWD_REGEX.test(data.get("password"))) {
       error =
-        "Password must be 4-20 characters long and contain only letters, numbers, and !@#$%.";
+        "Password must be 6-20 characters long and contain only letters, numbers, and !@#$%.";
     } else if (!EMAIL_REGEX.test(data.get("email"))) {
       error = "Email must be a valid email address.";
     } else if (data.get("password") !== data.get("repassword")) {
@@ -90,20 +90,17 @@ export default function SignUpComponent() {
             <Container maxWidth="sm">
               <Box
                 sx={{
-                  m: 6,
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "center",
                 }}
               >
-                <Typography component="h1" variant="h5">
+                <Typography component="h1" variant="h4" mt={6}>
                   Sign Up
                 </Typography>
-                <Grid container justifyContent="flex-centre">
-                  <Grid item sx={{ mt: 2, mb: 2 }}>
-                    Already have an account? <Link href="/login">Sign in!</Link>
-                  </Grid>
-                </Grid>
+                <Typography component="h1" variant="h6" mt={3} mb={2}>
+                  Already have an account? <Link href="/login">Sign in!</Link>
+                </Typography>
                 <Box
                   component="form"
                   onSubmit={handleSubmit}
