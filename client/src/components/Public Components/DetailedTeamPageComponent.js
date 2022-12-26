@@ -10,24 +10,19 @@ import {
   Grid,
   Typography,
   Card,
-  Container,
   CardContent,
-  CardMedia,
-  CardActionArea,
-  CardActions,
 } from "@mui/material";
 import { UserContext } from "../../contexts/userContext";
 import SimpleLinearRegression from "ml-regression-simple-linear";
 
 export default function DetailedTeamPageComponent() {
-  const { token, user } = useContext(UserContext);
+  const { token, user, setUser } = useContext(UserContext);
   const [team, setTeam] = useState(null);
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
   const { id } = useParams();
 
   function CustomCard(props) {
-    console.log(props.content);
     return (
       <>
         <Card
@@ -55,6 +50,7 @@ export default function DetailedTeamPageComponent() {
                       variant="body2"
                       color="text.secondary"
                       align="center"
+                      style={{ color: "#0000FF" }}
                       key={person}
                     >
                       <a href={`mailto:${person.email}`}>{person.name}</a>
@@ -96,10 +92,19 @@ export default function DetailedTeamPageComponent() {
       const response = await FFP_API.get(`/expenses/${id}`);
       setExpenses(response.data);
     };
+    const fetchUser = async () => {
+      const response = await FFP_API.get(`/users/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setUser(response.data);
+    };
     fetchTeam();
     fetchRevenues();
     fetchExpenses();
-  }, [setTeam, setRevenues, setExpenses, id]);
+    fetchUser();
+  }, [setTeam, setRevenues, setExpenses, token, setUser, id]);
 
   // takes an integer input and returns sequence of integers from 0 to input
   function getSequence(input) {
@@ -122,15 +127,11 @@ export default function DetailedTeamPageComponent() {
     // revert the order of the y array
     //y = y.reverse();
 
-    console.log(x);
-    console.log(y);
-
     // create a linear regression model
     const model = new SimpleLinearRegression(x, y);
 
     // predict the next revenue
     let prediction = model.predict(x.length + 1);
-    console.log("Revenue prediction for next month is:" + prediction);
     return prediction;
   }
 
@@ -150,15 +151,12 @@ export default function DetailedTeamPageComponent() {
 
     // predict the next expense
     let prediction = model.predict(x.length + 1);
-    console.log("Expense prediction for next month is:" + prediction);
     return prediction;
   }
 
   // predict Net Spend
   function predictNetSpend() {
-    let netSpend = predictRevenue() - predictExpense();
-    console.log("Net Spend prediction for next month is:" + netSpend);
-    return netSpend;
+    return predictRevenue() - predictExpense();
   }
 
   /**
@@ -315,7 +313,7 @@ export default function DetailedTeamPageComponent() {
             <Box display="flex" justifyContent="center" alignItems="center">
               <Avatar sx={{ width: "auto", mt: 2 }} src={team.logoURL} />
             </Box>
-            {token ? (
+            {token && user && user.role === "TFF Admin" ? (
               <Typography variant="body1" align="center" sx={{ mt: 2 }}>
                 <Button
                   variant="contained"
@@ -332,7 +330,13 @@ export default function DetailedTeamPageComponent() {
               alignItems="center"
               sx={{ mt: 2 }}
             >
-              {CustomCard({ title: "Manager", content: team.manager })}
+              {CustomCard({
+                title: "Manager",
+                content:
+                  team.manager === ""
+                    ? "No manager information."
+                    : team.manager,
+              })}
             </Box>
             {/* <Typography variant="body1" align="center" sx={{ mt: 2 }}>
               Manager: {team.manager}
