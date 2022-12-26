@@ -21,6 +21,8 @@ import { useNavigate } from "react-router-dom";
 
 const theme = createTheme();
 
+const EMAIL_REGEX = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
 export default function SendKeyComponent() {
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -52,6 +54,7 @@ export default function SendKeyComponent() {
   };
 
   const sendEmail = async (e) => {
+    setE(false);
     e.preventDefault();
     if (role === "Team Admin") {
       if (selectedTeam === "") {
@@ -59,6 +62,11 @@ export default function SendKeyComponent() {
         setErrorMessage("Please select a team!");
         return;
       }
+    }
+    if (EMAIL_REGEX.test(e.currentTarget.email.value) === false) {
+      setE(true);
+      setErrorMessage("Please enter a valid email!");
+      return;
     }
     const data = new FormData(e.currentTarget);
     try {
@@ -167,7 +175,7 @@ export default function SendKeyComponent() {
               />
             ) : null}
             <TextField
-              sx={{ mt: 3}}
+              sx={{ mt: 3 }}
               margin="normal"
               required
               fullWidth
