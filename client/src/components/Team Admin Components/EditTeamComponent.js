@@ -8,6 +8,7 @@ import {
   Container,
   Typography,
   Grid,
+  Divider,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useEffect, useState, useContext } from "react";
@@ -131,7 +132,7 @@ export default function EditTeamComponent() {
           Update Your Team's Information
         </Typography>
         <Grid container>
-          <Grid item xs={7}>
+          <Grid item xs={6.5}>
             <Container maxWidth="sm">
               <Box
                 sx={{
@@ -234,7 +235,13 @@ export default function EditTeamComponent() {
                                 <Button
                                   key={lawyerObj.name}
                                   variant="contained"
-                                  sx={{ ml: 2, bgcolor: "#51087E" }}
+                                  sx={{
+                                    ml: 2,
+                                    bgcolor: "#51087E",
+                                    "&:hover": {
+                                      backgroundColor: "#51087E",
+                                    },
+                                  }}
                                   onClick={() => {
                                     const newLawyers = lawyers.filter(function (
                                       l
@@ -278,7 +285,13 @@ export default function EditTeamComponent() {
                                 <Button
                                   key={boardMemberObj.name}
                                   variant="contained"
-                                  sx={{ ml: 2, bgcolor: "#51087E" }}
+                                  sx={{
+                                    ml: 2,
+                                    bgcolor: "#51087E",
+                                    "&:hover": {
+                                      backgroundColor: "#51087E",
+                                    },
+                                  }}
                                   onClick={() => {
                                     const newLawyers = lawyers.filter(function (
                                       l
@@ -327,15 +340,19 @@ export default function EditTeamComponent() {
               </Box>
             </Container>
           </Grid>
-          <Grid item xs={5}>
+          <Divider
+            orientation="vertical"
+            variant="middle"
+            flexItem
+            sx={{
+              mr: 4,
+              ml: -4,
+            }}
+          />
+          <Grid item xs={4.5}>
             <Box
               sx={{
                 mt: 2,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                alignItems: "center",
-                alignContent: "center",
               }}
             >
               <Box>
