@@ -138,7 +138,7 @@ export default function ProfilePageComponent() {
         <Grid item xs={4}>
           <CustomCard
             title="Send Key"
-            link="/sendkey"
+            link="/register"
             description="Send a registration key to any type of user that needs to enter the system"
           />
         </Grid>
