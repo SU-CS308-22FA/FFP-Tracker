@@ -59,13 +59,27 @@ const updateExpenseById = asyncHandler(async (req, res) => {
       .json({ error: "All fields are required to update a team's revenues!" });
   }
   const exp = await Expense.findOne({ teamId: id });
+  const team = await Team.findOne({ _id: id });
+  if (!team) return res.status(404).json({ error: "Team not found!" });
   if (!exp)
     return res.status(404).json({ error: "No revenue found for this team!" });
+  if (exp.salaries.get(month) !== undefined) {
+    return res
+      .status(400)
+      .json({ error: "Expense already exists for this month!" });
+  }
   exp.salaries.set(month, salaries);
   exp.amortization.set(month, amortization);
   exp.operational.set(month, operational);
-  const result = await exp.save();
-  return res.status(200).json(exp);
+  team.currentBudget =
+    Number(team.currentBudget) -
+    Number(salaries) -
+    Number(amortization) -
+    Number(operational);
+  console.log(team.currentBudget);
+  await team.save();
+  await exp.save();
+  return res.status(201).json(exp);
 });
 
 const deleteExpense = asyncHandler(async (req, res) => {
