@@ -105,7 +105,8 @@ const createUser = asyncHandler(async (req, res) => {
 // @access private
 const updateUser = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  const { fullname, username, password, team } = req.body;
+  const { fullname, username, password, team, isSupporting, rejectedTeams } =
+    req.body;
   const user = await User.findById(id).exec();
   if (!user) return res.status(400).json({ error: "User not found!" });
   if (user.role !== "Supporter") {
@@ -128,7 +129,21 @@ const updateUser = asyncHandler(async (req, res) => {
       user.password = await bcrypt.hash(password, 10);
     }
   } else {
-    user.team = team;
+    if (isSupporting) {
+      user.isSupporting = isSupporting;
+    } else {
+      //let old = user.rejectedTeams;
+      //user.rejectedTeams = [...user.rejectedTeams, rejectedTeams];
+      if (rejectedTeams) {
+        if (user.rejectedTeams.length === 0) {
+          user.rejectedTeams = rejectedTeams;
+        } else {
+          user.rejectedTeams = [...user.rejectedTeams, rejectedTeams];
+        }
+      }
+
+      user.team = team;
+    }
   }
 
   const updatedUser = await user.save();

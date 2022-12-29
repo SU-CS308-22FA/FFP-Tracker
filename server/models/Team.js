@@ -45,7 +45,7 @@ const TeamSchema = new mongoose.Schema({
   },
   sponsorBudget: {
     type: Number,
-    required: true,
+    required: false,
     default: 0,
   },
 });
