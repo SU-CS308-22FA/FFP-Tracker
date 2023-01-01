@@ -34,6 +34,7 @@ app.use("/api/revenues", require("./routes/revenueRoutes"));
 app.use("/api/expenses", require("./routes/expenseRoutes"));
 app.use("/api/notifications", require("./routes/notificationRoutes"));
 app.use("/api/files", require("./routes/fileRoutes"));
+app.use("/api/players", require("./routes/playerRoutes"));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/../client/build/index.html"));
