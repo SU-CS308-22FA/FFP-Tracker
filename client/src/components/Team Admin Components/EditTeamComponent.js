@@ -8,6 +8,7 @@ import {
   Container,
   Typography,
   Grid,
+  Divider,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useEffect, useState, useContext } from "react";
@@ -81,13 +82,21 @@ export default function EditTeamComponent() {
   const handleAddLawyer = (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    setLawyers([...lawyers, data.get("lname")]);
+    const newLawyer = JSON.stringify({
+      name: data.get("lname"),
+      email: data.get("email"),
+    });
+    setLawyers([...lawyers, newLawyer]);
   };
 
   const handleAddBoardMember = (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
-    setBoardMembers([...boardMembers, data.get("bname")]);
+    const newBoardMember = JSON.stringify({
+      name: data.get("bname"),
+      email: data.get("email"),
+    });
+    setBoardMembers([...boardMembers, newBoardMember]);
   };
 
   useEffect(() => {
@@ -123,7 +132,7 @@ export default function EditTeamComponent() {
           Update Your Team's Information
         </Typography>
         <Grid container>
-          <Grid item xs={7}>
+          <Grid item xs={6.5}>
             <Container maxWidth="sm">
               <Box
                 sx={{
@@ -211,22 +220,35 @@ export default function EditTeamComponent() {
                       </Typography>
                       {lawyers.length !== 0 ? (
                         lawyers.map((lawyer) => {
+                          let lawyerObj = JSON.parse(lawyer);
                           return (
                             <>
                               <Typography
-                                key={lawyer}
+                                key={lawyerObj.name}
                                 variant="h6"
+                                style={{ color: "blue" }}
                                 sx={{ mb: 1 }}
                               >
-                                {lawyer}
+                                <a href={`mailto:${lawyerObj.email}`}>
+                                  {lawyerObj.name}
+                                </a>
                                 <Button
-                                  key={lawyer}
+                                  key={lawyerObj.name}
                                   variant="contained"
-                                  sx={{ ml: 2, bgcolor: "#51087E" }}
+                                  sx={{
+                                    ml: 2,
+                                    bgcolor: "#51087E",
+                                    "&:hover": {
+                                      backgroundColor: "#51087E",
+                                    },
+                                  }}
                                   onClick={() => {
-                                    const newLawyers = lawyers.filter(
-                                      (l) => l !== lawyer
-                                    );
+                                    const newLawyers = lawyers.filter(function (
+                                      l
+                                    ) {
+                                      const lawyer = JSON.parse(l);
+                                      return lawyer.name !== lawyerObj.name;
+                                    });
                                     setLawyers(newLawyers);
                                   }}
                                 >
@@ -248,23 +270,38 @@ export default function EditTeamComponent() {
                       </Typography>
                       {boardMembers.length !== 0 ? (
                         boardMembers.map((boardMember) => {
+                          let boardMemberObj = JSON.parse(boardMember);
                           return (
                             <>
                               <Typography
-                                key={boardMember}
+                                key={boardMemberObj.name}
                                 variant="h6"
+                                style={{ color: "blue" }}
                                 sx={{ mb: 1 }}
                               >
-                                {boardMember}
+                                <a href={`mailto:${boardMemberObj.email}`}>
+                                  {boardMemberObj.name}
+                                </a>
                                 <Button
-                                  key={boardMember}
+                                  key={boardMemberObj.name}
                                   variant="contained"
-                                  sx={{ ml: 2, bgcolor: "#51087E" }}
+                                  sx={{
+                                    ml: 2,
+                                    bgcolor: "#51087E",
+                                    "&:hover": {
+                                      backgroundColor: "#51087E",
+                                    },
+                                  }}
                                   onClick={() => {
-                                    const newBoard = boardMembers.filter(
-                                      (b) => b !== boardMember
-                                    );
-                                    setBoardMembers(newBoard);
+                                    const newLawyers = lawyers.filter(function (
+                                      l
+                                    ) {
+                                      const lawyer = JSON.parse(l);
+                                      return (
+                                        lawyer.name !== boardMemberObj.name
+                                      );
+                                    });
+                                    setBoardMembers(newLawyers);
                                   }}
                                 >
                                   Remove Board Member
@@ -303,15 +340,19 @@ export default function EditTeamComponent() {
               </Box>
             </Container>
           </Grid>
-          <Grid item xs={5}>
+          <Divider
+            orientation="vertical"
+            variant="middle"
+            flexItem
+            sx={{
+              mr: 4,
+              ml: -4,
+            }}
+          />
+          <Grid item xs={4.5}>
             <Box
               sx={{
                 mt: 2,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                alignItems: "center",
-                alignContent: "center",
               }}
             >
               <Box>
@@ -328,7 +369,7 @@ export default function EditTeamComponent() {
                     alignItems: "center",
                   }}
                 >
-                  <Grid container spacing={2}>
+                  <Grid container spacing={1}>
                     <Grid item xs={12}>
                       <TextField
                         required
@@ -336,26 +377,37 @@ export default function EditTeamComponent() {
                         label="Lawyer Name"
                         name="lname"
                       />
+                      <TextField
+                        sx={{ ml: 2 }}
+                        required
+                        id="email"
+                        label="Email"
+                        name="email"
+                      />
                     </Grid>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      sx={{
-                        mt: 2,
-                        mb: 4,
-                        bgcolor: "#51087E",
-                        "&:hover": {
-                          backgroundColor: "#51087E",
-                        },
-                      }}
-                    >
-                      Add Lawyer
-                    </Button>
+                    <Grid item xs={12}>
+                      <Box textAlign="center">
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          sx={{
+                            mt: 2,
+                            mb: 4,
+                            bgcolor: "#51087E",
+                            "&:hover": {
+                              backgroundColor: "#51087E",
+                            },
+                          }}
+                        >
+                          Add Lawyer
+                        </Button>
+                      </Box>
+                    </Grid>
                   </Grid>
                 </Box>
               </Box>
               <Box>
-                <Typography variant="h4" align="center" sx={{ mt: 2 }}>
+                <Typography variant="h4" align="center" sx={{ mt: 4 }}>
                   Add a Board Member
                 </Typography>
                 <Box
@@ -368,7 +420,7 @@ export default function EditTeamComponent() {
                     alignItems: "center",
                   }}
                 >
-                  <Grid container spacing={2}>
+                  <Grid container spacing={1}>
                     <Grid item xs={12}>
                       <TextField
                         required
@@ -376,21 +428,32 @@ export default function EditTeamComponent() {
                         label="Board Member Name"
                         name="bname"
                       />
+                      <TextField
+                        sx={{ ml: 2 }}
+                        required
+                        id="email"
+                        label="Email"
+                        name="email"
+                      />
                     </Grid>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      sx={{
-                        mt: 2,
-                        mb: 4,
-                        bgcolor: "#51087E",
-                        "&:hover": {
-                          backgroundColor: "#51087E",
-                        },
-                      }}
-                    >
-                      Add Board Member
-                    </Button>
+                    <Grid item xs={12}>
+                      <Box textAlign="center">
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          sx={{
+                            mt: 2,
+                            mb: 4,
+                            bgcolor: "#51087E",
+                            "&:hover": {
+                              backgroundColor: "#51087E",
+                            },
+                          }}
+                        >
+                          Add Board Member
+                        </Button>
+                      </Box>
+                    </Grid>
                   </Grid>
                 </Box>
               </Box>

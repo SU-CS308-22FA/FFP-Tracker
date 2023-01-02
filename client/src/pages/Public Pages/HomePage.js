@@ -1,10 +1,19 @@
 import FrontPageAppBar from "../../components/Public Components/FrontPageAppBar";
 import { Avatar, Box, Typography, Container } from "@mui/material";
+import { useContext } from "react";
+import { UserContext } from "../../contexts/userContext";
 
 export default function HomePage() {
+  const { user } = useContext(UserContext);
+  let navItems;
+  if (user) {
+    navItems = ["Home"];
+  } else {
+    navItems = ["Home", "Sign Up"];
+  }
   const content = (
     <>
-      <FrontPageAppBar navItems={["Teams", "Sign Up"]} />
+      <FrontPageAppBar navItems={navItems} />
       <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
         <Avatar
           align="center"

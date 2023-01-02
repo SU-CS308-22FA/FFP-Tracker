@@ -49,7 +49,7 @@ export default function LoginComponent() {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 6,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -58,11 +58,9 @@ export default function LoginComponent() {
           <Typography component="h1" variant="h4">
             Log In
           </Typography>
-          <Grid container>
-            <Grid item sx={{ mt: 2 }}>
-              Don't have an account? <Link href="/signup">{"Sign Up"}</Link>
-            </Grid>
-          </Grid>
+          <Typography variant="h6" mt={3} mb={2}>
+            Don't have an account? <Link href="/signup">Sign up!</Link>
+          </Typography>
           <Box component="form" onSubmit={handleSubmit}>
             <TextField
               margin="normal"
@@ -94,8 +92,7 @@ export default function LoginComponent() {
               fullWidth
               variant="contained"
               sx={{
-                mt: 3,
-                mb: 4,
+                mt: 2,
                 backgroundColor: "#51087E",
                 "&:hover": {
                   backgroundColor: "#51087E",
