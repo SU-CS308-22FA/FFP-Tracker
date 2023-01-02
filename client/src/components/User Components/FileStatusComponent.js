@@ -216,7 +216,7 @@ export default function FileStatusComponent() {
   return (
     <>
       <Container maxWidth="lg" disableGutters>
-        <Typography variant="h3" align="center" sx={{ mt: 2 }}>
+        <Typography variant="h3" align="center" sx={{ mt: 4 }}>
           File Status
         </Typography>
         <Box

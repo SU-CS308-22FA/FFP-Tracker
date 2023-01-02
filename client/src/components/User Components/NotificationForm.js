@@ -1,16 +1,36 @@
 import emailjs from "@emailjs/browser";
-import { Button, TextField, Box } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Box,
+  Container,
+  CssBaseline,
+  Typography,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-export default function ContactUs() {
+const EMAIL_REGEX = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+export default function NotificationForm() {
+  const navigate = useNavigate();
+
   async function sendEmail(e) {
     e.preventDefault();
-    console.log(e.target.message.value);
-    console.log(e.target.subject.value);
+    if (!EMAIL_REGEX.test(e.target.to_email.value)) {
+      alert("Invalid recipient email address.");
+      return;
+    }
+    if (!EMAIL_REGEX.test(e.target.from_email.value)) {
+      alert("Invalid sender email address.");
+      return;
+    }
     await emailjs
       .sendForm("gmail", "template_46kzdyk", e.target, "vHB_tCaBZcPIUtpPO")
       .then(
         (result) => {
           console.log(result.text);
+          alert("Email sent successfully!");
+          navigate("/my/profile");
         },
         (error) => {
           console.log(error.text);
@@ -21,96 +41,99 @@ export default function ContactUs() {
 
   return (
     <>
-      <Box
-        component="form"
-        sx={{
-          "& .MuiTextField-root": { m: 1, width: "25ch" },
-        }}
-        noValidate
-        autoComplete="off"
-        onSubmit={sendEmail}
-      ></Box>
-      <form className="contact-form" onSubmit={sendEmail}>
-        <div className="row pt-5 mx-auto">
-          <div className="col-8 form-group mx-auto">
-            <TextField
-              required
-              id="outlined-required"
-              label="To Email"
-              defaultValue=""
-              placeholder="To EMail"
-              variant="outlined"
-              name="to_email"
-            />
-          </div>
-          <div className="col-8 form-group pt-5 mx-auto">
-            <TextField
-              required
-              id="outlined-required"
-              label="To Name"
-              defaultValue=""
-              placeholder="To Name"
-              variant="outlined"
-              name="to_name"
-            />
-          </div>
-          <div className="col-8 form-group pt-5 mx-auto">
-            <TextField
-              required
-              id="outlined-required"
-              label="From Email"
-              defaultValue=""
-              placeholder="From EMail"
-              variant="outlined"
-              name="from_email"
-            />
-          </div>
-          <div className="col-8 form-group pt-5 mx-auto">
-            <TextField
-              required
-              id="outlined-required"
-              label="From Name"
-              defaultValue=""
-              placeholder="From Name"
-              variant="outlined"
-              name="from_name"
-            />
-          </div>
-          <div className="col-8 form-group pt-5 mx-auto">
-            <TextField
-              required
-              id="outlined-required"
-              label="Subject"
-              defaultValue=""
-              placeholder="Subject"
-              variant="outlined"
-              name="subject"
-            />
-          </div>
-          <div className="col-8 form-group pt-5 mx-auto">
-            <TextField
-              id="outlined-multiline-static"
-              label="Message"
-              multiline
-              rows={10}
-              defaultValue=""
-              placeholder="Message"
-              variant="outlined"
-              name="message"
-            />
-          </div>
-          <div className="col-8 pt-3 mx-auto">
-            <Button
-              variant="contained"
-              type="submit"
-              value="Send Notification"
-              color="success"
-            >
-              Send
-            </Button>
-          </div>
-        </div>
-      </form>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Typography component="h1" mt={4} variant="h4" align="center">
+          Send Email
+        </Typography>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+          component="form"
+          onSubmit={sendEmail}
+        >
+          <TextField
+            required
+            fullWidth
+            id="outlined-required"
+            label="To Email"
+            defaultValue=""
+            placeholder="To Email"
+            variant="outlined"
+            name="to_email"
+            sx={{ mt: 4 }}
+          />
+          <TextField
+            required
+            fullWidth
+            id="outlined-required"
+            label="To Name"
+            defaultValue=""
+            placeholder="To Name"
+            variant="outlined"
+            name="to_name"
+            sx={{ mt: 2 }}
+          />
+          <TextField
+            required
+            fullWidth
+            id="outlined-required"
+            label="From Email"
+            defaultValue=""
+            placeholder="From EMail"
+            variant="outlined"
+            name="from_email"
+            sx={{ mt: 2 }}
+          />
+          <TextField
+            required
+            fullWidth
+            id="outlined-required"
+            label="From Name"
+            defaultValue=""
+            placeholder="From Name"
+            variant="outlined"
+            name="from_name"
+            sx={{ mt: 2 }}
+          />
+          <TextField
+            required
+            fullWidth
+            id="outlined-required"
+            label="Subject"
+            defaultValue=""
+            placeholder="Subject"
+            variant="outlined"
+            name="subject"
+            sx={{ mt: 2 }}
+          />
+          <TextField
+            fullWidth
+            id="outlined-multiline-static"
+            label="Message"
+            multiline
+            required
+            rows={10}
+            defaultValue=""
+            placeholder="Message"
+            variant="outlined"
+            name="message"
+            sx={{ mt: 2 }}
+          />
+          <Button
+            variant="contained"
+            type="submit"
+            value="Send Notification"
+            color="success"
+            sx={{ mt: 2 }}
+          >
+            Send Email
+          </Button>
+        </Box>
+      </Container>
     </>
   );
 }

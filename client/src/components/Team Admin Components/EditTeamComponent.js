@@ -386,20 +386,22 @@ export default function EditTeamComponent() {
                       />
                     </Grid>
                     <Grid item xs={12}>
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        sx={{
-                          mt: 2,
-                          mb: 4,
-                          bgcolor: "#51087E",
-                          "&:hover": {
-                            backgroundColor: "#51087E",
-                          },
-                        }}
-                      >
-                        Add Lawyer
-                      </Button>
+                      <Box textAlign="center">
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          sx={{
+                            mt: 2,
+                            mb: 4,
+                            bgcolor: "#51087E",
+                            "&:hover": {
+                              backgroundColor: "#51087E",
+                            },
+                          }}
+                        >
+                          Add Lawyer
+                        </Button>
+                      </Box>
                     </Grid>
                   </Grid>
                 </Box>
@@ -435,20 +437,22 @@ export default function EditTeamComponent() {
                       />
                     </Grid>
                     <Grid item xs={12}>
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        sx={{
-                          mt: 2,
-                          mb: 4,
-                          bgcolor: "#51087E",
-                          "&:hover": {
-                            backgroundColor: "#51087E",
-                          },
-                        }}
-                      >
-                        Add Board Member
-                      </Button>
+                      <Box textAlign="center">
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          sx={{
+                            mt: 2,
+                            mb: 4,
+                            bgcolor: "#51087E",
+                            "&:hover": {
+                              backgroundColor: "#51087E",
+                            },
+                          }}
+                        >
+                          Add Board Member
+                        </Button>
+                      </Box>
                     </Grid>
                   </Grid>
                 </Box>

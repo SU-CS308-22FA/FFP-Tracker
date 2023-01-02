@@ -22,7 +22,9 @@ function FrontPageAppBar(navItems) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" }, ml: 2 }}
           >
-            <Link to="/home">FFP Tracker for TFF</Link>
+            <Link to={token ? "/my/profile" : "/home"}>
+              FFP Tracker for TFF
+            </Link>
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navigationItems.map((item) => (
