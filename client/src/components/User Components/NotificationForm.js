@@ -13,7 +13,6 @@ const EMAIL_REGEX = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 export default function NotificationForm() {
   const navigate = useNavigate();
-
   async function sendEmail(e) {
     e.preventDefault();
     if (!EMAIL_REGEX.test(e.target.to_email.value)) {

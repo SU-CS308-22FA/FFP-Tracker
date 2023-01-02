@@ -145,7 +145,7 @@ export default function ProfilePageComponent() {
         <Grid item xs={2} />
       </>
     );
-  } else {
+  } else if (user.role === "Lawyer") {
     roleBasedContent = (
       <>
         <Grid item xs={4} />
@@ -158,6 +158,13 @@ export default function ProfilePageComponent() {
         </Grid>
         <Grid item xs={4} />
       </>
+    );
+  } else {
+    roleBasedContent = (
+      <Typography variant="h6" gutterBottom>
+        As a supporter, you can view your notifications, edit your profile, you
+        can support teams, view all teams and their budgets.
+      </Typography>
     );
   }
   const content = (

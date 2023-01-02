@@ -39,6 +39,9 @@ function ProfileAppBar() {
   if (user.role === "Team Admin") {
     nav = (
       <>
+        <Button color="inherit" component={Link} to="/supportrequest">
+          Review Support Request
+        </Button>
         <Button color="inherit" component={Link} to="/submit">
           Submit
         </Button>
@@ -87,9 +90,17 @@ function ProfileAppBar() {
             <Link to={`/my/profile`}>FFP Tracker for TFF</Link>
           </Typography>
           {nav}
-          <Button sx={{ color: "#FFFFFF" }}>
-            <Link to="/status">File Status</Link>
-          </Button>
+
+          {user.role !== "Supporter" ? (
+            <Button sx={{ color: "#FFFFFF" }}>
+              <Link to="/status">File Status</Link>
+            </Button>
+          ) : null}
+          {user.role === "Supporter" ? (
+            <Button sx={{ color: "#FFFFFF" }}>
+              <Link to="/supportteam">SUPPORT TEAM</Link>
+            </Button>
+          ) : null}
           <Button sx={{ color: "#FFFFFF" }}>
             <Link to="/my/profile/edit">Edit Profile</Link>
           </Button>

@@ -21,6 +21,7 @@ export default function DetailedTeamPageComponent() {
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
   const { id } = useParams();
+  const [users, setUsers] = useState(null);
 
   function CustomCard(props) {
     return (
@@ -179,6 +180,21 @@ export default function DetailedTeamPageComponent() {
     return obj[Object.keys(obj)[Object.keys(obj).length - 1]];
   }
 
+  function hasSupporter() {
+    console.log(users);
+
+    for (let i = 0; i < users.length; i++) {
+      if (
+        users[i].role === "Supporter" &&
+        users[i].team === team._id &&
+        users[i].isSupporting
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   function plot(team, revenues, expenses) {
     let months = [];
     for (const [key, value] of Object.entries(revenues.ticketing)) {
@@ -285,7 +301,7 @@ export default function DetailedTeamPageComponent() {
   }
   const content = (
     <>
-      {team && revenues && expenses ? (
+      {team && revenues && expenses && users ? (
         <Grid
           container
           spacing={1}
