@@ -1,7 +1,14 @@
 import emailjs from "@emailjs/browser";
+import { useLocation } from "react-router-dom";
 import { Button, TextField, Box } from "@mui/material";
 
 export default function ContactUs() {
+  const location = useLocation();
+  let data = "";
+  if (location.state) {
+    data = location.state.data;
+  }
+
   async function sendEmail(e) {
     e.preventDefault();
     console.log(e.target.message.value);
@@ -37,7 +44,7 @@ export default function ContactUs() {
               required
               id="outlined-required"
               label="To Email"
-              defaultValue=""
+              defaultValue={data ? data : ""}
               placeholder="To EMail"
               variant="outlined"
               name="to_email"

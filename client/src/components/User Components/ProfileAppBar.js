@@ -39,6 +39,9 @@ function ProfileAppBar() {
   if (user.role === "Team Admin") {
     nav = (
       <>
+        <Button color="inherit" component={Link} to="/supportrequest">
+          Review Support Request
+        </Button>
         <Button color="inherit" component={Link} to="/submit">
           Submit
         </Button>

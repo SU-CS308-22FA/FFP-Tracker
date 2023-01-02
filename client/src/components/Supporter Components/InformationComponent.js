@@ -38,7 +38,6 @@ export default function MultiActionAreaCard() {
   }, [user]);
 
   const handleUpdateTeam = async () => {
-    //e.preventDefault();
     const options = {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -59,13 +58,9 @@ export default function MultiActionAreaCard() {
   const handleCancelRequest = async () => {
     handleUpdateTeam();
     try {
-      await FFP_API.patch(
-        `/users/${user._id}`,
-        {
-          team: null,
-        }
-        // options
-      );
+      await FFP_API.patch(`/users/${user._id}`, {
+        team: null,
+      });
       alert(
         "You have successfully cancelled the request! The page will be refreshed."
       );
@@ -76,67 +71,138 @@ export default function MultiActionAreaCard() {
     }
   };
 
-  if (team) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-      >
-        <Card sx={{ maxWidth: 345 }}>
-          <Box
-            sx={{
-              width: "100%",
-            }}
-          >
-            <LinearProgress />
-          </Box>
-          <CardActionArea>
-            <CardMedia
-              component="img"
-              height="140"
-              image={team.logoURL}
-              //alt="green iguana"s
-              sx={{ ml: 8, maxWidth: 200 }}
-            />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="div">
-                {team.teamName}
-              </Typography>
-              <Typography variant="body2">
-                Your request to join our team as a supporter is being reviewed
-                by the team admin. Thank you for your interest in supporting our
-                cause.
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <Button
-              variant="outlined"
-              size="small"
-              color="primary"
-              onClick={() => navigate(`/teams/${team._id}`)}
+  function handleNavigate(teamAdminMail) {
+    navigate("/sendnotification", {
+      state: { data: teamAdminMail },
+    });
+  }
+
+  if (team && user) {
+    if (user.isSupporting) {
+      return (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="100vh"
+        >
+          <Card sx={{ maxWidth: 345 }}>
+            <Box
+              sx={{
+                width: "100%",
+              }}
+            ></Box>
+            <CardActionArea>
+              <CardMedia
+                component="img"
+                height="140"
+                image={team.logoURL}
+                sx={{ ml: 8, maxWidth: 200 }}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {team.teamName}
+                </Typography>
+                <Typography variant="body2">
+                  Your request to become a supporter of our team has been
+                  approved by the administrator. You will now be providing
+                  support to the team with a budget of {team.sponsorBudget} Mil.
+                  TL for this season. Thank you for your support!
+                </Typography>
+                <Typography variant="body2">
+                  Click the button to send a notification to the team admin.
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            <CardActions>
+              <Button
+                variant="outlined"
+                size="small"
+                color="primary"
+                onClick={() => navigate(`/teams/${team._id}`)}
+              >
+                Team Page
+              </Button>
+              <Button
+                variant="outlined"
+                size="small"
+                color="primary"
+                onClick={() => handleNavigate(team.admin)}
+              >
+                Send notification
+              </Button>
+
+              {e && (
+                <Alert variant="outlined" severity="error">
+                  {errorMessage}
+                </Alert>
+              )}
+            </CardActions>
+          </Card>
+        </Box>
+      );
+    } else if (!user.isSupporting) {
+      return (
+        <Box
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          minHeight="100vh"
+        >
+          <Card sx={{ maxWidth: 345 }}>
+            <Box
+              sx={{
+                width: "100%",
+              }}
             >
-              Team Page
-            </Button>
-            <Button
-              onClick={handleCancelRequest}
-              size="small"
-              color="error"
-              variant="outlined"
-            >
-              Cancel request
-            </Button>
-            {e && (
-              <Alert variant="outlined" severity="error">
-                {errorMessage}
-              </Alert>
-            )}
-          </CardActions>
-        </Card>
-      </Box>
-    );
+              <LinearProgress />
+            </Box>
+            <CardActionArea>
+              <CardMedia
+                component="img"
+                height="140"
+                image={team.logoURL}
+                //alt="green iguana"s
+                sx={{ ml: 8, maxWidth: 200 }}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {team.teamName}
+                </Typography>
+                <Typography variant="body2">
+                  Your request to join our team as a supporter is being reviewed
+                  by the team admin. Thank you for your interest in supporting
+                  our cause.
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            <CardActions>
+              <Button
+                variant="outlined"
+                size="small"
+                color="primary"
+                onClick={() => navigate(`/teams/${team._id}`)}
+              >
+                Team Page
+              </Button>
+              <Button
+                onClick={handleCancelRequest}
+                size="small"
+                color="error"
+                variant="outlined"
+              >
+                Cancel request
+              </Button>
+              {e && (
+                <Alert variant="outlined" severity="error">
+                  {errorMessage}
+                </Alert>
+              )}
+            </CardActions>
+          </Card>
+        </Box>
+      );
+    }
   } else {
     <Container sx={{ ml: 10 }}>
       <CircularProgressComponent></CircularProgressComponent>

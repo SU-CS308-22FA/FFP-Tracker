@@ -35,7 +35,12 @@ const UserSchema = new mongoose.Schema({
   isSupporting: {
     type: Boolean,
     default: false,
-    required: true,
+    required: false,
+  },
+  rejectedTeams: {
+    type: Array,
+    default: [],
+    required: false,
   },
 });
 

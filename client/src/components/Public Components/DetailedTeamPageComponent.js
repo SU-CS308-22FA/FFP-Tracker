@@ -13,6 +13,7 @@ export default function DetailedTeamPageComponent() {
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
   const { id } = useParams();
+  const [users, setUsers] = useState(null);
 
   useEffect(() => {
     const fetchTeam = async () => {
@@ -27,10 +28,16 @@ export default function DetailedTeamPageComponent() {
       const response = await FFP_API.get(`/expenses/${id}`);
       setExpenses(response.data);
     };
+    const fetchUsers = async () => {
+      const response = await FFP_API.get(`/users`);
+      setUsers(response.data);
+    };
+
     fetchTeam();
     fetchRevenues();
     fetchExpenses();
-  }, [setTeam, setRevenues, setExpenses, id]);
+    fetchUsers();
+  }, [setTeam, setRevenues, setExpenses, setUsers, id]);
 
   // takes an integer input and returns sequence of integers from 0 to input
   function getSequence(input) {
@@ -110,6 +117,21 @@ export default function DetailedTeamPageComponent() {
 
   function returnLastValueOfObject(obj) {
     return obj[Object.keys(obj)[Object.keys(obj).length - 1]];
+  }
+
+  function hasSupporter() {
+    console.log(users);
+
+    for (let i = 0; i < users.length; i++) {
+      if (
+        users[i].role === "Supporter" &&
+        users[i].team === team._id &&
+        users[i].isSupporting
+      ) {
+        return true;
+      }
+    }
+    return false;
   }
 
   function plot(team, revenues, expenses) {
@@ -218,7 +240,7 @@ export default function DetailedTeamPageComponent() {
   }
   const content = (
     <>
-      {team && revenues && expenses ? (
+      {team && revenues && expenses && users ? (
         <Grid
           container
           spacing={1}
@@ -299,6 +321,9 @@ export default function DetailedTeamPageComponent() {
                 )) *
                 -1}{" "}
               Mil. TL
+            </Typography>
+            <Typography variant="body1" align="center" sx={{ mt: 2 }}>
+              Sponsor Budget: {hasSupporter() ? team.sponsorBudget : 0} Mil. TL
             </Typography>
             <Typography variant="body1" align="center" sx={{ mt: 2 }}>
               Net Spend Prediction for Next Month: {predictNetSpend() * -1} Mil.
