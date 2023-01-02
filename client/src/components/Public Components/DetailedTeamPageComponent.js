@@ -47,14 +47,42 @@ export default function DetailedTeamPageComponent() {
     let y = [];
 
     // get the values of each revenue objects
-    for (const [key, value] of Object.entries(revenues.ticketing)) {
-      y.push(value + revenues.marketing[key] + revenues.broadcasting[key]);
-    }
+    // for (const [key, value] of Object.entries(revenues.ticketing)) {
+    //   y.push(value + revenues.marketing[key] + revenues.broadcasting[key]);
+    // }
     // revert the order of the y array
     //y = y.reverse();
 
-    console.log(x);
-    console.log(y);
+    let expensesByMonth = {};
+    for (const [key, value] of Object.entries(revenues.ticketing)) {
+      expensesByMonth[key] = value;
+    }
+    for (const [key, value] of Object.entries(revenues.marketing)) {
+      expensesByMonth[key] += value;
+    }
+    for (const [key, value] of Object.entries(revenues.broadcasting)) {
+      expensesByMonth[key] += value;
+    }
+    let months = [];
+    for (const [key, value] of Object.entries(expensesByMonth)) {
+      months.push(String(key));
+    }
+    months.sort((a, b) => {
+      const aYear = Number(a.slice(0, 4));
+      const bYear = Number(b.slice(0, 4));
+      const aMonth = Number(a.slice(5, 7));
+      const bMonth = Number(b.slice(5, 7));
+      if (aYear === bYear) {
+        return aMonth - bMonth;
+      } else {
+        return aYear - bYear;
+      }
+    });
+    for (let i = 0; i < months.length; i++) {
+      y.push(expensesByMonth[months[i]]);
+    }
+    // print y
+    console.log("y is in Revenues:", y);
 
     // create a linear regression model
     const model = new SimpleLinearRegression(x, y);
@@ -70,9 +98,44 @@ export default function DetailedTeamPageComponent() {
     let x = getSequence(Object.keys(expenses.salaries).length);
     let y = [];
     // get the values of each expense objects
+    // for (const [key, value] of Object.entries(expenses.salaries)) {
+    //   y.push(value + expenses.amortization[key] + expenses.operational[key]);
+    // }
+
+    // get expenses by considering key values as month-year and sorting them
+    
+    let expensesByMonth = {};
     for (const [key, value] of Object.entries(expenses.salaries)) {
-      y.push(value + expenses.amortization[key] + expenses.operational[key]);
+      expensesByMonth[key] = value;
     }
+    for (const [key, value] of Object.entries(expenses.amortization)) {
+      expensesByMonth[key] += value;
+    }
+    for (const [key, value] of Object.entries(expenses.operational)) {
+      expensesByMonth[key] += value;
+    }
+    let months = [];
+    for (const [key, value] of Object.entries(expensesByMonth)) {
+      months.push(String(key));
+    }
+    months.sort((a, b) => {
+      const aYear = Number(a.slice(0, 4));
+      const bYear = Number(b.slice(0, 4));
+      const aMonth = Number(a.slice(5, 7));
+      const bMonth = Number(b.slice(5, 7));
+      if (aYear === bYear) {
+        return aMonth - bMonth;
+      } else {
+        return aYear - bYear;
+      }
+    });
+    for (let i = 0; i < months.length; i++) {
+      y.push(expensesByMonth[months[i]]);
+    }
+    // print y
+    console.log("y is in Expenses:", y);
+
+
     // revert the order of the y array
     //y = y.reverse();
 

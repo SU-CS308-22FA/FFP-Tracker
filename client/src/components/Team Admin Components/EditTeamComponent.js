@@ -107,6 +107,7 @@ export default function EditTeamComponent() {
     };
     fetchTeamInfo();
   }, [user]);
+  
 
   return !team ? (
     <CircularProgressComponent />
@@ -392,6 +393,22 @@ export default function EditTeamComponent() {
                       Add Board Member
                     </Button>
                   </Grid>
+                  <Typography variant="body1" align="center">
+                      <Button
+                        variant="contained"
+                        sx={{
+                          mt: 2,
+                          mb: 4,
+                          bgcolor: "#51087E",
+                          "&:hover": {
+                            backgroundColor: "#51087E",
+                          },
+                        }}
+                        href="/edit/team/players"
+                      >
+                        Players Page
+                      </Button>
+                    </Typography>
                 </Box>
               </Box>
             </Box>

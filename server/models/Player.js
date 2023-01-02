@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 
 const PlayerSchema = new mongoose.Schema({
   name: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: String,
+    type: String,
     required: true,
   },
   team: {
@@ -13,13 +12,13 @@ const PlayerSchema = new mongoose.Schema({
     required: true,
   },
   position: {
-  type: String,
-  required: true,
+    type: String,
+    required: true,
   },
   number: {
     type: Number,
     required: true,
-},
+  },
   wage: {
     type: Number,
     required: true,
@@ -28,10 +27,10 @@ const PlayerSchema = new mongoose.Schema({
     type: String,
     required: true,
     },
-    birthDate: {
-        type: Date,
-        required: true,
-    },
+  birthDate: {
+    type: String,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Player", PlayerSchema);

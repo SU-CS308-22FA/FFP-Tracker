@@ -24,12 +24,14 @@ const getPlayerById = asyncHandler(async (req, res) => {
     });
 
 
-// create a new player with name, team, position, number and wage
+// create a new player with a name, team, position, number, wage, nationality, and birthdate
 const createPlayer = asyncHandler(async (req, res) => {
+
     const { name, team, position, number, wage, nationality, birthDate } = req.body;
     if (!name || !team || !position || !number || !wage || !nationality || !birthDate) {
         return res.status(400).json({ error: "All fields are required!" });
     }
+
     try {
         const player = await Player.create({
             name: name,
@@ -38,12 +40,14 @@ const createPlayer = asyncHandler(async (req, res) => {
             number: number,
             wage: wage,
             nationality: nationality,
+            birthDate: birthDate
         });
         return res.status(201).json(player);
     } catch (error) {
         return res.status(500).json({ error: "Internal Server Error!" });
     }
-});
+    });
+
 
 
 
@@ -77,7 +81,7 @@ const deletePlayerById = asyncHandler(async (req, res) => {
     ({ _id: id });
     if (!player)
         return res.status(404).json({ error: "Player not found!" });
-    const result = await Player.delete
+    const result = await Player.deleteOne
     ({ _id: id });
     return res.status(200).json({ message: "Player deleted!" });
     });
