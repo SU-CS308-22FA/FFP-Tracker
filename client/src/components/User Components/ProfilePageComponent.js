@@ -10,9 +10,9 @@ export default function ProfilePageComponent() {
     roleBasedContent = (
       <Typography variant="h6" gutterBottom>
         As a team admin, you can submit your team's monthly expenses and
-        revenues, view your notifications, edit you profile as well as change
-        information about your team. You can also view your team's current
-        budget and the budget history.
+        revenues, view your notifications,manage support requests, edit you
+        profile as well as change information about your team. You can also view
+        your team's current budget and the budget history.
       </Typography>
     );
   } else if (user.role === "TFF Admin") {
@@ -33,7 +33,8 @@ export default function ProfilePageComponent() {
   } else {
     roleBasedContent = (
       <Typography variant="h6" gutterBottom>
-        As a Supporter, you can support teams, view all teams and their budgets.
+        As a supporter, you can view your notifications, edit your profile, you
+        can support teams, view all teams and their budgets.
       </Typography>
     );
   }

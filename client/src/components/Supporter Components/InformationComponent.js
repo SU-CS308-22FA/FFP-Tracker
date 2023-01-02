@@ -38,7 +38,6 @@ export default function MultiActionAreaCard() {
   }, [user]);
 
   const handleUpdateTeam = async () => {
-    //e.preventDefault();
     const options = {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -59,13 +58,9 @@ export default function MultiActionAreaCard() {
   const handleCancelRequest = async () => {
     handleUpdateTeam();
     try {
-      await FFP_API.patch(
-        `/users/${user._id}`,
-        {
-          team: null,
-        }
-        // options
-      );
+      await FFP_API.patch(`/users/${user._id}`, {
+        team: null,
+      });
       alert(
         "You have successfully cancelled the request! The page will be refreshed."
       );
@@ -102,7 +97,6 @@ export default function MultiActionAreaCard() {
                 component="img"
                 height="140"
                 image={team.logoURL}
-                //alt="green iguana"s
                 sx={{ ml: 8, maxWidth: 200 }}
               />
               <CardContent>

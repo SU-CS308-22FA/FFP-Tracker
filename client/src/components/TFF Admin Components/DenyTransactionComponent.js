@@ -18,6 +18,12 @@ import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 const theme = createTheme();
 
 export default function DenyTransactionComponent() {
+  const currentDate = new Date();
+  let todaymonth = currentDate.getMonth() + 1;
+  todaymonth = todaymonth.toString();
+  let todayyear = currentDate.getFullYear();
+  todayyear = todayyear.toString();
+
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
   const [teams, setTeams] = useState(null);
@@ -129,7 +135,6 @@ export default function DenyTransactionComponent() {
       }
     }
     const exps = expenses[index2];
-    console.log("aasdassdss:", revs, exps);
 
     lastDate = "";
     lastRevenueTicketing = 0.0;
@@ -154,6 +159,25 @@ export default function DenyTransactionComponent() {
         lastExpenseOperational = exps.operational[key];
       }
     }
+    /*
+    const dateParts = lastDate.split("-");
+    let year = "";
+    let month = "";
+    if (dateParts.length !== 1) {
+      year = dateParts[0];
+      month = dateParts[1];
+      console.log("evet", todayyear, year);
+      if (year === todayyear) {
+        if (todaymonth - month >= 2) {
+          //console.log("----", todaymonth, month);
+          lastDate = "a";
+        }
+      } else if (year !== todayyear) {
+        console.log("aaaaaaa", year, todayyear);
+        lastDate = "a";
+      }
+    }
+    */
 
     return [
       lastDate,
@@ -223,6 +247,20 @@ export default function DenyTransactionComponent() {
             lastExpenseSalary = values[4];
             lastExpenseAmortization = values[5];
             lastExpenseOperational = values[6];
+
+            if (lastDate !== "") {
+              const dateParts = lastDate.split("-");
+              let year = dateParts[0];
+              let month = dateParts[1];
+              if (year === todayyear) {
+                console.log(year, todayyear);
+                if (todaymonth - month >= 2) {
+                  lastDate = "a";
+                }
+              } else {
+                lastDate = "a";
+              }
+            }
           }
 
           return !team ? (
@@ -250,29 +288,41 @@ export default function DenyTransactionComponent() {
                       </Typography>
                       {lastDate ? (
                         <>
-                          <Typography variant="h6">
-                            Last submit date is {lastDate}{" "}
-                          </Typography>
-                          <Typography variant="h6">
-                            Last ticketing revenue is {lastRevenueTicketing}{" "}
-                          </Typography>
-                          <Typography variant="h6">
-                            Last marketing revenue is {lastRevenueMarketing}{" "}
-                          </Typography>
-                          <Typography variant="h6">
-                            Last broadcasting revenue is{" "}
-                            {lastRevenueBroadCasting}{" "}
-                          </Typography>
-                          <Typography variant="h6">
-                            Last salary expense is {lastExpenseSalary}{" "}
-                          </Typography>
-                          <Typography variant="h6">
-                            Last amortizational expense is{" "}
-                            {lastExpenseAmortization}{" "}
-                          </Typography>
-                          <Typography variant="h6">
-                            Last operational expense is {lastExpenseOperational}{" "}
-                          </Typography>
+                          {lastDate === "a" ? (
+                            <Box>
+                              <Typography variant="h6">
+                                There is no revenue & expense record for the
+                                current year or within the past month.
+                              </Typography>
+                            </Box>
+                          ) : (
+                            <>
+                              <Typography variant="h6">
+                                Last submit date is {lastDate}{" "}
+                              </Typography>
+                              <Typography variant="h6">
+                                Last ticketing revenue is {lastRevenueTicketing}{" "}
+                              </Typography>
+                              <Typography variant="h6">
+                                Last marketing revenue is {lastRevenueMarketing}{" "}
+                              </Typography>
+                              <Typography variant="h6">
+                                Last broadcasting revenue is{" "}
+                                {lastRevenueBroadCasting}{" "}
+                              </Typography>
+                              <Typography variant="h6">
+                                Last salary expense is {lastExpenseSalary}{" "}
+                              </Typography>
+                              <Typography variant="h6">
+                                Last amortizational expense is{" "}
+                                {lastExpenseAmortization}{" "}
+                              </Typography>
+                              <Typography variant="h6">
+                                Last operational expense is{" "}
+                                {lastExpenseOperational}{" "}
+                              </Typography>
+                            </>
+                          )}
                         </>
                       ) : (
                         <Typography variant="h6">
@@ -285,7 +335,7 @@ export default function DenyTransactionComponent() {
                           {errorMessage}
                         </Alert>
                       )}
-                      {lastDate ? (
+                      {lastDate && lastDate !== "a" ? (
                         <Box>
                           <Button
                             onClick={() =>

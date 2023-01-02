@@ -29,7 +29,6 @@ import { styled } from "@mui/material/styles";
 import { UserContext } from "../../contexts/userContext";
 import { useContext } from "react";
 import { optionUnstyledClasses } from "@mui/base";
-//import InformationComponent from "./InformationComponent";
 
 const theme = createTheme();
 
@@ -59,11 +58,10 @@ export default function SupportRequestReviewComponent() {
   const [loading, setLoading] = useState(true);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  //const [budget, setBudget] = useState(["", ""]);
+
   const [budget, setBudget] = useState("");
 
   const handleUpdateTeam = async (team) => {
-    //e.preventDefault();
     const options = {
       headers: {
         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
@@ -88,8 +86,6 @@ export default function SupportRequestReviewComponent() {
       await FFP_API.patch(`/users/${User._id}`, {
         team: null,
         rejectedTeams: userTeam._id,
-
-        //{ team_id: userTeam._id },
       });
       alert(
         "You have successfully rejected the request! The page will be refreshed."
@@ -103,7 +99,7 @@ export default function SupportRequestReviewComponent() {
 
   const handleApproveSupport = async (User) => {
     let userTeam = teamFinder(User);
-    //handleUpdateTeam2(userTeam);
+
     try {
       await FFP_API.patch(`/users/${User._id}`, {
         isSupporting: true,
@@ -119,13 +115,6 @@ export default function SupportRequestReviewComponent() {
   };
 
   useEffect(() => {
-    /*
-    const options = {
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-      },
-    };
-    */
     const fetchData = async () => {
       await FFP_API.get("/teams/data").then((res) => {
         setTeams(res.data.teams);
@@ -141,24 +130,6 @@ export default function SupportRequestReviewComponent() {
     fetchUsers();
   }, [setTeams, setUsers]);
 
-  const submit = (teamName, admin, id) => {
-    /*
-    confirmAlert({
-      title: "CONFIRM TO DELETE",
-      message: "Are you sure to do delete " + teamName + "?",
-      buttons: [
-        {
-          label: "Yes",
-          onClick: () => handleDeleteTeam(teamName, admin, id),
-        },
-        {
-          label: "No",
-          //onClick: () => alert("Team has not been deleted!"),
-        },
-      ],
-    });
-    */
-  };
   function teamFinder(user) {
     let index1 = -1;
     for (let i = 0; i < teams.length; i++) {
@@ -261,97 +232,3 @@ export default function SupportRequestReviewComponent() {
     </ThemeProvider>
   );
 }
-
-/*
-<li key={team.teamName}>
-                <ThemeProvider theme={theme}>
-                  <CssBaseline />
-                  <Container maxWidth="md">
-                    <Box
-                      sx={{
-                        mb: 2,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Typography variant="h6">{team.teamName} </Typography>
-                      <Avatar
-                        src={team.logoURL}
-                        sx={{ mt: 2, width: 56, height: 56 }}
-                      />
-                      {e && (
-                        <Alert variant="outlined" severity="error">
-                          {errorMessage}
-                        </Alert>
-                      )}
-                      <Button
-                        onClick={() =>
-                          submit(team.teamName, team.admin, team._id)
-                        }
-                        variant="contained"
-                        sx={{
-                          mt: 2,
-                          mb: 4,
-                          bgcolor: "#51087E",
-                          "&:hover": {
-                            backgroundColor: "#51087E",
-                          },
-                        }}
-                      >
-                        DELETE
-                      </Button>
-                    </Box>
-                  </Container>
-                </ThemeProvider>
-              </li>
-
-
-               {!loading ? (
-        teams.map((team) => {
-          return !team ? (
-            <CircularProgressComponent />
-          ) : (
-            <>
-              <Typography sx={{ mb: 2 }} variant="h4" component="h1">
-                Categories
-              </Typography>
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 100 }} aria-label="customized table">
-                  <TableHead>
-                    <TableRow>
-                      <StyledTableCell align="right">Team Name</StyledTableCell>
-                      <StyledTableCell align="right">Avatar</StyledTableCell>
-
-                      <StyledTableCell align="right">Delete</StyledTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {
-                      <StyledTableRow key={team.teamName}>
-                        <StyledTableCell align="right">
-                          {team.teamName}
-                        </StyledTableCell>
-                        <StyledTableCell align="right">{}</StyledTableCell>
-
-                        <StyledTableCell align="right">
-                          {" "}
-                          <button
-                            onClick={(e) => console.log("")}
-                            className="btn btn-danger"
-                          >
-                            Delete
-                          </button>
-                        </StyledTableCell>
-                      </StyledTableRow>
-                    }
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </>
-          );
-        })
-      ) : (
-        <CircularProgressComponent />
-      )}
-              */
