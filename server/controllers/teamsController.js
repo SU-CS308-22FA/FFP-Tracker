@@ -109,29 +109,44 @@ const createTeam = asyncHandler(async (req, res) => {
 // @access private
 const updateTeam = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  const { wikiLink, manager, logoURL, lawyers, boardMembers } = req.body;
-  if (
-    wikiLink === undefined ||
-    manager === undefined ||
-    logoURL === undefined ||
-    !lawyers ||
-    !boardMembers
-  ) {
-    return res
-      .status(400)
-      .json({ error: "All fields are required to update a team!" });
-  }
-  const team = await Team.findOne({ _id: id }).lean();
-  if (!team) return res.status(400).json({ error: "No team was found!" });
-  const updatedTeam = await Team.findOneAndUpdate(
-    { _id: id },
-    { wikiLink, manager, logoURL, lawyers, boardMembers },
-    { new: true }
-  );
-  if (updatedTeam) {
-    return res.status(200).json({ message: "Team updated successfully!" });
+  const { wikiLink, manager, logoURL, lawyers, boardMembers, sponsorBudget } =
+    req.body;
+  if (sponsorBudget || sponsorBudget === 0) {
+    const team = await Team.findOne({ _id: id }).lean();
+    if (!team) return res.status(400).json({ error: "No team was found!" });
+    const updatedTeam = await Team.findOneAndUpdate(
+      { _id: id },
+      { sponsorBudget }
+    );
+    if (updatedTeam) {
+      return res.status(200).json({ message: "Team updated successfully!" });
+    } else {
+      res.status(500).json({ error: "Something went wrong!" });
+    }
   } else {
-    res.status(500).json({ error: "Something went wrong!" });
+    if (
+      wikiLink === undefined ||
+      manager === undefined ||
+      logoURL === undefined ||
+      !lawyers ||
+      !boardMembers
+    ) {
+      return res
+        .status(400)
+        .json({ error: "All fields are required to update a team!" });
+    }
+    const team = await Team.findOne({ _id: id }).lean();
+    if (!team) return res.status(400).json({ error: "No team was found!" });
+    const updatedTeam = await Team.findOneAndUpdate(
+      { _id: id },
+      { wikiLink, manager, logoURL, lawyers, boardMembers },
+      { new: true }
+    );
+    if (updatedTeam) {
+      return res.status(200).json({ message: "Team updated successfully!" });
+    } else {
+      res.status(500).json({ error: "Something went wrong!" });
+    }
   }
 });
 

@@ -20,6 +20,7 @@ import FileSubmitPage from "./pages/Team Admin Pages/FileSubmitPage";
 import SendNotificationPage from "./pages/User Pages/SendNotificationPage";
 import FileStatusPage from "./pages/User Pages/FileStatusPage";
 import EditTeamPage from "./pages/Team Admin Pages/EditTeamPage";
+import SupportTeamPage from "./pages/Supporter Pages/SupportTeamPage";
 
 function App() {
   return (
@@ -53,6 +54,9 @@ function App() {
             <Route path="/newteam" element={<RegisterTeamPage />} />
             <Route path="/deleteteam" element={<DeleteTeamPage />} />
             <Route path="/register" element={<SendKeyPage />} />
+          </Route>
+          <Route element={<RequireAuth allowedRoles={[ROLES.SUPPORTER]} />}>
+            <Route path="/supportteam" element={<SupportTeamPage />} />
           </Route>
         </Route>
       </Routes>

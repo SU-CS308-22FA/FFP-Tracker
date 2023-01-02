@@ -87,9 +87,17 @@ function ProfileAppBar() {
             <Link to={`/my/profile`}>FFP Tracker for TFF</Link>
           </Typography>
           {nav}
-          <Button sx={{ color: "#FFFFFF" }}>
-            <Link to="/status">File Status</Link>
-          </Button>
+
+          {user.role !== "Supporter" ? (
+            <Button sx={{ color: "#FFFFFF" }}>
+              <Link to="/status">File Status</Link>
+            </Button>
+          ) : null}
+          {user.role === "Supporter" ? (
+            <Button sx={{ color: "#FFFFFF" }}>
+              <Link to="/supportteam">SUPPORT TEAM</Link>
+            </Button>
+          ) : null}
           <Button sx={{ color: "#FFFFFF" }}>
             <Link to="/my/profile/edit">Edit Profile</Link>
           </Button>
