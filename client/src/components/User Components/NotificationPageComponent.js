@@ -150,6 +150,7 @@ export default function NotificationPageComponent() {
         if (notification.receiver === userid) {
           notif.push(notification);
         }
+        return 1;
       });
       return notificationTemplate(notif);
     }

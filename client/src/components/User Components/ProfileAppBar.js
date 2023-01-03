@@ -9,11 +9,14 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../../contexts/userContext";
 import FFP_API from "../../app/api";
 import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 
 function ProfileAppBar() {
   const { user, setUser, setToken, setLogin } = useContext(UserContext);
   const [notifications, setNotifications] = useState(null);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchNotifications = async () => {
@@ -50,6 +53,12 @@ function ProfileAppBar() {
           >
             <Link to={`/my/profile`}>FFP Tracker for TFF</Link>
           </Typography>
+          <Button
+            sx={{ color: "#FFFFFF" }}
+            onClick={() => navigate("/my/profile")}
+          >
+            Profile
+          </Button>
           <Button sx={{ color: "#FFFFFF" }}>
             <Link to="/my/profile/notifications">Notifications</Link>
             <Badge badgeContent={countNotifications} color="error">
