@@ -1,13 +1,11 @@
-import {
-  Alert,
-  Button,
-  CssBaseline,
-  TextField,
-  Box,
-  Container,
-  Typography,
-  Grid,
-} from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -40,7 +38,6 @@ export default function RegisterTeamComponent() {
       setErrorMessage(result);
     } else {
       try {
-
         const options = {
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,

@@ -1,12 +1,10 @@
 import emailjs from "@emailjs/browser";
-import {
-  Button,
-  TextField,
-  Box,
-  Container,
-  CssBaseline,
-  Typography,
-} from "@mui/material";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import CssBaseline from "@mui/material/CssBaseline";
+import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 
 const EMAIL_REGEX = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;

@@ -1,12 +1,10 @@
-import {
-  Alert,
-  Avatar,
-  Button,
-  CssBaseline,
-  Box,
-  Container,
-  Typography,
-} from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import CircularProgressComponent from "../Public Components/CircularProgressComponent";

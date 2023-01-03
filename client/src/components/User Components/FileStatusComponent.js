@@ -1,12 +1,10 @@
-import {
-  Button,
-  Box,
-  Typography,
-  Paper,
-  IconButton,
-  Stack,
-  Container,
-} from "@mui/material";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Container from "@mui/material/Container";
 import { DataGrid } from "@mui/x-data-grid";
 import DoneIcon from "@mui/icons-material/Done";
 import BlockIcon from "@mui/icons-material/Block";

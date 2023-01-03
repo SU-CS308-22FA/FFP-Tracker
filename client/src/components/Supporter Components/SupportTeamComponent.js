@@ -1,19 +1,14 @@
-import {
-  Alert,
-  Avatar,
-  Button,
-  CssBaseline,
-  Box,
-  Container,
-  Typography,
-  TextField,
-} from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import CircularProgressComponent from "../Public Components/CircularProgressComponent";
 import FFP_API from "../../app/api";
-import emailjs from "@emailjs/browser";
-import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -24,8 +19,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
 import { UserContext } from "../../contexts/userContext";
-import { useContext } from "react";
-import { optionUnstyledClasses } from "@mui/base";
 import InformationComponent from "./InformationComponent";
 
 const theme = createTheme();
@@ -49,15 +42,15 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
+
 export default function SupportTeamComponent() {
-  const { user, setToken, setLogin, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [teams, setTeams] = useState(null);
-  const [rejectedteams, setRejectedteams] = useState(null);
   const [loading, setLoading] = useState(true);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   const [budget, setBudget] = useState("");
+
   rejectedTeamsFinder();
 
   const handleUpdateTeam = async (team, amount) => {
@@ -114,7 +107,6 @@ export default function SupportTeamComponent() {
 
   function rejectedTeamsFinder(teamid) {
     let arr = user.rejectedTeams;
-
     for (let i = 0; i < arr.length; i++) {
       if (arr[i] === teamid) {
         return true;
@@ -124,114 +116,107 @@ export default function SupportTeamComponent() {
   }
 
   if (user.team) {
-    return <InformationComponent></InformationComponent>;
+    return <InformationComponent />;
   } else {
     return (
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <main>
           {/* Hero unit */}
-          <Box
-            sx={{
-              bgcolor: "background.paper",
-              pt: 8,
-              pb: 6,
-            }}
-          >
-            <Container maxWidth="md">
-              <Box sx={{ mt: 3 }}></Box>
-              <Typography sx={{ mb: 2 }} variant="h4" component="h1">
-                Teams
-              </Typography>
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 100 }} aria-label="customized table">
-                  <TableHead>
-                    <TableRow>
-                      <StyledTableCell align="center">
-                        Team Name
-                      </StyledTableCell>
-                      <StyledTableCell align="center">Logo</StyledTableCell>
-                      <StyledTableCell align="center">Status</StyledTableCell>
-                      <StyledTableCell align="center">
-                        Season Budget(Mil. TL)
-                      </StyledTableCell>
-                      <StyledTableCell align="center">Support</StyledTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {teams !== null ? (
-                      teams.map((team, index) => {
-                        if (team.sponsorBudget === 0) {
-                          return (
-                            <StyledTableRow key={team.teamName}>
-                              <StyledTableCell align="center">
-                                {team.teamName}
-                              </StyledTableCell>
-                              <StyledTableCell align="center">
-                                <Avatar src={team.logoURL} sx={{ ml: 6 }} />
-                              </StyledTableCell>
-                              <StyledTableCell align="center">
-                                {rejectedTeamsFinder(team._id)
-                                  ? "Rejected"
-                                  : "Applicable"}
-                              </StyledTableCell>
-                              <StyledTableCell align="center">
-                                <TextField
-                                  disabled={
-                                    rejectedTeamsFinder(team._id) ? true : false
-                                  }
-                                  inputProps={{
-                                    inputMode: "numeric",
-                                    pattern: "[0-9]*",
-                                  }}
-                                  margin="normal"
-                                  fullWidth
-                                  id={team.teamName}
-                                  onChange={(e) => {
-                                    let newArr = [...budget];
-                                    newArr[index] = e.target.value;
-                                    setBudget(newArr);
-                                  }}
-                                  value={budget[index]}
-                                  label="budget"
-                                  name="budget"
-                                  required
-                                />
-                              </StyledTableCell>
-                              <StyledTableCell align="center">
-                                <Button
-                                  disabled={
-                                    rejectedTeamsFinder(team._id) ? true : false
-                                  }
-                                  onClick={() =>
-                                    handleSupportTeam(team, budget[index])
-                                  }
-                                  variant="contained"
-                                  color="success"
-                                >
-                                  SUPPORT
-                                </Button>
-                              </StyledTableCell>
-                            </StyledTableRow>
-                          );
-                        }
-                      })
-                    ) : (
-                      <Container sx={{ ml: 15 }}>
-                        <CircularProgressComponent></CircularProgressComponent>
-                      </Container>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Container>
-            <Box sx={{ mt: 3 }}></Box>
-            {e && (
-              <Alert variant="outlined" severity="error">
-                {errorMessage}
-              </Alert>
-            )}
-          </Box>
+          <Container maxWidth="md">
+            <Typography
+              sx={{ mt: 2, mb: 4 }}
+              variant="h3"
+              component="h1"
+              align="center"
+            >
+              Request to Support a Team
+            </Typography>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 100 }} aria-label="customized table">
+                <TableHead>
+                  <TableRow>
+                    <StyledTableCell align="center">Team Name</StyledTableCell>
+                    <StyledTableCell align="center">Logo</StyledTableCell>
+                    <StyledTableCell align="center">Status</StyledTableCell>
+                    <StyledTableCell align="center">
+                      Season Budget (Mil. TL)
+                    </StyledTableCell>
+                    <StyledTableCell align="center">Support</StyledTableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {teams !== null ? (
+                    teams.map((team, index) => {
+                      if (team.sponsorBudget === 0) {
+                        return (
+                          <StyledTableRow key={team.teamName}>
+                            <StyledTableCell align="center">
+                              {team.teamName}
+                            </StyledTableCell>
+                            <StyledTableCell align="center">
+                              <Avatar src={team.logoURL} sx={{ ml: 3 }} />
+                            </StyledTableCell>
+                            <StyledTableCell align="center">
+                              {rejectedTeamsFinder(team._id)
+                                ? "Rejected"
+                                : "Applicable"}
+                            </StyledTableCell>
+                            <StyledTableCell align="center">
+                              <TextField
+                                disabled={
+                                  rejectedTeamsFinder(team._id) ? true : false
+                                }
+                                inputProps={{
+                                  inputMode: "numeric",
+                                  pattern: "[0-9]*",
+                                }}
+                                margin="normal"
+                                fullWidth
+                                id={team.teamName}
+                                onChange={(e) => {
+                                  let newArr = [...budget];
+                                  newArr[index] = e.target.value;
+                                  setBudget(newArr);
+                                }}
+                                value={budget[index]}
+                                label="Budget"
+                                name="budget"
+                                required
+                              />
+                            </StyledTableCell>
+                            <StyledTableCell align="center">
+                              <Button
+                                disabled={
+                                  rejectedTeamsFinder(team._id) ? true : false
+                                }
+                                onClick={() =>
+                                  handleSupportTeam(team, budget[index])
+                                }
+                                variant="contained"
+                                color="success"
+                              >
+                                Request
+                              </Button>
+                            </StyledTableCell>
+                          </StyledTableRow>
+                        );
+                      }
+                    })
+                  ) : (
+                    <Container sx={{ ml: 15 }}>
+                      <CircularProgressComponent />
+                    </Container>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Container>
+          {e && (
+            <Alert variant="outlined" severity="error" sx={{ mt: 2 }}>
+              {errorMessage}
+            </Alert>
+          )}
         </main>
       </ThemeProvider>
     );

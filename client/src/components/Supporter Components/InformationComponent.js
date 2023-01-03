@@ -1,25 +1,23 @@
-import { Box, Alert } from "@mui/material";
-import * as React from "react";
+import Box from "@mui/material/Box";
+import Alert from "@mui/material/Alert";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import LinearProgress from "@mui/material/LinearProgress";
-import { useTheme } from "@mui/material/styles";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
-import { useState, useEffect } from "react";
+import Button from "@mui/material/Button";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardActions from "@mui/material/CardActions";
+import Container from "@mui/material/Container";
+import { useState, useEffect, useContext } from "react";
 import FFP_API from "../../app/api";
 import { UserContext } from "../../contexts/userContext";
-import { useContext } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
-import { Container } from "@mui/system";
+import { useNavigate } from "react-router-dom";
 import CircularProgressComponent from "../Public Components/CircularProgressComponent";
 
 export default function MultiActionAreaCard() {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
-
-  const theme = useTheme();
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [team, setTeam] = useState(null);
@@ -143,69 +141,81 @@ export default function MultiActionAreaCard() {
       );
     } else if (!user.isSupporting) {
       return (
-        <Box
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          minHeight="100vh"
-        >
-          <Card sx={{ maxWidth: 345 }}>
-            <Box
-              sx={{
-                width: "100%",
-              }}
-            >
-              <LinearProgress />
-            </Box>
-            <CardActionArea>
-              <CardMedia
-                component="img"
-                height="140"
-                image={team.logoURL}
-                //alt="green iguana"s
-                sx={{ ml: 8, maxWidth: 200 }}
-              />
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="div">
-                  {team.teamName}
-                </Typography>
-                <Typography variant="body2">
-                  Your request to join our team as a supporter is being reviewed
-                  by the team admin. Thank you for your interest in supporting
-                  our cause.
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Button
-                variant="outlined"
-                size="small"
-                color="primary"
-                onClick={() => navigate(`/teams/${team._id}`)}
+        <>
+          <Typography variant="h4" component="div" align="center" mt={4}>
+            Current Status of Your Request
+          </Typography>
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            mt={10}
+          >
+            <Card sx={{ maxWidth: 345 }}>
+              <Box
+                sx={{
+                  width: "100%",
+                }}
               >
-                Team Page
-              </Button>
-              <Button
-                onClick={handleCancelRequest}
-                size="small"
-                color="error"
-                variant="outlined"
-              >
-                Cancel request
-              </Button>
-              {e && (
-                <Alert variant="outlined" severity="error">
-                  {errorMessage}
-                </Alert>
-              )}
-            </CardActions>
-          </Card>
-        </Box>
+                <LinearProgress />
+              </Box>
+              <CardActionArea>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={team.logoURL}
+                  //alt="green iguana"s
+                  sx={{ maxWidth: 200, mt: 2, ml: 10 }}
+                />
+                <CardContent>
+                  <Typography
+                    gutterBottom
+                    variant="h5"
+                    component="div"
+                    align="center"
+                  >
+                    {team.teamName}
+                  </Typography>
+                  <Typography variant="body2">
+                    Your request to join our team as a supporter is being
+                    reviewed by the team admin. Thank you for your interest.
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+              <CardActions>
+                <Container maxWidth="lg">
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    color="primary"
+                    onClick={() => navigate(`/teams/${team._id}`)}
+                  >
+                    Team Page
+                  </Button>
+                  <Button
+                    onClick={handleCancelRequest}
+                    size="small"
+                    color="error"
+                    variant="outlined"
+                    sx={{ ml: 4 }}
+                  >
+                    Cancel request
+                  </Button>
+                </Container>
+                {e && (
+                  <Alert variant="outlined" severity="error">
+                    {errorMessage}
+                  </Alert>
+                )}
+              </CardActions>
+            </Card>
+          </Box>
+        </>
       );
     }
   } else {
     <Container sx={{ ml: 10 }}>
-      <CircularProgressComponent></CircularProgressComponent>
+      <CircularProgressComponent />
     </Container>;
   }
 }

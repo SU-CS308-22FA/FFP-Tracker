@@ -1,17 +1,15 @@
-import {
-  Alert,
-  Button,
-  CssBaseline,
-  TextField,
-  Box,
-  Container,
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select,
-  Typography,
-  Autocomplete,
-} from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Typography from "@mui/material/Typography";
+import Autocomplete from "@mui/material/Autocomplete";
 import { useRef, useState, useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import FFP_API from "../../app/api";

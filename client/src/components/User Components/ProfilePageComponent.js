@@ -1,15 +1,11 @@
 import { useContext } from "react";
 import { UserContext } from "../../contexts/userContext";
-import {
-  Button,
-  Box,
-  Grid,
-  Typography,
-  Card,
-  CardContent,
-  Container,
-  CardActionArea,
-} from "@mui/material";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Container from "@mui/material/Container";
+import CardActionArea from "@mui/material/CardActionArea";
 import { useNavigate } from "react-router-dom";
 
 export default function ProfilePageComponent() {
@@ -101,6 +97,15 @@ export default function ProfilePageComponent() {
             description="View the status of your submitted files"
           />
         </Grid>
+        <Grid item xs={4}></Grid>
+        <Grid item xs={4}>
+          <CustomCard
+            title="Review Sponsorship Requests"
+            link="/supportrequest"
+            description="Review what teams have requested to sponsor your team"
+          />
+        </Grid>
+        <Grid item xs={4}></Grid>
       </>
     );
   } else if (user.role === "TFF Admin") {
@@ -161,10 +166,17 @@ export default function ProfilePageComponent() {
     );
   } else {
     roleBasedContent = (
-      <Typography variant="h6" gutterBottom>
-        As a supporter, you can view your notifications, edit your profile, you
-        can support teams, view all teams and their budgets.
-      </Typography>
+      <>
+        <Grid item xs={4} />
+        <Grid item xs={4}>
+          <CustomCard
+            title="Request to Sponsor a Team"
+            link="/supportteam"
+            description="See a list of all teams and request to sponsor one"
+          />
+        </Grid>
+        <Grid item xs={4} />
+      </>
     );
   }
   const content = (

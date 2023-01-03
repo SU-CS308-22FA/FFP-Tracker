@@ -3,15 +3,13 @@ import FFP_API from "../../app/api";
 import CircularProgressComponent from "./CircularProgressComponent";
 import { useParams } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
-import {
-  Avatar,
-  Button,
-  Box,
-  Grid,
-  Typography,
-  Card,
-  CardContent,
-} from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
 import { UserContext } from "../../contexts/userContext";
 import SimpleLinearRegression from "ml-regression-simple-linear";
 
@@ -21,7 +19,6 @@ export default function DetailedTeamPageComponent() {
   const [revenues, setRevenues] = useState(null);
   const [expenses, setExpenses] = useState(null);
   const { id } = useParams();
-  const [users, setUsers] = useState(null);
 
   function CustomCard(props) {
     return (
@@ -180,21 +177,6 @@ export default function DetailedTeamPageComponent() {
     return obj[Object.keys(obj)[Object.keys(obj).length - 1]];
   }
 
-  function hasSupporter() {
-    console.log(users);
-
-    for (let i = 0; i < users.length; i++) {
-      if (
-        users[i].role === "Supporter" &&
-        users[i].team === team._id &&
-        users[i].isSupporting
-      ) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   function plot(team, revenues, expenses) {
     let months = [];
     for (const [key, value] of Object.entries(revenues.ticketing)) {
@@ -301,7 +283,7 @@ export default function DetailedTeamPageComponent() {
   }
   const content = (
     <>
-      {team && revenues && expenses && users ? (
+      {team && revenues && expenses ? (
         <Grid
           container
           spacing={1}

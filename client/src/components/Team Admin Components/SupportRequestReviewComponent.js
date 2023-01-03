@@ -1,22 +1,15 @@
-import {
-  Alert,
-  Avatar,
-  Button,
-  CssBaseline,
-  Box,
-  Container,
-  Typography,
-  TextField,
-  IconButton,
-} from "@mui/material";
+import Alert from "@mui/material/Alert";
+import CssBaseline from "@mui/material/CssBaseline";
+import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import IconButton from "@mui/material/IconButton";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import CircularProgressComponent from "../Public Components/CircularProgressComponent";
 import DoneIcon from "@mui/icons-material/Done";
 import BlockIcon from "@mui/icons-material/Block";
 import FFP_API from "../../app/api";
-import emailjs from "@emailjs/browser";
-import { confirmAlert } from "react-confirm-alert"; // Import
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import css
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -27,8 +20,6 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { styled } from "@mui/material/styles";
 import { UserContext } from "../../contexts/userContext";
-import { useContext } from "react";
-import { optionUnstyledClasses } from "@mui/base";
 
 const theme = createTheme();
 
@@ -51,15 +42,13 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
+
 export default function SupportRequestReviewComponent() {
-  const { user, setToken, setLogin, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [users, setUsers] = useState(null);
   const [teams, setTeams] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
-  const [budget, setBudget] = useState("");
 
   const handleUpdateTeam = async (team) => {
     const options = {
@@ -98,8 +87,6 @@ export default function SupportRequestReviewComponent() {
   };
 
   const handleApproveSupport = async (User) => {
-    let userTeam = teamFinder(User);
-
     try {
       await FFP_API.patch(`/users/${User._id}`, {
         isSupporting: true,
@@ -119,7 +106,6 @@ export default function SupportRequestReviewComponent() {
       await FFP_API.get("/teams/data").then((res) => {
         setTeams(res.data.teams);
       });
-      setLoading(false);
     };
     const fetchUsers = async () => {
       const response = await FFP_API.get(`/users`);
@@ -139,7 +125,6 @@ export default function SupportRequestReviewComponent() {
       }
     }
     const userTeam = teams[index1];
-
     return userTeam;
   }
 
@@ -151,14 +136,16 @@ export default function SupportRequestReviewComponent() {
         <Box
           sx={{
             bgcolor: "background.paper",
-            pt: 8,
-            pb: 6,
           }}
         >
           <Container maxWidth="sm">
-            <Box sx={{ mt: 3 }}></Box>
-            <Typography sx={{ mb: 2 }} variant="h4" component="h1">
-              Requests
+            <Typography
+              sx={{ mt: 4, mb: 2 }}
+              variant="h4"
+              component="h1"
+              align="center"
+            >
+              Current Requests
             </Typography>
             <TableContainer component={Paper}>
               <Table sx={{ minWidth: 100 }} aria-label="customized table">
@@ -170,7 +157,6 @@ export default function SupportRequestReviewComponent() {
                     <StyledTableCell align="center">
                       Budget Offering(Mil. TL)
                     </StyledTableCell>
-
                     <StyledTableCell align="center">Decision</StyledTableCell>
                   </TableRow>
                 </TableHead>

@@ -1,12 +1,10 @@
-import {
-  Avatar,
-  Badge,
-  Button,
-  AppBar,
-  Box,
-  Toolbar,
-  Typography,
-} from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Badge from "@mui/material/Badge";
+import Button from "@mui/material/Button";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
 import { Link } from "react-router-dom";
 import { UserContext } from "../../contexts/userContext";
 import FFP_API from "../../app/api";
@@ -35,43 +33,6 @@ function ProfileAppBar() {
     }
   }
 
-  let nav;
-  if (user.role === "Team Admin") {
-    nav = (
-      <>
-        <Button color="inherit" component={Link} to="/supportrequest">
-          Review Support Request
-        </Button>
-        <Button color="inherit" component={Link} to="/submit">
-          Submit
-        </Button>
-        <Button color="inherit" component={Link} to="/edit/team">
-          Edit Team
-        </Button>
-      </>
-    );
-  } else if (user.role === "TFF Admin") {
-    nav = (
-      <>
-        <Button color="inherit" component={Link} to="/deleteteam">
-          Delete Team
-        </Button>
-
-        <Button color="inherit" component={Link} to="/denytransaction">
-          Deny Transaction
-        </Button>
-        <Button color="inherit" component={Link} to="/newteam">
-          Add Team
-        </Button>
-        <Button color="inherit" component={Link} to="/register">
-          Send Key
-        </Button>
-      </>
-    );
-  } else {
-    nav = null;
-  }
-
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar
@@ -89,29 +50,11 @@ function ProfileAppBar() {
           >
             <Link to={`/my/profile`}>FFP Tracker for TFF</Link>
           </Typography>
-          {nav}
-
-          {user.role !== "Supporter" ? (
-            <Button sx={{ color: "#FFFFFF" }}>
-              <Link to="/status">File Status</Link>
-            </Button>
-          ) : null}
-          {user.role === "Supporter" ? (
-            <Button sx={{ color: "#FFFFFF" }}>
-              <Link to="/supportteam">SUPPORT TEAM</Link>
-            </Button>
-          ) : null}
-          <Button sx={{ color: "#FFFFFF" }}>
-            <Link to="/my/profile/edit">Edit Profile</Link>
-          </Button>
           <Button sx={{ color: "#FFFFFF" }}>
             <Link to="/my/profile/notifications">Notifications</Link>
             <Badge badgeContent={countNotifications} color="error">
               <NotificationsIcon />
             </Badge>
-          </Button>
-          <Button color="inherit" component={Link} to="/teams">
-            Teams
           </Button>
           <Button
             sx={{ color: "#FFFFFF" }}
