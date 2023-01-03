@@ -6,10 +6,16 @@ import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const EMAIL_REGEX = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
 export default function NotificationForm() {
+  const location = useLocation();
+  let data = "";
+  if (location.state) {
+    data = location.state.data;
+  }
   const navigate = useNavigate();
   async function sendEmail(e) {
     e.preventDefault();
@@ -57,7 +63,7 @@ export default function NotificationForm() {
             fullWidth
             id="outlined-required"
             label="To Email"
-            defaultValue=""
+            defaultValue={data ? data : ""}
             placeholder="To Email"
             variant="outlined"
             name="to_email"

@@ -14,6 +14,7 @@ import { UserContext } from "../../contexts/userContext";
 import SimpleLinearRegression from "ml-regression-simple-linear";
 
 export default function DetailedTeamPageComponent() {
+  const [users, setUsers] = useState(null);
   const { token, user, setUser } = useContext(UserContext);
   const [team, setTeam] = useState(null);
   const [revenues, setRevenues] = useState(null);
@@ -98,11 +99,31 @@ export default function DetailedTeamPageComponent() {
       });
       setUser(response.data);
     };
+    const fetchUsers = async () => {
+      const response = await FFP_API.get(`/users`);
+      setUsers(response.data);
+    };
     fetchTeam();
     fetchRevenues();
     fetchExpenses();
     fetchUser();
-  }, [setTeam, setRevenues, setExpenses, token, setUser, id]);
+    fetchUsers();
+  }, [setTeam, setRevenues, setExpenses, token, setUser, id, setUsers]);
+
+  function hasSupporter() {
+    console.log(users);
+
+    for (let i = 0; i < users.length; i++) {
+      if (
+        users[i].role === "Supporter" &&
+        users[i].team === team._id &&
+        users[i].isSupporting
+      ) {
+        return true;
+      }
+    }
+    return false;
+  }
 
   // takes an integer input and returns sequence of integers from 0 to input
   function getSequence(input) {
@@ -283,7 +304,7 @@ export default function DetailedTeamPageComponent() {
   }
   const content = (
     <>
-      {team && revenues && expenses ? (
+      {team && revenues && expenses && users ? (
         <Grid
           container
           spacing={1}
@@ -347,6 +368,9 @@ export default function DetailedTeamPageComponent() {
                     content: [
                       `Season Starting Budget: ${team.seasonBudget} Mil TL`,
                       `Current Budget: ${team.currentBudget} Mil TL`,
+                      `Sponsor Budget: ${
+                        hasSupporter() ? team.sponsorBudget : 0
+                      } Mil TL`,
                     ],
                   })}
                 </Box>

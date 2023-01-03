@@ -36,7 +36,7 @@ class FFPTesting(unittest.TestCase):
 
         """
         driver = self.driver
-        driver.get("http://localhost:3000/")
+        driver.get("https://ffp-tracker.herokuapp.com/")
         self.assertIn("FFP Tracker", driver.title)
 
         # Login
@@ -53,21 +53,21 @@ class FFPTesting(unittest.TestCase):
         driver.switch_to.alert.accept()
         self.assertIn("my/profile", driver.current_url)
         time.sleep(1)
-        elem = driver.find_element(By.XPATH, '/html/body/div/div/nav/div/button[1]/a')
+        elem = driver.find_element(By.XPATH, '/html/body/div/main/div[1]/div[2]/div/button/div')
         elem.click()
         time.sleep(2)
 
         # Find the table rows containing the teams
-        rows = driver.find_element(By.XPATH,'/html/body/div/main/div/div[1]')
+        rows = driver.find_element(By.XPATH,'/html/body/div/main/div')
 
         # Find the budget input field for the first team
-        budget_input = driver.find_element(By.XPATH,'/html/body/div/main/div/div[1]/div[2]/table/tbody/tr[1]/td[4]/div/div/input')
+        budget_input = driver.find_element(By.XPATH,'/html/body/div/main/div/div/table/tbody/tr[1]/td[4]/div/div/input')
 
         # Enter a budget in the input field
         budget_input.send_keys("10000")
 
         # Find the submit button for the first team
-        submit_button = driver.find_element(By.XPATH,'/html/body/div/main/div/div[1]/div[2]/table/tbody/tr[1]/td[5]/button')
+        submit_button = driver.find_element(By.XPATH,'/html/body/div/main/div/div/table/tbody/tr[1]/td[5]/button')
 
         # Click the submit button
         submit_button.click()
@@ -85,7 +85,7 @@ class FFPTesting(unittest.TestCase):
         time.sleep(3)
 
         #Find team page button which appears after submitting budget successfully
-        team_page_button = driver.find_element(By.XPATH, '/html/body/div/div[2]/div/div[2]/button[1]')
+        team_page_button = driver.find_element(By.XPATH, '/html/body/div/div[3]/div/div[2]/div/button[1]')
         time.sleep(2)
 
         self.assertTrue(team_page_button, "Submitting budget was not successful!")

@@ -24,6 +24,7 @@ class FFPTesting(unittest.TestCase):
 
         -Request table should not be empty at the start of the test
         -Corresponding team admin should be logged in 
+        -For the below example, team admin of Galatasaray should be logged in
         
 
 
@@ -35,7 +36,7 @@ class FFPTesting(unittest.TestCase):
 
         """
         driver = self.driver
-        driver.get("http://localhost:3000/")
+        driver.get("https://ffp-tracker.herokuapp.com/")
         self.assertIn("FFP Tracker", driver.title)
 
         # Login
@@ -43,16 +44,16 @@ class FFPTesting(unittest.TestCase):
         elem.click()
         self.assertIn("login", driver.current_url)
         elem = driver.find_element(By.XPATH, '/html/body/div/main/div/form/div[1]/div/input')
-        elem.send_keys("taners@sabanciuniv.edu")
+        elem.send_keys("gs@ffptracker.com")
         elem = driver.find_element(By.XPATH, '/html/body/div/main/div/form/div[2]/div/input')
-        elem.send_keys("12345")
+        elem.send_keys("galatasaray")
         elem = driver.find_element(By.XPATH, '/html/body/div/main/div/form/button')
         elem.click()
         WebDriverWait(driver, 10).until(EC.alert_is_present())
         driver.switch_to.alert.accept()
         self.assertIn("my/profile", driver.current_url)
         time.sleep(1)
-        elem = driver.find_element(By.XPATH, '/html/body/div/div/nav/div/a[1]')
+        elem = driver.find_element(By.XPATH, '/html/body/div/main/div[1]/div[5]/div/button/div')
         elem.click()
         time.sleep(2)
 
@@ -60,7 +61,7 @@ class FFPTesting(unittest.TestCase):
         rows = driver.find_element(By.XPATH,'/html/body/div/main/div/div[1]')
 
         # Find the accept button for the first team
-        accept_button = driver.find_element(By.XPATH,'/html/body/div/main/div/div[1]/div[2]/table/tbody/tr/td[3]/button[1]')
+        accept_button = driver.find_element(By.XPATH,'/html/body/div/main/div/div[1]/div/table/tbody/tr/td[3]/button[1]')
 
         # Click the accept button
         accept_button.click()
