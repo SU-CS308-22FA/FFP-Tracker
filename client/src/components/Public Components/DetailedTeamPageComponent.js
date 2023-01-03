@@ -82,14 +82,14 @@ export default function DetailedTeamPageComponent() {
       y.push(expensesByMonth[months[i]]);
     }
     // print y
-    console.log("y is in Revenues:", y);
+    //console.log("y is in Revenues:", y);
 
     // create a linear regression model
     const model = new SimpleLinearRegression(x, y);
 
     // predict the next revenue
     let prediction = model.predict(x.length + 1);
-    console.log("Revenue prediction for next month is:" + prediction);
+    //console.log("Revenue prediction for next month is:" + prediction);
     return prediction;
   }
 
@@ -133,7 +133,7 @@ export default function DetailedTeamPageComponent() {
       y.push(expensesByMonth[months[i]]);
     }
     // print y
-    console.log("y is in Expenses:", y);
+    //console.log("y is in Expenses:", y);
 
 
     // revert the order of the y array
@@ -144,7 +144,7 @@ export default function DetailedTeamPageComponent() {
 
     // predict the next expense
     let prediction = model.predict(x.length + 1);
-    console.log("Expense prediction for next month is:" + prediction);
+    //console.log("Expense prediction for next month is:" + prediction);
     return prediction;
   }
 

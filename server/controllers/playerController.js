@@ -53,8 +53,10 @@ const createPlayer = asyncHandler(async (req, res) => {
 
 // update a player by player id
 const updatePlayerById = asyncHandler(async (req, res) => {
+    console.log("içerdeyim");
+
     const { id } = req.params;
-    const { name, team, position, number, wage, nationality } = req.body;
+    const { name, team, position, number, wage, nationality, birthDate } = req.body;
     if (!name || !team || !position || !number || !wage || !nationality || !birthDate) {
         return res.status(400).json({ error: "All fields are required!" });
     }
@@ -62,14 +64,24 @@ const updatePlayerById = asyncHandler(async (req, res) => {
     ({ _id: id });
     if (!player)
         return res.status(404).json({ error: "Player not found!" });
-    player.name.set(name);
-    player.team.set(team);
-    player.position.set(position);
-    player.number.set(number);
-    player.wage.set(wage);
-    player.nationality.set(nationality);
-    const result = await player.save();
-    return res.status(200).json(player);
+    player.name = name;
+    player.team = team;
+    player.position = position;
+    player.number = number;
+    player.wage = wage;
+    player.nationality = nationality;
+    player.birthDate = birthDate;
+
+    const updatedPlayer = await player.save();
+    console.log(updatedPlayer);
+    if(updatedPlayer) {
+        return res.status(200).json({ message: "Player updated succesfully!" });
+    } else {
+        return res.status(400).json({ error: "There was an issue with ther server!" });
+    }
+
+    //const result = await player.save();
+    //return res.status(200).json(player);
     });
 
 

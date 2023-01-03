@@ -124,7 +124,7 @@ export default function FileSubmitComponent() {
 
   // send notification about submitted file, to all TFF Admins
   function sendNotificationToTFFAdmins() {
-    console.log("sendNotificationToTFFAdmins");
+    //console.log("sendNotificationToTFFAdmins");
     const tffAdmins = getTFFAdmins();
     try {
       for (let i = 0; i < tffAdmins.length; i++) {
@@ -245,20 +245,19 @@ export default function FileSubmitComponent() {
       total += returnTotalOfObject(teamRevenues[i].marketing);
       total += returnTotalOfObject(teamRevenues[i].broadcasting);
     }
-    console.log("Total Revenues BEFORE ADD are:" + total);
     total += Number(data.get("Ticketing"));
     total += Number(data.get("Marketing"));
     total += Number(data.get("Broadcasting"));
 
-    console.log("Total Revenues are:" + total);
+    //console.log("Total Revenues are:" + total);
     return total;
   };
 
   const NetSpend = (data) => {
     //const TotalExpense = TotalExpenses(data);
     //const TotalRevenue = TotalRevenues(data);
-    console.log("Total Expenses are: " + TotalExpenses(data));
-    console.log("Total Revenues are:" + TotalRevenues(data));
+    // console.log("Total Expenses are: " + TotalExpenses(data));
+    // console.log("Total Revenues are:" + TotalRevenues(data));
     // set net spend to a variable
     //const netSpend = TotalExpenses(data) - TotalRevenues(data);
     console.log("Net Spend is:" + Number(TotalExpenses(data) - TotalRevenues(data)));
@@ -308,7 +307,7 @@ export default function FileSubmitComponent() {
 
   // write a linear regression prediction function for revenues
   function predictRevenue(data, date) {
-    console.log("IN PREDICT REVENUE");
+    //console.log("IN PREDICT REVENUE");
     const teamRevenues = getRevenues();
     let x = getSequence(Object.keys(teamRevenues[0].ticketing).length + 1);
     let y = [];
@@ -351,15 +350,15 @@ export default function FileSubmitComponent() {
       }
     });
 
-    console.log("Months:",months);
-    console.log("RevenuesByMonth:",revenuesByMonth);
+    // console.log("Months:",months);
+    // console.log("RevenuesByMonth:",revenuesByMonth);
 
     for (let i = 0; i < months.length; i++) {
       y.push(revenuesByMonth[months[i]]);
     }
 
-    console.log("Predict Revenue X:",x);
-    console.log("Predict Revenue Y:",y);
+    // console.log("Predict Revenue X:",x);
+    // console.log("Predict Revenue Y:",y);
     // revert the order of the y array
     //y = y.reverse();
 
@@ -374,13 +373,13 @@ export default function FileSubmitComponent() {
     // predict the next revenue
     let prediction = model.predict(x.length + 1);
     //console.log("Revenue prediction for next month is:" + prediction);
-    console.log("OUT OF PREDICT REVENUE");
+    //console.log("OUT OF PREDICT REVENUE");
     return prediction;
   }
 
   // write a linear regression prediction function for expenses
   function predictExpense(data, date) {
-    console.log("IN PREDICT EXPENSE");
+    //console.log("IN PREDICT EXPENSE");
     const teamExpenses = getExpenses();
     let x = getSequence(Object.keys(teamExpenses[0].salaries).length + 1);
     let y = [];
@@ -422,15 +421,15 @@ export default function FileSubmitComponent() {
       }
     });
 
-    console.log("Months:",months);
-    console.log("ExpensesByMonth:",expensesByMonth);
+    // console.log("Months:",months);
+    // console.log("ExpensesByMonth:",expensesByMonth);
 
     for (let i = 0; i < months.length; i++) {
       y.push(expensesByMonth[months[i]]);
     }
 
-    console.log("Predict Expense X:",x);
-    console.log("Predict Expense Y:",y);
+    // console.log("Predict Expense X:",x);
+    // console.log("Predict Expense Y:",y);
 
     // if only 1 data, return that data
     if (x.length === 1) {
@@ -444,7 +443,7 @@ export default function FileSubmitComponent() {
     let prediction = model.predict(x.length + 1);
     //console.log("Expense prediction for next month is:" + prediction);
 
-    console.log("OUT OF PREDICT EXPENSE");
+    //console.log("OUT OF PREDICT EXPENSE");
     return prediction;
   }
 
