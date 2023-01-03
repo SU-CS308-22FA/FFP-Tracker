@@ -63,6 +63,9 @@ function ProfileAppBar() {
         <Button color="inherit" component={Link} to="/register">
           Send Key
         </Button>
+        <Button color="inherit" component={Link} to="/penalty">
+          Penalty
+        </Button>
       </>
     );
   } else {

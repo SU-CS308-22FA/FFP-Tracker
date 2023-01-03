@@ -21,6 +21,7 @@ import SendNotificationPage from "./pages/User Pages/SendNotificationPage";
 import FileStatusPage from "./pages/User Pages/FileStatusPage";
 import EditTeamPage from "./pages/Team Admin Pages/EditTeamPage";
 import PlayersPage from "./pages/Team Admin Pages/PlayersPage";
+import PenaltyPage from "./pages/TFF Admin Pages/PenaltyPage";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
             <Route path="/edit/team/players" element={<PlayersPage />} />
           </Route>
           <Route element={<RequireAuth allowedRoles={[ROLES.TFF_ADMIN]} />}>
+            <Route path="/penalty" element={<PenaltyPage />} />
             <Route path="/denytransaction" element={<DenyTransactionPage />} />
             <Route path="/newteam" element={<RegisterTeamPage />} />
             <Route path="/deleteteam" element={<DeleteTeamPage />} />
