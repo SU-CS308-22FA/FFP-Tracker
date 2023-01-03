@@ -84,6 +84,12 @@ export default function DetailedTeamPageComponent() {
     // print y
     //console.log("y is in Revenues:", y);
 
+    // if only 1 data, return that data
+    if (x.length === 1) {
+      return y[0];
+    }
+
+
     // create a linear regression model
     const model = new SimpleLinearRegression(x, y);
 
@@ -135,9 +141,10 @@ export default function DetailedTeamPageComponent() {
     // print y
     //console.log("y is in Expenses:", y);
 
-
-    // revert the order of the y array
-    //y = y.reverse();
+    // if only 1 data, return that data
+    if (x.length === 1) {
+      return y[0];
+    }
 
     // create a linear regression model
     const model = new SimpleLinearRegression(x, y);
