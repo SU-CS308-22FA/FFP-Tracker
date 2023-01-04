@@ -53,7 +53,7 @@ class FFPTesting(unittest.TestCase):
         driver.switch_to.alert.accept()
         self.assertIn("my/profile", driver.current_url)
         time.sleep(1)
-        elem = driver.find_element(By.XPATH, '/html/body/div/main/div[1]/div[5]/div/button/div')
+        elem = driver.find_element(By.XPATH, '/html/body/div/main/div[1]/div[6]/div/button')
         elem.click()
         time.sleep(2)
 
