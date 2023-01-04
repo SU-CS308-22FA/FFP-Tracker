@@ -224,7 +224,7 @@ export default function PenaltyComponent() {
         createNotification(
           teamAdmin,
           "Penalty",
-          `You have been penalized ${penalty} TL by ${user.fullname}, for not submitting your files last month`
+          `You have been penalized ${penalty} M TL by ${user.fullname}, for not submitting your files last month`
         );
       });
 
