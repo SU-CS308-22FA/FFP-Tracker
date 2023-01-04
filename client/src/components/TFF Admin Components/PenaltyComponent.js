@@ -20,11 +20,11 @@ export default function PenaltyComponent() {
   const { user } = useContext(UserContext);
   const [e, setE] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [users, setUsers] = useState(null);
-  const [revenues, setRevenues] = useState(null);
-  const [expenses, setExpenses] = useState(null);
-  const [files, setFiles] = useState(null);
-  const [teams, setTeams] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [revenues, setRevenues] = useState([]);
+  const [expenses, setExpenses] = useState([]);
+  const [files, setFiles] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [penalties, setPenalties] = useState({});
 
   const handlePenaltyChange = (event, teamName) => {
