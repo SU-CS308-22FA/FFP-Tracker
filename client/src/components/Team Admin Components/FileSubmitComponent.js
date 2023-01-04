@@ -42,7 +42,7 @@ export default function FileSubmitComponent() {
     fetchExpenses();
     fetchRevenues();
     fetchUsers();
-  }, [setUsers]);
+  }, [setUsers, setRevenues, setExpenses]);
 
   const navigate = useNavigate();
 
@@ -122,7 +122,7 @@ export default function FileSubmitComponent() {
 
   // send notification about submitted file, to all TFF Admins
   function sendNotificationToTFFAdmins() {
-    console.log("sendNotificationToTFFAdmins");
+    //console.log("sendNotificationToTFFAdmins");
     const tffAdmins = getTFFAdmins();
     try {
       for (let i = 0; i < tffAdmins.length; i++) {
@@ -204,16 +204,20 @@ export default function FileSubmitComponent() {
   };
 
   // get total of all expenses for users team
-  const TotalExpenses = () => {
+  const TotalExpenses = (data) => {
     var total = 0;
     const teamExpenses = getExpenses();
-    console.log(teamExpenses);
     for (let i = 0; i < teamExpenses.length; i++) {
       total += returnTotalOfObject(teamExpenses[i].salaries);
       total += returnTotalOfObject(teamExpenses[i].amortization);
       total += returnTotalOfObject(teamExpenses[i].operational);
     }
-    console.log("Total Expenses are: " + total);
+
+    total += Number(data.get("Salaries"));
+    total += Number(data.get("Amortization"));
+    total += Number(data.get("Operational"));
+
+    //console.log("Total Expenses are: " + total);
     return total;
   };
 
@@ -231,7 +235,7 @@ export default function FileSubmitComponent() {
   };
 
   // get total of all revenues for users team
-  const TotalRevenues = () => {
+  const TotalRevenues = (data) => {
     var total = 0;
     const teamRevenues = getRevenues();
     for (let i = 0; i < teamRevenues.length; i++) {
@@ -239,13 +243,23 @@ export default function FileSubmitComponent() {
       total += returnTotalOfObject(teamRevenues[i].marketing);
       total += returnTotalOfObject(teamRevenues[i].broadcasting);
     }
-    console.log("Total Revenues are:" + total);
+    total += Number(data.get("Ticketing"));
+    total += Number(data.get("Marketing"));
+    total += Number(data.get("Broadcasting"));
+
+    //console.log("Total Revenues are:" + total);
     return total;
   };
 
-  const NetSpend = () => {
-    console.log("Net Spend is:" + TotalExpenses() - TotalRevenues());
-    return TotalExpenses() - TotalRevenues();
+  const NetSpend = (data) => {
+    //const TotalExpense = TotalExpenses(data);
+    //const TotalRevenue = TotalRevenues(data);
+    // console.log("Total Expenses are: " + TotalExpenses(data));
+    // console.log("Total Revenues are:" + TotalRevenues(data));
+    // set net spend to a variable
+    //const netSpend = TotalExpenses(data) - TotalRevenues(data);
+    console.log("Net Spend is:" + Number(TotalExpenses(data) - TotalRevenues(data)));
+    return TotalExpenses(data) - TotalRevenues(data);
   };
 
   // get all users with role of Team Admin and team of users team
@@ -262,8 +276,8 @@ export default function FileSubmitComponent() {
   };
 
   // send notification to user if net spend is positive
-  function sendNotificationToUserIfNetSpendIsPositive() {
-    if (NetSpend() > 0) {
+  function sendNotificationToUserIfNetSpendIsPositive(data) {
+    if (NetSpend(data) > 0) {
       try {
         // send notification to all team admins of users team
         const teamAdmins = getTeamAdmins();
@@ -273,7 +287,7 @@ export default function FileSubmitComponent() {
             teamAdmins[i]._id,
             "Net Spend",
             "Your net spend is: " +
-              NetSpend() +
+              NetSpend(data) +
               "Mil. TL. " +
               "Please check your expenses"
           );
@@ -290,76 +304,162 @@ export default function FileSubmitComponent() {
   }
 
   // write a linear regression prediction function for revenues
-  function predictRevenue() {
+  function predictRevenue(data, date) {
+    //console.log("IN PREDICT REVENUE");
     const teamRevenues = getRevenues();
-    let x = getSequence(Object.keys(teamRevenues[0].ticketing).length);
+    let x = getSequence(Object.keys(teamRevenues[0].ticketing).length + 1);
     let y = [];
 
-    for (const [key, value] of Object.entries(teamRevenues[0].ticketing)) {
-      y.push(
-        value +
-          teamRevenues[0].marketing[key] +
-          teamRevenues[0].broadcasting[key]
-      );
+    
+    // get revenues by considering key values as month-year and sorting them
+    let revenuesByMonth = {};
+    for (let i = 0; i < teamRevenues.length; i++) {
+      for (const [key, value] of Object.entries(teamRevenues[i].ticketing)) {
+        revenuesByMonth[key] = value;
+      }
     }
-    console.log(x);
-    console.log(y);
+    for (let i = 0; i < teamRevenues.length; i++) {
+      for (const [key, value] of Object.entries(teamRevenues[i].marketing)) {
+        revenuesByMonth[key] += value;
+      }
+    }
+    for (let i = 0; i < teamRevenues.length; i++) {
+      for (const [key, value] of Object.entries(teamRevenues[i].broadcasting)) {
+        revenuesByMonth[key] += value;
+      }
+    }
+    // add new expense to expensesByMonth
+    revenuesByMonth[date.substring(0, 7)] = Number(data.get("Ticketing")) + Number(data.get("Marketing")) + Number(data.get("Broadcasting"));
+
+
+    let months = [];
+    for (const [key, value] of Object.entries(revenuesByMonth)) {
+      months.push(key);
+    }
+    months.sort((a, b) => {
+      const aYear = Number(a.slice(0, 4));
+      const bYear = Number(b.slice(0, 4));
+      const aMonth = Number(a.slice(5, 7));
+      const bMonth = Number(b.slice(5, 7));
+      if (aYear === bYear) {
+        return aMonth - bMonth;
+      } else {
+        return aYear - bYear;
+      }
+    });
+
+    // console.log("Months:",months);
+    // console.log("RevenuesByMonth:",revenuesByMonth);
+
+    for (let i = 0; i < months.length; i++) {
+      y.push(revenuesByMonth[months[i]]);
+    }
+
+    // console.log("Predict Revenue X:",x);
+    // console.log("Predict Revenue Y:",y);
     // revert the order of the y array
     //y = y.reverse();
+
+    // if only 1 data, return that data
+    if (x.length === 1) {
+      return y[0];
+    }
 
     // create a linear regression model
     const model = new SimpleLinearRegression(x, y);
 
     // predict the next revenue
     let prediction = model.predict(x.length + 1);
-    console.log("Revenue prediction for next month is:" + prediction);
+    //console.log("Revenue prediction for next month is:" + prediction);
+    //console.log("OUT OF PREDICT REVENUE");
     return prediction;
   }
 
   // write a linear regression prediction function for expenses
-  function predictExpense() {
+  function predictExpense(data, date) {
+    //console.log("IN PREDICT EXPENSE");
     const teamExpenses = getExpenses();
-    let x = getSequence(Object.keys(teamExpenses[0].salaries).length);
+    let x = getSequence(Object.keys(teamExpenses[0].salaries).length + 1);
     let y = [];
 
-    // get the values of each expense objects
-    for (const [key, value] of Object.entries(teamExpenses[0].salaries)) {
-      y.push(
-        value +
-          teamExpenses[0].amortization[key] +
-          teamExpenses[0].operational[key]
-      );
+    // get revenues by considering key values as month-year and sorting them
+    let expensesByMonth = {};
+    for (let i = 0; i < teamExpenses.length; i++) {
+      for (const [key, value] of Object.entries(teamExpenses[i].salaries)) {
+        expensesByMonth[key] = value;
+      }
     }
-    // revert the order of the y array
-    //y = y.reverse();
+    for (let i = 0; i < teamExpenses.length; i++) {
+      for (const [key, value] of Object.entries(teamExpenses[i].amortization)) {
+        expensesByMonth[key] += value;
+      }
+    }
+    for (let i = 0; i < teamExpenses.length; i++) {
+      for (const [key, value] of Object.entries(teamExpenses[i].operational)) {
+        expensesByMonth[key] += value;
+      }
+    }
+    // add new expense to expensesByMonth
+    expensesByMonth[date.substring(0, 7)] = Number(data.get("Salaries")) + Number(data.get("Amortization")) + Number(data.get("Operational"));
+
+    let months = [];
+    for (const [key, value] of Object.entries(expensesByMonth)) {
+      months.push(key);
+    }
+
+    months.sort((a, b) => {
+      const aYear = Number(a.slice(0, 4));
+      const bYear = Number(b.slice(0, 4));
+      const aMonth = Number(a.slice(5, 7));
+      const bMonth = Number(b.slice(5, 7));
+      if (aYear === bYear) {
+        return aMonth - bMonth;
+      } else {
+        return aYear - bYear;
+      }
+    });
+
+    // console.log("Months:",months);
+    // console.log("ExpensesByMonth:",expensesByMonth);
+
+    for (let i = 0; i < months.length; i++) {
+      y.push(expensesByMonth[months[i]]);
+    }
+
+    // console.log("Predict Expense X:",x);
+    // console.log("Predict Expense Y:",y);
+
+    // if only 1 data, return that data
+    if (x.length === 1) {
+      return y[0];
+    }
 
     // create a linear regression model
     const model = new SimpleLinearRegression(x, y);
 
     // predict the next expense
     let prediction = model.predict(x.length + 1);
-    console.log("Expense prediction for next month is:" + prediction);
+    //console.log("Expense prediction for next month is:" + prediction);
+
+    //console.log("OUT OF PREDICT EXPENSE");
     return prediction;
   }
 
   // predict Net Spend
-  function predictNetSpend() {
-    let netSpend = predictRevenue() - predictExpense();
-    console.log("Net Spend prediction for next month is:" + netSpend);
+  function predictNetSpend(data, date) {
+    let netSpend = predictRevenue(data, date) - predictExpense(data, date);
+    //console.log("Net Spend prediction for next month is:" + netSpend);
     return netSpend;
   }
 
   // send notification to team admins if predicted net spend is negative
-  function sendNotificationToTeamAdminsIfPredictedNetSpendIsNegative() {
-    let PredictedNetSpend = predictNetSpend();
+  function sendNotificationToTeamAdminsIfPredictedNetSpendIsNegative(data, date) {
+    let PredictedNetSpend = predictNetSpend(data, date);
     console.log("Predicted Net Spend is:" + PredictedNetSpend);
     if (PredictedNetSpend < 0) {
       try {
         // send notification to all team admins of users team
         const teamAdmins = getTeamAdmins();
-
-        console.log("team admins are:");
-        console.log(teamAdmins);
 
         for (let i = 0; i < teamAdmins.length; i++) {
           createNotification(
@@ -367,7 +467,7 @@ export default function FileSubmitComponent() {
             teamAdmins[i]._id,
             "Predicted Net Spend",
             "Your predicted net spend is: " +
-              PredictedNetSpend +
+              (PredictedNetSpend*-1) +
               "Mil. TL for the next month. " +
               "Please check your expenses."
           );
@@ -387,8 +487,8 @@ export default function FileSubmitComponent() {
   }
 
   // send email to team admins if predicted net spend is negative
-  function sendEmailToTeamAdminsIfPredictedNetSpendIsNegative() {
-    let PredictedNetSpend = predictNetSpend();
+  function sendEmailToTeamAdminsIfPredictedNetSpendIsNegative(data, date) {
+    let PredictedNetSpend = predictNetSpend(data, date);
     if (PredictedNetSpend < 0) {
       try {
         // send email to all team admins of users team
@@ -401,7 +501,7 @@ export default function FileSubmitComponent() {
             subject: "Financial Risk is Predicted in Net Spend for Next Month",
             message:
               "Your predicted net spend is: " +
-              PredictedNetSpend * -1 +
+              (PredictedNetSpend * -1) +
               "Mil. TL for the next month. Please check your expenses.",
           };
           sendEmail(parameters);
@@ -421,8 +521,8 @@ export default function FileSubmitComponent() {
   }
 
   // send email to team admins if net spend is positive
-  function sendEmailToTeamAdminsIfNetSpendIsPositive() {
-    if (NetSpend() > 0) {
+  function sendEmailToTeamAdminsIfNetSpendIsPositive(data) {
+    if (NetSpend(data) > 0) {
       try {
         // send email to all team admins of users team
         const teamAdmins = getTeamAdmins();
@@ -434,7 +534,7 @@ export default function FileSubmitComponent() {
             subject: "Net Spend is Positive",
             message:
               "Your net spend is: " +
-              NetSpend() +
+              NetSpend(data) +
               "Mil. TL. " +
               "Please check your expenses",
           };
@@ -500,10 +600,10 @@ export default function FileSubmitComponent() {
         sendNotificationToTFFAdmins();
         sendNotificationToLawyers();
         sendNotificationToUser();
-        sendNotificationToUserIfNetSpendIsPositive();
-        sendEmailToTeamAdminsIfNetSpendIsPositive();
-        sendNotificationToTeamAdminsIfPredictedNetSpendIsNegative();
-        sendEmailToTeamAdminsIfPredictedNetSpendIsNegative();
+        sendNotificationToUserIfNetSpendIsPositive(data);
+        sendEmailToTeamAdminsIfNetSpendIsPositive(data);
+        sendNotificationToTeamAdminsIfPredictedNetSpendIsNegative(data, date);
+        sendEmailToTeamAdminsIfPredictedNetSpendIsNegative(data, date);
         navigate(`/my/profile/`);
       } catch (error) {
         console.log(error);

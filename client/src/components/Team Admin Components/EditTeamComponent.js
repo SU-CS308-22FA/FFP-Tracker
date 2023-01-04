@@ -77,6 +77,10 @@ export default function EditTeamComponent() {
     picker.open();
   };
 
+
+  
+
+
   const handleAddLawyer = (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
@@ -114,6 +118,7 @@ export default function EditTeamComponent() {
     };
     fetchTeamInfo();
   }, [user]);
+  
 
   return !team ? (
     <CircularProgressComponent />
@@ -262,6 +267,7 @@ export default function EditTeamComponent() {
                         </Typography>
                       )}
                     </Grid>
+
                     <Grid item xs={12}>
                       <Typography variant="h5" align="center" sx={{ mb: 2 }}>
                         Your Board:
@@ -453,6 +459,22 @@ export default function EditTeamComponent() {
                       </Box>
                     </Grid>
                   </Grid>
+                  <Typography variant="body1" align="center">
+                      <Button
+                        variant="contained"
+                        sx={{
+                          mt: 2,
+                          mb: 4,
+                          bgcolor: "#51087E",
+                          "&:hover": {
+                            backgroundColor: "#51087E",
+                          },
+                        }}
+                        href="/edit/team/players"
+                      >
+                        Players Page
+                      </Button>
+                    </Typography>
                 </Box>
               </Box>
             </Box>
@@ -461,4 +483,189 @@ export default function EditTeamComponent() {
       </ThemeProvider>
     </>
   );
+
+  // return !team ? (
+  //   <CircularProgressComponent />
+  // ) : (
+  //   <ThemeProvider theme={theme}>
+  //     <Box
+  //       display="flex"
+  //       flexDirection="column"
+  //       alignItems="center"
+  //       mt={5}
+  //       mb={5}
+  //     >
+  //       <Typography variant="h3" align="center" mb={5}>
+  //         Update Your Team's Information
+  //       </Typography>
+  //       <Box
+  //         display="flex"
+  //         flexDirection="column"
+  //         alignItems="center"
+  //         mb={5}
+  //       >
+  //         <Typography variant="h6" mb={2}>
+  //           Your Team is {team.teamName}{" "}
+  //         </Typography>
+  //         <Avatar src={team.logoURL} mb={2} />
+  //         {selectedFile ? (
+  //           <>
+  //             <Box
+  //               display="flex"
+  //               flexDirection="column"
+  //               alignItems="center"
+  //               mb={2}
+  //             >
+  //               <Typography variant="h7" mb={1}>
+  //                 This will be your new team logo:
+  //               </Typography>
+  //               <Avatar
+  //                 variant="square"
+  //                 src={selectedFile}
+  //                 width={100}
+  //                 height={100}
+  //               />
+  //             </Box>
+  //           </>
+  //         ) : (
+  //           <Button
+  //             onClick={handleFilePicker}
+  //             variant="contained"
+  //             color="primary"
+  //             mb={2}
+  //           >
+  //             Change Team Logo
+  //           </Button>
+  //         )}
+  //       </Box>
+  //       <Box
+  //         display="flex"
+  //         flexDirection="column"
+  //         alignItems="center"
+  //         mb={5}
+  //       >
+  //         <form onSubmit={handleSubmit}>
+  //           <Grid container spacing={2}>
+  //             <Grid item xs={12}>
+  //               <TextField
+  //                 fullWidth
+  //                 value={wikiLink}
+  //                 onChange={(e) => setWikiLink(e.target.value)}
+  //                 id="wikiLink"
+  //                 label="Wikipedia Link"
+  //                 name="wikiLink"
+  //                 required
+  //               />
+  //             </Grid>
+  //             <Grid item xs={12}>
+  //               <TextField
+  //                 fullWidth
+  //                 value={manager}
+  //                 onChange={(e) => setManager(e.target.value)}
+  //                 id="manager"
+  //                 label="Manager Name"
+  //                 name="manager"
+  //                 required
+  //               />
+  //             </Grid>
+  //             <Grid item xs={12}>
+  //               <Typography variant="h5" align="center" mb={2}>
+  //                 Your Lawyers:
+  //               </Typography>
+  //               {lawyers.length !== 0 ? (
+  //                 lawyers.map((lawyer) => (
+  //                   <Box display="flex" alignItems="center" mb={1}>
+  //                     <Typography variant="h6" mb={0}>
+  //                       {lawyer}
+  //                     </Typography>
+  //                     <Button
+  //                       variant="contained"
+  //                       color="secondary"
+  //                       ml={2}
+  //                       onClick={() => setLawyers(lawyers.filter((l) => l !== lawyer))}
+  //                     >
+  //                       Remove
+  //                     </Button>
+  //                   </Box>
+  //                 ))
+  //               ) : (
+  //                 <Typography variant="h6" color="textSecondary">
+  //                   No lawyers added yet
+  //                 </Typography>
+  //               )}
+  //               <Box mt={2}>
+  //                 <form onSubmit={handleAddLawyer}>
+  //                   <TextField
+  //                     fullWidth
+  //                     id="lname"
+  //                     label="Add a lawyer"
+  //                     name="lname"
+  //                     required
+  //                   />
+  //                   <Button
+  //                     type="submit"
+  //                     variant="contained"
+  //                     color="primary"
+  //                     mt={2}
+  //                   >
+  //                     Add Lawyer
+  //                   </Button>
+  //                 </form>
+  //               </Box>
+  //             </Grid>
+  //             <Grid item xs={12}>
+  //               <Typography variant="h5" align="center" mb={2}>
+  //                 Your Board Members:
+  //               </Typography>
+  //               {boardMembers.length !== 0 ? (
+  //                 boardMembers.map((boardMember) => (
+  //                   <Box display="flex" alignItems="center" mb={1}>
+  //                     <Typography variant="h6" mb={0}>
+  //                       {boardMember}
+  //                     </Typography>
+  //                     <Button
+  //                       variant="contained"
+  //                       color="secondary"
+  //                       ml={2}
+  //                       onClick={() =>
+  //                         setBoardMembers(boardMembers.filter((b) => b !== boardMember))
+  //                       }
+  //                     >
+  //                       Remove
+  //                     </Button>
+  //                   </Box>
+  //                 ))
+  //               ) : (
+  //                 <Typography variant="h6" color="textSecondary">
+  //                   No board members added yet
+  //                 </Typography>
+  //               )}
+  //               <Box mt={2}>
+  //                 <form onSubmit={handleAddBoardMember}>
+  //                   <TextField
+  //                     fullWidth
+  //                     id="bname"
+  //                     label="Add a board member"
+  //                     name="bname"
+  //                     required
+  //                   />
+  //                   <Button type="submit" variant="contained" color="primary" mt={2}>
+  //                     Add Board Member
+  //                   </Button>
+  //                 </form>
+  //               </Box>
+  //             </Grid>
+  //             <Grid item xs={12}>
+  //               <Button type="submit" variant="contained" color="primary" mt={2}>
+  //                 Update Team
+  //               </Button>
+  //             </Grid>
+  //           </Grid>
+  //         </form>
+  //       </Box>
+  //     </Box>
+  //   </ThemeProvider>
+  // );
+
+                  
 }

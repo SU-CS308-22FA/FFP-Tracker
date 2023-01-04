@@ -35,7 +35,6 @@ function ProfileAppBar() {
       }
     }
   }
-
   return (
     <Box sx={{ display: "flex" }}>
       <AppBar

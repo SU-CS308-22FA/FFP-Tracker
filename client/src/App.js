@@ -20,6 +20,8 @@ import FileSubmitPage from "./pages/Team Admin Pages/FileSubmitPage";
 import SendNotificationPage from "./pages/User Pages/SendNotificationPage";
 import FileStatusPage from "./pages/User Pages/FileStatusPage";
 import EditTeamPage from "./pages/Team Admin Pages/EditTeamPage";
+import PlayersPage from "./pages/Team Admin Pages/PlayersPage";
+import PenaltyPage from "./pages/TFF Admin Pages/PenaltyPage";
 import SupportRequestReviewPage from "./pages/Team Admin Pages/SupportRequestReviewPage";
 import SupportTeamPage from "./pages/Supporter Pages/SupportTeamPage";
 
@@ -49,12 +51,14 @@ function App() {
           <Route element={<RequireAuth allowedRoles={[ROLES.TEAM_ADMIN]} />}>
             <Route path="/submit" element={<FileSubmitPage />} />
             <Route path="/edit/team/" element={<EditTeamPage />} />
+            <Route path="/edit/team/players" element={<PlayersPage />} />
             <Route
               path="/supportrequest"
               element={<SupportRequestReviewPage />}
             />
           </Route>
           <Route element={<RequireAuth allowedRoles={[ROLES.TFF_ADMIN]} />}>
+            <Route path="/penalty" element={<PenaltyPage />} />
             <Route path="/denytransaction" element={<DenyTransactionPage />} />
             <Route path="/newteam" element={<RegisterTeamPage />} />
             <Route path="/deleteteam" element={<DeleteTeamPage />} />

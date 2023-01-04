@@ -16,7 +16,8 @@ router
   .route("/:id")
   .get(teamsController.getTeamById)
   .delete(verifyJWT, teamsController.deleteTeam)
-  .patch(verifyJWT, teamsController.updateTeam);
+  .patch(verifyJWT, teamsController.updateTeam)
+  .put(teamsController.updateTeamBudget);
 
 router.route("/:name/admin").get(teamsController.getTeamAdmin);
 

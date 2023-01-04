@@ -150,6 +150,30 @@ const updateTeam = asyncHandler(async (req, res) => {
   }
 });
 
+const updateTeamBudget = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+  const { currentBudget } = req.body;
+  if (!currentBudget) {
+    return res
+      .status(400)
+      .json({ error: "All fields are required to update a team!" });
+  }
+  const team = await Team.findOne({
+    _id: id,
+  }).lean();
+  if (!team) return res.status(400).json({ error: "No team was found!" });
+  const updatedTeam = await Team.findOneAndUpdate(
+    { _id: id },
+    { currentBudget },
+    { new: true }
+  );
+  if (updatedTeam) {
+    return res.status(200).json({ message: "Team updated successfully!" });
+  } else {
+    res.status(500).json({ error: "Something went wrong!" });
+  }
+});
+
 const deleteTeam = asyncHandler(async (req, res) => {
   const id = req.params.id;
   if (!id) return res.status(400).json({ error: "Team ID is required!" });
@@ -170,4 +194,5 @@ module.exports = {
   getTeamAdmin,
   getTeamGraphDataById,
   deleteTeam,
+  updateTeamBudget,
 };
