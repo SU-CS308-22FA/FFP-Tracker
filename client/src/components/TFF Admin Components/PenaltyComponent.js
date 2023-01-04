@@ -269,7 +269,8 @@ export default function FileSubmitComponent() {
         });
 
         // reload the page
-        //window.location.reload();
+        alert("Penalty sent successfully");
+        window.location.reload();
       }
     }
 
