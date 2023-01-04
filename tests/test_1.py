@@ -57,7 +57,7 @@ class FFPTesting(unittest.TestCase):
         elem.click()
         time.sleep(2)
 
-        # Find the table rows containing the teams
+        # Find the table rows c ontaining the teams
         rows = driver.find_element(By.XPATH,'/html/body/div/main/div')
 
         # Find the budget input field for the first team
