@@ -58,7 +58,7 @@ class FFPTesting(unittest.TestCase):
         element = driver.find_element(By.XPATH, '/html/body/div/main/div[2]/div[1]/div/button')
         element.click()
         self.assertIn("teams", driver.current_url)
-        time.sleep(1)
+        time.sleep(4)
         div_element = driver.find_element(By.CSS_SELECTOR, "#root > div.MuiBox-root.css-7m4n47")
         elements_inside_div = div_element.find_elements(By.XPATH, './/p')
         team_added = False
