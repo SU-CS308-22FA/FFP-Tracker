@@ -3,6 +3,9 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -36,6 +39,63 @@ export default function DenyTransactionComponent() {
   let lastExpenseSalary = 0.0;
   let lastExpenseAmortization = 0.0;
   let lastExpenseOperational = 0.0;
+
+  function CustomCard(props) {
+    return (
+      <>
+        <Card
+          style={{
+            backgroundColor: "#f5f5f5",
+          }}
+          sx={{ width: 330 }}
+        >
+          <CardContent>
+            <Typography
+              gutterBottom
+              variant="h6"
+              component="div"
+              align="center"
+              fontWeight="bold"
+            >
+              {props.title}
+            </Typography>
+            {typeof props.content === "object" ? (
+              props.content.map((item) => {
+                if (props.title.indexOf("Associated") !== -1) {
+                  const person = JSON.parse(item);
+                  return (
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      align="center"
+                      style={{ color: "#0000FF" }}
+                      key={person}
+                    >
+                      <a href={`mailto:${person.email}`}>{person.name}</a>
+                    </Typography>
+                  );
+                }
+                return (
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    align="center"
+                    key={item}
+                  >
+                    {item}
+                  </Typography>
+                );
+              })
+            ) : (
+              <Typography variant="body2" color="text.secondary" align="center">
+                {props.content}
+              </Typography>
+            )}
+          </CardContent>
+        </Card>
+      </>
+    );
+  }
 
   /**
    * This function will accept details about a team
@@ -133,7 +193,6 @@ export default function DenyTransactionComponent() {
       }
     }
     const exps = expenses[index2];
-
     lastDate = "";
     lastRevenueTicketing = 0.0;
     lastRevenueMarketing = 0.0;
@@ -150,32 +209,12 @@ export default function DenyTransactionComponent() {
           lastRevenueBroadCasting = revs.broadcasting[key];
         }
       }
-
       for (const [key, value] of Object.entries(exps.salaries)) {
         lastExpenseSalary = value;
         lastExpenseAmortization = exps.amortization[key];
         lastExpenseOperational = exps.operational[key];
       }
     }
-    /*
-    const dateParts = lastDate.split("-");
-    let year = "";
-    let month = "";
-    if (dateParts.length !== 1) {
-      year = dateParts[0];
-      month = dateParts[1];
-      console.log("evet", todayyear, year);
-      if (year === todayyear) {
-        if (todaymonth - month >= 2) {
-          //console.log("----", todaymonth, month);
-          lastDate = "a";
-        }
-      } else if (year !== todayyear) {
-        console.log("aaaaaaa", year, todayyear);
-        lastDate = "a";
-      }
-    }
-    */
 
     return [
       lastDate,
@@ -211,7 +250,6 @@ export default function DenyTransactionComponent() {
         },
         {
           label: "No",
-          //onClick: () => alert("Team has not been deleted!"),
         },
       ],
     });
@@ -222,14 +260,14 @@ export default function DenyTransactionComponent() {
       <Container maxWidth="md">
         <Box
           sx={{
-            m: 2,
+            mt: 4,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
           }}
         >
           <Typography component="h1" variant="h3" sx={{ mb: 2 }}>
-            DENY TRANSACTION
+            Dismiss Financial Transactions
           </Typography>
         </Box>
       </Container>
@@ -237,7 +275,6 @@ export default function DenyTransactionComponent() {
         teams.map((team) => {
           if (team) {
             let values = revenueExpenseFinder(team, revenues, expenses);
-
             lastDate = values[0];
             lastRevenueTicketing = values[1];
             lastRevenueMarketing = values[2];
@@ -245,7 +282,6 @@ export default function DenyTransactionComponent() {
             lastExpenseSalary = values[4];
             lastExpenseAmortization = values[5];
             lastExpenseOperational = values[6];
-
             if (lastDate !== "") {
               const dateParts = lastDate.split("-");
               let year = dateParts[0];
@@ -260,106 +296,104 @@ export default function DenyTransactionComponent() {
               }
             }
           }
-
           return !team ? (
             <CircularProgressComponent />
           ) : (
             <>
-              <li key={team.teamName}>
-                <ThemeProvider theme={theme}>
-                  <CssBaseline />
-                  <Container maxWidth="md">
-                    <Box
-                      sx={{
-                        m: 6,
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Avatar
-                        src={team.logoURL}
-                        sx={{ mt: 2, mb: 2, width: 56, height: 56 }}
-                      />
-                      <Typography variant="h5" sx={{ mb: 2 }}>
-                        Team is {team.teamName}{" "}
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Container maxWidth="md" sx={{ mb: 4 }}>
+                  <Box
+                    sx={{
+                      mt: 6,
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Avatar
+                      src={team.logoURL}
+                      sx={{ mt: 2, mb: 2 }}
+                      variant="round"
+                    />
+                    <Typography variant="h5" sx={{ mb: 2 }}>
+                      {team.teamName}
+                    </Typography>
+                    {lastDate ? (
+                      <>
+                        {lastDate === "a" ? (
+                          <Box>
+                            <Typography variant="h6">
+                              There is no revenue & expense record for the
+                              current year or within the past month.
+                            </Typography>
+                          </Box>
+                        ) : (
+                          <>
+                            <Typography variant="h6" mb={2}>
+                              This team's last submission date is {lastDate}
+                              {"."}
+                            </Typography>
+                            <Grid container spacing={2}>
+                              <Grid item xs={1} />
+                              <Grid item xs={5}>
+                                <CustomCard
+                                  title="Last Month Expenses"
+                                  content={[
+                                    `Salary: ${lastExpenseSalary} Mil TL`,
+                                    `Amortization: ${lastExpenseAmortization} Mil TL`,
+                                    `Operational: ${lastExpenseOperational} Mil TL`,
+                                  ]}
+                                />
+                              </Grid>
+                              <Grid item xs={5}>
+                                <CustomCard
+                                  title="Last Month Revenues"
+                                  content={[
+                                    `Ticketing: ${lastRevenueTicketing} Mil TL`,
+                                    `Marketing: ${lastRevenueMarketing} Mil TL`,
+                                    `Broadcasting: ${lastRevenueBroadCasting} Mil TL`,
+                                  ]}
+                                />
+                              </Grid>
+                              <Grid item xs={1} />
+                            </Grid>
+                          </>
+                        )}
+                      </>
+                    ) : (
+                      <Typography variant="h6">
+                        There is no record for Revenues & Expenses.{" "}
                       </Typography>
-                      {lastDate ? (
-                        <>
-                          {lastDate === "a" ? (
-                            <Box>
-                              <Typography variant="h6">
-                                There is no revenue & expense record for the
-                                current year or within the past month.
-                              </Typography>
-                            </Box>
-                          ) : (
-                            <>
-                              <Typography variant="h6">
-                                Last submit date is {lastDate}{" "}
-                              </Typography>
-                              <Typography variant="h6">
-                                Last ticketing revenue is {lastRevenueTicketing}{" "}
-                              </Typography>
-                              <Typography variant="h6">
-                                Last marketing revenue is {lastRevenueMarketing}{" "}
-                              </Typography>
-                              <Typography variant="h6">
-                                Last broadcasting revenue is{" "}
-                                {lastRevenueBroadCasting}{" "}
-                              </Typography>
-                              <Typography variant="h6">
-                                Last salary expense is {lastExpenseSalary}{" "}
-                              </Typography>
-                              <Typography variant="h6">
-                                Last amortizational expense is{" "}
-                                {lastExpenseAmortization}{" "}
-                              </Typography>
-                              <Typography variant="h6">
-                                Last operational expense is{" "}
-                                {lastExpenseOperational}{" "}
-                              </Typography>
-                            </>
-                          )}
-                        </>
-                      ) : (
-                        <Typography variant="h6">
-                          There is no record for Revenues & Expenses.{" "}
-                        </Typography>
-                      )}
+                    )}
 
-                      {e && (
-                        <Alert variant="outlined" severity="error">
-                          {errorMessage}
-                        </Alert>
-                      )}
-                      {lastDate && lastDate !== "a" ? (
-                        <Box>
-                          <Button
-                            onClick={() =>
-                              submit(team.teamName, team.admin, team._id)
-                            }
-                            variant="contained"
-                            sx={{
-                              mt: 2,
-                              mr: 2,
-                              mb: 4,
-                              bgcolor: "#51087E",
-                              "&:hover": {
-                                backgroundColor: "#51087E",
-                              },
-                            }}
-                          >
-                            DENY TRANSACTION
-                          </Button>
-                        </Box>
-                      ) : (
-                        <></>
-                      )}
-                    </Box>
-                  </Container>
-                </ThemeProvider>
-              </li>
+                    {e && (
+                      <Alert variant="outlined" severity="error">
+                        {errorMessage}
+                      </Alert>
+                    )}
+                    {lastDate && lastDate !== "a" ? (
+                      <Box textAlign="center">
+                        <Button
+                          onClick={() =>
+                            submit(team.teamName, team.admin, team._id)
+                          }
+                          variant="contained"
+                          sx={{
+                            mt: 2,
+                            bgcolor: "#51087E",
+                            "&:hover": {
+                              backgroundColor: "#51087E",
+                            },
+                          }}
+                        >
+                          Dismiss Transactions
+                        </Button>
+                      </Box>
+                    ) : null}
+                  </Box>
+                </Container>
+              </ThemeProvider>
             </>
           );
         })

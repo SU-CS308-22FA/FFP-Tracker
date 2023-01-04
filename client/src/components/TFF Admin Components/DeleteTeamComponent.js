@@ -147,24 +147,25 @@ export default function RegisterTeamComponent() {
           <Box
             sx={{
               bgcolor: "background.paper",
-              pt: 8,
-              pb: 6,
             }}
           >
-            <Container maxWidth="md">
-              <Box sx={{ mt: 3 }}></Box>
-              <Typography sx={{ mb: 2 }} variant="h4" component="h1">
+            <Container maxWidth="md" sx={{ mb: 2 }}>
+              <Typography
+                sx={{ mt: 4, mb: 2 }}
+                variant="h3"
+                component="h1"
+                align="center"
+              >
                 Teams
               </Typography>
               <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 100 }} aria-label="customized table">
+                <Table aria-label="customized table">
                   <TableHead>
                     <TableRow>
                       <StyledTableCell align="center">
                         Team Name
                       </StyledTableCell>
                       <StyledTableCell align="center">Logo</StyledTableCell>
-
                       <StyledTableCell align="center">Delete</StyledTableCell>
                     </TableRow>
                   </TableHead>
@@ -180,9 +181,8 @@ export default function RegisterTeamComponent() {
                                 {team.teamName}
                               </StyledTableCell>
                               <StyledTableCell align="center">
-                                <Avatar src={team.logoURL} sx={{ ml: 15 }} />
+                                <Avatar src={team.logoURL} sx={{ ml: 21 }} />
                               </StyledTableCell>
-
                               <StyledTableCell align="center">
                                 <Button
                                   onClick={() =>
@@ -207,14 +207,13 @@ export default function RegisterTeamComponent() {
                       })
                     ) : (
                       <Container sx={{ ml: 15 }}>
-                        <CircularProgressComponent></CircularProgressComponent>
+                        <CircularProgressComponent />
                       </Container>
                     )}
                   </TableBody>
                 </Table>
               </TableContainer>
             </Container>
-            <Box sx={{ mt: 3 }}></Box>
             {e && (
               <Alert variant="outlined" severity="error">
                 {errorMessage}
