@@ -12,6 +12,7 @@ import { UserContext } from "../../contexts/userContext";
 import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
 import GavelIcon from "@mui/icons-material/Gavel";
 import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
+import RecommendIcon from "@mui/icons-material/Recommend";
 
 export default function HomePage() {
   const { user } = useContext(UserContext);
@@ -118,6 +119,26 @@ export default function HomePage() {
               </CardContent>
             </Card>
           </Grid>
+          <Grid item xs={12} sm={4} />
+          <Grid item xs={12} sm={4}>
+            <Card>
+              <CardHeader
+                avatar={
+                  <Avatar>
+                    <SportsSoccerIcon />
+                  </Avatar>
+                }
+                title="Sponsor"
+              />
+              <CardContent>
+                <Typography variant="body2">
+                  Sponsor can view all the teams, and request to sponsor a team
+                  for the season.
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} sm={4} />
         </Grid>
       </Container>
     </>
