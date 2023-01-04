@@ -43,7 +43,7 @@ export default function HomePage() {
           Federation. Also, the site is for the use of all fans around the world
           who are interested in the Turkish League.
         </Typography>
-        <Grid container spacing={2} sx={{ mt: 4 }}>
+        <Grid container spacing={2} sx={{ mt: 4, mb: 4 }}>
           <Grid item xs={12} sm={6}>
             <Card>
               <CardHeader

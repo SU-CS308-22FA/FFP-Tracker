@@ -97,7 +97,14 @@ export default function ProfilePageComponent() {
             description="View the status of your submitted files"
           />
         </Grid>
-        <Grid item xs={4}></Grid>
+        <Grid item xs={2} />
+        <Grid item xs={4}>
+          <CustomCard
+            title="Edit Your Players"
+            link="/edit/team/players"
+            description="Add or remove the players on your team, as well as edit their information"
+          />
+        </Grid>
         <Grid item xs={4}>
           <CustomCard
             title="Review Sponsorship Requests"
@@ -105,7 +112,7 @@ export default function ProfilePageComponent() {
             description="Review what teams have requested to sponsor your team"
           />
         </Grid>
-        <Grid item xs={4}></Grid>
+        <Grid item xs={2} />
       </>
     );
   } else if (user.role === "TFF Admin") {
@@ -132,7 +139,13 @@ export default function ProfilePageComponent() {
             description="Deny a team's transaction due to sisapproval from a lawyer"
           />
         </Grid>
-        <Grid item xs={2} />
+        <Grid item xs={4}>
+          <CustomCard
+            title="Incur a Penalty"
+            link="/penalty"
+            description="Incur a penalty for a team that has not submitted their financial declarations on time"
+          />
+        </Grid>
         <Grid item xs={4}>
           <CustomCard
             title="View File Status"
@@ -147,7 +160,6 @@ export default function ProfilePageComponent() {
             description="Send a registration key to any type of user that needs to enter the system"
           />
         </Grid>
-        <Grid item xs={2} />
       </>
     );
   } else if (user.role === "Lawyer") {
@@ -191,7 +203,7 @@ export default function ProfilePageComponent() {
         <Grid container sx={{ mt: 6 }} rowSpacing={2}>
           {roleBasedContent}
         </Grid>
-        <Grid container sx={{ mt: 2 }}>
+        <Grid container sx={{ mt: 2, mb: 4 }}>
           {regularContent}
         </Grid>
       </Container>

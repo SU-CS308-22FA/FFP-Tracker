@@ -23,18 +23,24 @@ class FFPTesting(unittest.TestCase):
         elem.click()
         self.assertIn("login", driver.current_url)
         elem = driver.find_element(By.XPATH, '/html/body/div/main/div/form/div[1]/div/input')
-        elem.send_keys("saul.goodman@ffptracker.com")
+        elem.send_keys("harvey.specter@ffptracker.com")
         elem = driver.find_element(By.XPATH, '/html/body/div/main/div/form/div[2]/div/input')
-        elem.send_keys("saulgoodman")
+        elem.send_keys("harveyspecter")
         elem = driver.find_element(By.XPATH, '/html/body/div/main/div/form/button')
         elem.click()
         WebDriverWait(driver, 10).until(EC.alert_is_present())
         driver.switch_to.alert.accept()
         self.assertIn("my/profile", driver.current_url)
         time.sleep(1)
-        elem = driver.find_element(By.XPATH, '/html/body/div/div/nav/div/button[1]')
+        elem = driver.find_element(By.XPATH, '/html/body/div/main/div[1]/div[2]/div/button')
         elem.click()
         self.assertIn("status", driver.current_url)
+        time.sleep(1)
+        try:
+            elem = driver.find_element(By.XPATH, '/html/body/div/div[2]/div')
+            print('Success')
+        except:
+            self.fail("Status element not found")
 
     def tearDown(self):
         self.driver.close()

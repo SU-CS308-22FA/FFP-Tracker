@@ -3,11 +3,7 @@ import unittest
 import random
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.alert import Alert
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 
 class FFPTesting(unittest.TestCase):
@@ -40,7 +36,7 @@ class FFPTesting(unittest.TestCase):
         driver.switch_to.alert.accept()
         self.assertIn("my/profile", driver.current_url)
         time.sleep(1)
-        elem = driver.find_element(By.XPATH, '/html/body/div/div/nav/div/a[3]')
+        elem = driver.find_element(By.XPATH, '/html/body/div/main/div[1]/div[1]/div/button')
         elem.click()
         self.assertIn("newteam", driver.current_url)
         time.sleep(1)
@@ -59,7 +55,7 @@ class FFPTesting(unittest.TestCase):
         time.sleep(1)
         self.assertIn("my/profile", driver.current_url)
         time.sleep(1)
-        element = driver.find_element(By.XPATH, '/html/body/div/div/nav/div/a[5]')
+        element = driver.find_element(By.XPATH, '/html/body/div/main/div[2]/div[1]/div/button')
         element.click()
         self.assertIn("teams", driver.current_url)
         time.sleep(1)

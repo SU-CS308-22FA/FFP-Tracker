@@ -200,7 +200,7 @@ export default function DetailedTeamPageComponent() {
     // }
 
     // get expenses by considering key values as month-year and sorting them
-    
+
     let expensesByMonth = {};
     for (const [key, value] of Object.entries(expenses.salaries)) {
       expensesByMonth[key] = value;
@@ -520,7 +520,7 @@ export default function DetailedTeamPageComponent() {
                 </Box>
               </Grid>
             </Grid>
-            <Grid container spacing={1} sx={{ mt: 0.5 }}>
+            <Grid container spacing={1} sx={{ mt: 0.5, mb: 4 }}>
               <Grid item xs={6}>
                 <Box display="flex" justifyContent="center" alignItems="center">
                   {CustomCard({
