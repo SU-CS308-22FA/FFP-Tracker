@@ -111,8 +111,6 @@ export default function DetailedTeamPageComponent() {
   }, [setTeam, setRevenues, setExpenses, token, setUser, id, setUsers]);
 
   function hasSupporter() {
-    console.log(users);
-
     for (let i = 0; i < users.length; i++) {
       if (
         users[i].role === "Supporter" &&
@@ -268,7 +266,22 @@ export default function DetailedTeamPageComponent() {
   }
 
   function returnLastValueOfObject(obj) {
-    return obj[Object.keys(obj)[Object.keys(obj).length - 1]];
+    let months = [];
+    for (const [key, value] of Object.entries(obj)) {
+      months.push(String(key));
+    }
+    months.sort((a, b) => {
+      const aYear = Number(a.slice(0, 4));
+      const bYear = Number(b.slice(0, 4));
+      const aMonth = Number(a.slice(5, 7));
+      const bMonth = Number(b.slice(5, 7));
+      if (aYear === bYear) {
+        return aMonth - bMonth;
+      } else {
+        return aYear - bYear;
+      }
+    });
+    return obj[months[months.length - 1]];
   }
 
   function plot(team, revenues, expenses) {

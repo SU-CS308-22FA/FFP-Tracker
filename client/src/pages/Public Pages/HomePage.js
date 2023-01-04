@@ -17,9 +17,9 @@ export default function HomePage() {
   const { user } = useContext(UserContext);
   let navItems;
   if (user) {
-    navItems = ["Home"];
+    navItems = ["Teams"];
   } else {
-    navItems = ["Home", "Sign Up"];
+    navItems = ["Teams", "Sign Up"];
   }
   const content = (
     <>
