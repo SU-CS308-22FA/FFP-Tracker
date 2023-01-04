@@ -3,16 +3,15 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import ListItemText from "@mui/material/ListItemText";
+import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
+import Grid from "@mui/material/Grid";
+import { DataGrid } from "@mui/x-data-grid";
 import SendIcon from "@mui/icons-material/Send";
 import Alert from "@mui/material/Alert";
-import { Fragment, useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import FFP_API from "../../app/api";
 import { UserContext } from "../../contexts/userContext";
-import { Container } from "@mui/system";
 
 export default function NotificationPageComponent() {
   const [e, setE] = useState(false);
@@ -70,12 +69,11 @@ export default function NotificationPageComponent() {
   // Button to delete notification size is small
   const DeleteButton = (props) => {
     return (
-      <Container align="center" sx={{ mt: 0.5 }}>
+      <Container align="center">
         <Button
           variant="contained"
           color="error"
           onClick={() => deleteNotification(props._id)}
-          size="small"
         >
           Delete
         </Button>
@@ -84,57 +82,77 @@ export default function NotificationPageComponent() {
   };
 
   // template for notification using list
-  const notificationTemplate = (notification) => {
+  const notificationTemplate = (notifications) => {
+    const columns = [
+      {
+        field: "subject",
+        headerName: "Subject",
+        width: 150,
+        headerAlign: "center",
+        align: "center",
+      },
+      {
+        field: "sender",
+        headerName: "Sender",
+        width: 150,
+        headerAlign: "center",
+        align: "center",
+        renderCell: (params) => {
+          return getUserFullName(params.row.sender);
+        },
+      },
+      {
+        field: "date",
+        headerName: "Date",
+        width: 120,
+        headerAlign: "center",
+        align: "center",
+        renderCell: (params) => {
+          return params.row.date.substring(0, 10);
+        },
+      },
+      {
+        field: "message",
+        headerName: "Message",
+        width: 500,
+        headerAlign: "center",
+        align: "left",
+      },
+      {
+        field: "delete",
+        headerName: "Delete",
+        width: 150,
+        headerAlign: "center",
+        align: "center",
+        renderCell: (params) => {
+          return DeleteButton(params.row);
+        },
+      },
+    ];
+
     return (
-      <ListItem alignItems="flex-start">
-        <ListItemText
-          primaryTypographyProps={{ align: "center" }}
-          primary={notification.subject}
-          secondary={
-            <Fragment>
-              <Typography
-                sx={{ display: "inline" }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-                align="center"
-              >
-                {getUserFullName(notification.sender)}
-              </Typography>
-              {" — " + notification.message}
-              <br></br>
-              {DeleteButton(notification)}
-            </Fragment>
-          }
-        />
-      </ListItem>
+      <DataGrid
+        rows={notifications}
+        columns={columns}
+        getRowId={(row) => row._id}
+        pageSize={10}
+        disableSelectionOnClick
+        experimentalFeatures={{ newEditingApi: true }}
+      />
     );
   };
 
   // display all notifications for a user with notification subject and message and sender
   const displayNotifications = (userid) => {
     if (notification) {
-      return notification.map((notification) => {
+      let notif = [];
+      notification.map(function (notification) {
         if (notification.receiver === userid) {
-          return (
-            <Box
-              key={notification._id}
-              sx={{
-                width: "100%",
-                maxWidth: 360,
-                bgcolor: "background.paper",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              {notificationTemplate(notification)}
-              <Divider variant="inset" component="li" />
-            </Box>
-          );
+          notif.push(notification);
         }
-        return null;
+        return 1;
       });
+      return notificationTemplate(notif);
     }
   };
 
@@ -176,17 +194,20 @@ export default function NotificationPageComponent() {
   const sendNotificationForm = () => {
     return (
       <>
+        <Typography variant="h5" align="center" sx={{}}>
+          Send In-app Notifications
+        </Typography>
         <Box
           component="form"
           onSubmit={handleSendNotification}
           sx={{
-            "& .MuiTextField-root": { m: 1, width: "25ch" },
+            "& .MuiTextField-root": { m: 1, width: "28ch" },
             alignItems: "center",
+            flexDirection: "column",
             display: "flex",
             flexWrap: "wrap",
             justifyContent: "center",
           }}
-          noValidate
           autoComplete="off"
         >
           <TextField
@@ -212,9 +233,11 @@ export default function NotificationPageComponent() {
             label="Message"
             defaultValue=""
             variant="filled"
+            multiline
+            rows={3}
           />
           <Button type="submit" variant="contained" endIcon={<SendIcon />}>
-            Send In-App Notification
+            Send Notification
           </Button>
         </Box>
       </>
@@ -233,31 +256,37 @@ export default function NotificationPageComponent() {
       >
         Notifications
       </Typography>
-      <Container align="center">
-        <Button variant="contained" color="primary" href="/sendnotification">
-          Send Email
-        </Button>
-      </Container>
-      <Typography
-        variant="h5"
-        component="div"
-        align="center"
-        gutterBottom
-        sx={{ mt: 2 }}
-      >
-        Your In-App Notifications
-      </Typography>
-      <List
+      <Box
         sx={{
+          mt: 4,
+          justifyContent: "center",
           alignItems: "center",
-          width: "100%",
-          maxWidth: 360,
-          bgcolor: "background.paper",
+          display: "flex",
         }}
       >
-        {displayNotifications(user._id)}
-      </List>
-      {sendNotificationForm()}
+        <Paper component={Box} width={1100} height={630.5}>
+          {displayNotifications(user._id)}
+        </Paper>
+      </Box>
+      <Grid container spacing={2} sx={{ mt: 2, mb: 2 }}>
+        <Grid item xs={12} sm={6}>
+          {sendNotificationForm()}
+        </Grid>
+        <Grid item xs={12} sm={6}>
+          <Typography variant="h5" align="center" sx={{}}>
+            Send Email
+          </Typography>
+          <Box textAlign="center">
+            <Button
+              variant="contained"
+              endIcon={<SendIcon />}
+              href="/sendnotification"
+            >
+              Send Email
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
       {e && (
         <Alert severity="error" sx={{ mt: 2, mb: 2 }}>
           {errorMessage}

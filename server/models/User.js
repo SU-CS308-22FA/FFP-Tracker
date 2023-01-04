@@ -32,6 +32,16 @@ const UserSchema = new mongoose.Schema({
     default: [],
     required: false,
   },
+  isSupporting: {
+    type: Boolean,
+    default: false,
+    required: false,
+  },
+  rejectedTeams: {
+    type: Array,
+    default: [],
+    required: false,
+  },
 });
 
 module.exports = mongoose.model("User", UserSchema);

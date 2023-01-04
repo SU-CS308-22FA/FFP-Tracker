@@ -16,7 +16,7 @@ import { UserContext } from "../../contexts/userContext";
 const theme = createTheme();
 
 const USER_REGEX = /^[A-z0-9]{3,20}$/;
-const PWD_REGEX = /^[A-z0-9!@#$%]{4,20}$/;
+const PWD_REGEX = /^[A-z0-9!@#$%]{6,20}$/;
 
 export default function EditUserComponent() {
   const [e, setE] = useState(false);
@@ -27,7 +27,6 @@ export default function EditUserComponent() {
   const navigate = useNavigate();
   const validate = (data) => {
     setE(false);
-    setErrorMessage("");
     let error = "";
     let pass = data.get("password");
     let repass = data.get("re-password");
@@ -36,7 +35,7 @@ export default function EditUserComponent() {
         "Username must be 3-20 characters long and contain only letters and numbers.";
     } else if (pass && !PWD_REGEX.test(data.get("password"))) {
       error =
-        "Password must be 4-20 characters long and contain only letters, numbers, and !@#$%.";
+        "Password must be 6-20 characters long and contain only letters, numbers, and !@#$%.";
     } else if (repass && data.get("password") !== data.get("repassword")) {
       error = "Passwords must match.";
     }
@@ -46,7 +45,6 @@ export default function EditUserComponent() {
   const handleUpdate = async (e) => {
     e.preventDefault();
     setE(false);
-    setErrorMessage("");
     const data = new FormData(e.currentTarget);
     const result = validate(data);
     if (result !== "") {

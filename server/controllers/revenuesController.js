@@ -51,6 +51,8 @@ const updateRevenueById = asyncHandler(async (req, res) => {
       .json({ error: "All fields are required to update a team's revenues!" });
   }
   const rev = await Revenue.findOne({ teamId: id });
+  const team = await Team.findOne({ _id: id });
+  if (!team) return res.status(404).json({ error: "Team not found!" });
   if (!rev)
     return res.status(404).json({ error: "No revenue found for this team!" });
   if (rev.ticketing.get(month) !== undefined) {
@@ -61,8 +63,15 @@ const updateRevenueById = asyncHandler(async (req, res) => {
   rev.ticketing.set(month, ticketing);
   rev.marketing.set(month, marketing);
   rev.broadcasting.set(month, broadcasting);
-  const result = await rev.save();
-  return res.status(200).json(rev);
+  team.currentBudget =
+    Number(team.currentBudget) +
+    Number(ticketing) +
+    Number(marketing) +
+    Number(broadcasting);
+  console.log(team.currentBudget);
+  await team.save();
+  await rev.save();
+  return res.status(201).json(rev);
 });
 
 const deleteRevenue = asyncHandler(async (req, res) => {

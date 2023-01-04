@@ -1,6 +1,10 @@
 import AppBar from "@mui/material/AppBar";
 import { Link } from "react-router-dom";
-import { Avatar, Box, Toolbar, Typography, Button } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import { useContext } from "react";
 import { UserContext } from "../../contexts/userContext";
 
@@ -22,7 +26,9 @@ function FrontPageAppBar(navItems) {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "none", sm: "block" }, ml: 2 }}
           >
-            <Link to="/home">FFP Tracker for TFF</Link>
+            <Link to={token ? "/my/profile" : "/home"}>
+              FFP Tracker for TFF
+            </Link>
           </Typography>
           <Box sx={{ display: { xs: "none", sm: "block" } }}>
             {navigationItems.map((item) => (

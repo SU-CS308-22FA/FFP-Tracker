@@ -35,8 +35,8 @@ export default function PersistLogin() {
         effectRan.current = true;
       };
     }
-  }, [setLogin, setToken, setUser, token]);
-  if (!login) {
+  }, [token, setUser, setLogin, setToken, setLoading]);
+  if (!login || !token) {
     return <Navigate to="/login" />;
   }
   if (loading || !user) {
