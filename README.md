@@ -8,6 +8,17 @@
 
 FFP Tracker is a web application to further transparency about the revenues and expenses of the teams that are a part of the Turkish Football Federation by making teams submit their financial documents to the system. After submissions, the federation and its lawyers will have a chance to review the files, approve or deny them based on their conclusions. With that in mind, teams will need to work harder to generate more streams of revenue to stay within their budget limits, and spend at most as much as they earn. Some actions can be taken before a serious breach of regulations as the system will be able to forecast the teams’ future situations. All information will be publicly available to all, in line with the aim to increase transparency.
 
+### Product Video
+
+<div align="center">
+  <a href="https://youtu.be/UDMx-8MEM_Q">
+    <img src="https://user-images.githubusercontent.com/104452252/216776724-7a2047db-d034-4d50-bb54-eb4551a65abf.png"
+ alt="FFP Tracker Product Video">
+  </a>
+</div>
+ 
+
+
 ### Current Working Application
 
 You can use the current version of the application by clicking **[here](https://ffp-tracker.herokuapp.com/)**.
